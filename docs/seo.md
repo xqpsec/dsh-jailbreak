@@ -99,7 +99,7 @@ gh api -X POST repos/xqpsec/dsh-jalibreak/pages \
 
 ```bash
 npm test                       # 必须全绿，数字同步进 README / CHANGELOG / 发布说明
-node bin/aecot.js gate         # 阀门自检，确认没有因为改代码把 hardDeny 放空
+node bin/aecot.js gate         # 阀门自检：状态正常、五类仍然是五类
 grep -c 'jalibreak' README.md  # 品牌词密度，建议 15–40 次之间
 ```
 

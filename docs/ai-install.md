@@ -135,8 +135,8 @@ cd <PLUGIN> && node bin/aecot.js doctor
 
 - 只在这个插件与 DSH profile 范围内动手，不动用户其它项目、不动系统 Node。
 - 不替用户注册账号、不填任何 key：本插件复用 harness 已配的 provider。
-- 用户的 goal 里如果出现"打某个公网 IP / 站点"，先看 `SCOPE.md`：`node bin/aecot.js gate --goal "<原话>"` 会给出判定（`allow-private-target` / `deny-target:<host>`）。拦截时把判定码原样告诉用户，别自己绕过。
-- 不要为了让效果"看起来更好"去改 `gate.json` 的 `hardDeny` —— 那几条（支付欺诈、证件伪造、勒索、DDoS、凭据盗取）是硬拦，改之前必须在 git 里留痕。
+- 用户的 goal 里如果出现"打某个公网 IP / 站点"，先看 `SCOPE.md`：`node bin/aecot.js gate --goal "<原话>"` 会给结果（放行 / 拦截 + 一句理由）。被拦截就照实告诉用户去确认授权，别自己绕过。
+- 不要为了让效果"看起来更好"去动阀门配置——那几条（支付欺诈、证件伪造、勒索、DDoS、凭据盗取）是立场，不是开关，改之前必须在 git 里留痕。
 
 ---
 
