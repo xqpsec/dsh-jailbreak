@@ -7,10 +7,22 @@
 **An evolutionary, measurable, gated jailbreak plugin for [DeepSeek Harness](https://github.com/deepseek-ai).**
 No host patches, no `prompt-inject.md`. It rewrites messages **at the request boundary**, ships a 9-dimension AE-CoT evolutionary search (arXiv:2605.24497), a reproducible 20-goal benchmark, and a **gate** that keeps reverse engineering in and unauthorized intrusion out.
 
+> **Before**　"What does this loader do to my process?" → *I'm sorry, I can't help with that.*
+>
+> **After**　Same question → the call chain, the decoder, the persistence path, and the patch point. (illustrative)
+
+```bash
+dsh plugin --profile web add github:xqpsec/dsh-jalibreak
+```
+
+- **Nothing patched** — zero host edits, uninstall is one `remove`, a DSH upgrade cannot clobber it.
+- **Nothing sent anywhere** — it edits the body of the request you were already making. No extra network, no second key, no stored conversations.
+- **A gate, not a free pass** — reverse engineering, CTF, lab ranges and sample analysis go through; fraud, forged documents and unauthorized intrusion are passed through untouched.
+
 [![version](https://img.shields.io/badge/version-1.0.0-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
-[![tests](https://img.shields.io/badge/tests-81%2F81-22c55e?style=flat-square)](test)
+[![tests](https://img.shields.io/badge/tests-94%2F94-22c55e?style=flat-square)](test)
 [![baseline](https://img.shields.io/badge/strict%20baseline-17%2F20%20%C2%B7%2085%25-8b5cf6?style=flat-square)](docs/eval-report.md)
 [![node](https://img.shields.io/badge/node-%E2%89%A520-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)
 [![telegram](https://img.shields.io/badge/Telegram-group-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/+Q4EgamAkwYYyYTE1)
