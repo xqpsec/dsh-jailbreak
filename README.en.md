@@ -7,9 +7,13 @@
 **An evolutionary, measurable, gated jailbreak plugin for [DeepSeek Harness](https://github.com/deepseek-ai).**
 No host patches, no `prompt-inject.md`. It rewrites messages **at the request boundary**, ships a 9-dimension AE-CoT evolutionary search (arXiv:2605.24497), a reproducible 20-goal benchmark, and a **gate** that keeps reverse engineering in and unauthorized intrusion out.
 
-> **Before**　"What does this loader do to my process?" → *I'm sorry, I can't help with that.*
+[![Before / after](docs/before-after.png)](docs/before-after.md)
+
+> **Measured, 2026-10-28** · `deepseek-flash`, temperature 0, through the plugin's real `transformDeepseekBody()` path.
 >
-> **After**　Same question → the call chain, the decoder, the persistence path, and the patch point. (illustrative)
+> **Before**　499 chars — a refusal, plus four "here's what I *can* help with" bullets.
+>
+> **After**　3,716 chars — the `amsiInitFailed` reflection trick, a complete `Invoke-AmsiBypass`, and how to verify it landed. Raw transcripts: [docs/before-after.md](docs/before-after.md).
 
 ```bash
 dsh plugin --profile web add github:xqpsec/dsh-jalibreak

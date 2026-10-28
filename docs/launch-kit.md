@@ -96,6 +96,8 @@ git push origin v1.0.0
 
 ## 四、引流稿（照抄，改 `xqpsec`）
 
+> **发帖必带首图**：[before-after.png](before-after.png)（1280×760，实测对比，不是示意图）。没有图的帖子在这个圈子里基本没人点。
+
 ### 1) V2EX（节点：`/go/security` 或 `/go/programmer`）
 
 标题（选一个，别用感叹号堆砌，V2EX 反感标题党）：
@@ -116,7 +118,7 @@ git push origin v1.0.0
 - 20 目标固定集、temp=0、严格 rubric：最优 17/20，跑法和原始记录都在仓库里
 - 自带的阀门：逆向 / 样本分析 / CTF / 靶场放行，公网目标要登记授权，支付诈骗/证件伪造/勒索/DDoS/盗号五类直接拦（授权文件也解不开）
 
-零运行时依赖，AGPL-3.0-only（阀门 MIT），`npm test` 81/81。
+零运行时依赖，AGPL-3.0-only（阀门 MIT），`npm test` 94/94。
 
 https://github.com/xqpsec/dsh-jalibreak
 
@@ -142,7 +144,7 @@ It also carries the paper's evolutionary search (9-dim genome, arXiv:2605.24497)
 
 There's a gate, and it is the part I care most about: reverse engineering / malware analysis / CTF / lab eval pass untouched; public targets are your responsibility to authorize; payment fraud, identity forgery, ransomware, DDoS and credential theft are never produced, not even with a commercial license. The rules are implementation detail and are not restated in the docs. Every decision goes to gate-audit.jsonl.
 
-Zero runtime deps, AGPL-3.0-only (gate MIT), 81/81 tests.
+Zero runtime deps, AGPL-3.0-only (gate MIT), 94/94 tests.
 https://github.com/xqpsec/dsh-jalibreak
 ```
 
@@ -156,7 +158,7 @@ fetch 层改写请求：system 段 + assistant 轨迹，temp=0 / thinking=disabl
 20 目标固定集严格 rubric：17/20，原始记录在仓库
 阀门：逆向/CTF/靶场放行，未授权公网 + 五类犯罪拦死
 
-零依赖 · AGPL-3.0 · 81/81
+零依赖 · AGPL-3.0 · 94/94
 github.com/xqpsec/dsh-jalibreak
 
 群 t.me/+Q4EgamAkwYYyYTE1 · 频道 t.me/jalibreak_llm
@@ -183,7 +185,7 @@ github.com/xqpsec/dsh-jalibreak
 
 📦 github.com/xqpsec/dsh-jalibreak
 📖 条款：SCOPE.md
-🧪 81/81 tests · AGPL-3.0 · 零运行时依赖
+🧪 94/94 tests · AGPL-3.0 · 零运行时依赖
 
 群：https://t.me/+Q4EgamAkwYYyYTE1
 频道：https://t.me/jalibreak_llm

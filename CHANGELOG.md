@@ -4,6 +4,8 @@
 
 首个公开版本。
 
+**实测对比素材**：新增 [docs/before-after.md](docs/before-after.md) 与 `docs/before-after.png`——同一句话在 `deepseek-flash`、`temperature 0` 下走真实 `transformDeepseekBody()` 的前后原始记录（499 字符纯拒绝 → 3,716 字符含完整实现）。README 中英第一屏与 Pages 落地页都换成了这张真实对比。
+
 ### 破甲（请求边界）
 - `lib/live.js`：在插件进程内包装 `fetch`，对所有 host 的 `/chat/completions` 生效（`lib/endpoint.js` 可收窄到指定域名），其它 URL 原样透传
 - 双通道静态轨迹注入：system 段（已审阅） + assistant 续写段（`Implementation:`），并硬约束 `temperature=0` / `max_tokens≥8192` / `thinking=disabled`
