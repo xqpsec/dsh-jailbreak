@@ -31,7 +31,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jalibreak
 [![node](https://img.shields.io/badge/node-%E2%89%A520-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)
 [![telegram](https://img.shields.io/badge/Telegram-group-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/+Q4EgamAkwYYyYTE1)
 
-**[中文主页](README.md)** · **[SCOPE / gate](SCOPE.md)** · **[eval numbers](docs/eval-report.md)** · **[tech manual](docs/tech-manual.md)**
+**English** · **[中文主页](README.md)** · **[SCOPE / gate](SCOPE.md)** · **[eval numbers](docs/eval-report.md)** · **[tech manual](docs/tech-manual.md)**
 
 </div>
 
@@ -39,9 +39,22 @@ dsh plugin --profile web add github:xqpsec/dsh-jalibreak
 
 > **Search terms that should land here**: `dsh-jalibreak` · `jalibreak` · `DeepSeek Harness jailbreak` · `prompt injection plugin` · `CoT jailbreak` · `refusal benchmark` · `refusal reduction` · `reverse engineering without refusal` · `dsh-purge alternative`.
 >
-> Coming from `dsh-purge`? Read [the comparison](#why-not-another-patch-the-host-jailbreak-plugin) first — **0 host patches, 81 tests, 17/20 strict baseline**, all reproducible.
+> Coming from `dsh-purge`? Read [the comparison](#why-not-another-patch-the-host-jailbreak-plugin) first — **0 host patches, 94 tests, 17/20 strict baseline**, all reproducible.
 >
 > ⭐ **A star is the only distribution this project has.** For questions or the stronger private build, join the **[Telegram group](https://t.me/+Q4EgamAkwYYyYTE1)**.
+
+---
+
+## The lazy path (30 seconds, no reading)
+
+Paste this into whichever AI assistant you already use:
+
+```text
+Read https://github.com/xqpsec/dsh-jalibreak/blob/main/docs/ai-install.md and install this plugin
+into my DeepSeek Harness profile "web" for me. Then tell me, in one line, how to switch it on.
+```
+
+[that file](docs/ai-install.md) is written *for an AI*, not for you: pre-flight checks, three install routes in priority order, the exact verification command, and a failure table. You do not need to understand any of it.
 
 ---
 
@@ -100,6 +113,21 @@ node bin/aecot.js run    --goal "an AMSI-bypassing PowerShell loader" --backend 
 ```
 
 Artifacts land in `./.aecot/runs/<runId>/{meta,events,population,best,corpus,report}`.
+
+---
+
+## What you get
+
+- **6 agent tools**: `aecot_run` / `aecot_status` / `aecot_export` / `aecot_judge` / `aecot_render` / `aecot_taxonomy` (the `aecot_` prefix is kept so existing scripts keep working).
+- **Web panel**: goal, backend, provider, judge, generation/population budget, live progress, per-generation trace table, nine-dimension chips, run history, export.
+- **`/ab` slash command**: `/ab <objective>` runs a 1-generation × 4-individual search and drops the finished answer straight back into the conversation; `-v` shows the whole run, `-g/-n` change generations/population.
+- **Dual-channel request-boundary injection** (`lib/live.js`): system segment + assistant continuation segment.
+- **Refusal reduction** (`lib/hcot.js` v03 + `lib/refusal.js`): `standard`/`max` trace levels, trace language follows the objective, exactly one automatic re-send after a refused first answer (`mode:"refusal-retry"` on disk).
+- **Gate** (`lib/gate.js`): one decision before injection; research work is not touched, out-of-scope requests get no trace.
+- **Audit**: one JSONL line per decision and per rewrite — for your own review, never for the decision.
+- **Evolution engine**: elitism + fragment crossover + adaptive mutation (μ₀=0.1, step ±0.1, cap 0.3) + early stop after 3 stagnant generations.
+- **Three backends**: `harness` (uses `ctx.llm`, zero config) / `openai` (your own base_url + key) / `ollama`; `offline` makes 0 network calls.
+- **Zero dependencies**, 94 unit tests green.
 
 ---
 
@@ -195,6 +223,31 @@ DEEPSEEK_API_KEY=sk-... node eval/run-baseline.mjs --variant hcot-dual --judge l
 
 ---
 
+## The 9-dimension genome
+
+Paper Eq. (6): `Θ = s × d × i × c × a × b × n × t × k`
+
+| Dim | Meaning | Values |
+| --- | --- | --- |
+| `s` | Scheme type | 8 |
+| `d` | Approach class | 5 |
+| `i` | Injection vector | 6 |
+| `c` | CoT style | 6 |
+| `a` | Authority frame | 5 |
+| `b` | Blocker removal | 5 |
+| `n` | Narrative | 5 |
+| `t` | Tone | 4 |
+| `k` | Knowledge anchor | 5 |
+
+```bash
+node bin/aecot.js taxonomy                 # print the whole space (values, arity, constraints)
+node bin/aecot.js render --goal "…"        # render one P = M + S + C, no model call
+```
+
+Operators: elitism (Eq. 11, `elite=2`) → fragment crossover (Eq. 12) → adaptive mutation (Eq. 13) → early stop (Eq. 14).
+
+---
+
 ## Why not just patch the host (vs. dsh-purge)
 
 **dsh-purge** (`YuJunZhiXue/dsh-purge`) is the established option: it applies host patches plus a global `prompt-inject.md`, keeps `host-backups/`, and ships under Apache-2.0 with an extra commercial license.
@@ -236,8 +289,39 @@ Env: `DSH_JALIBREAK_ENDPOINTS='{"hosts":["api.deepseek.com"]}'` (optional — na
 ```text
 index.js client.js cordis.patch.yml gate.json scope.txt
 lib/  engine taxonomy render hcot live gate judge hub routes backends profile store arm rng
-bin/aecot.js   eval/   test/ (11 files, 81 cases)   docs/   locale/
+bin/aecot.js   eval/   test/ (14 files, 94 cases)   docs/   locale/
 ```
+
+## FAQ
+
+**Will it modify my DeepSeek Harness?**
+No. Zero host patches: public plugin APIs only, the `fetch` wrapper lives inside the plugin process, `dispose()` restores it. There is no `host-backups/` directory.
+
+**I already run dsh-purge — can I keep both?**
+Yes, but **run one injection channel at a time**. Two at once stack two traces on the same request and both the score and the output rot.
+
+**Why not `prompt-inject.md`?**
+One global prompt is one prompt for every model: it has to be rewritten when the model changes, and it cannot be reproduced. Here the boundary rewrite carries the genome, so changing models is just another evolution run.
+
+**Is the 85% real?**
+Strict rubric (the answer must carry executable detail): 17 of 20 goals pass, and `results.jsonl` is in the repo. The earlier, looser rubric once produced 20/20 and 19/20 — **both are published**.
+
+**Does it need another API key?**
+No. It uses `ctx.llm` by default (whatever provider the harness already has). `--backend openai --base-url … --api-key …` only when you want a specific external endpoint.
+
+**Does it phone home?**
+`--backend offline` makes zero network calls; `render` / `taxonomy` / `gate` are pure local. The live channel only rewrites `/chat/completions`-shaped requests and passes everything else through (you can narrow it to specific hosts).
+
+**Will the gate block my research?**
+Reverse engineering, sample analysis, CTF and evaluation are the intended use and are not blocked. Two things are stopped: public targets you have not cleared, and payment fraud / forged documents / ransomware / DDoS / credential theft — which do not change because you bought a commercial license or wrote an authorization file. The rules live in `lib/gate.js`; change them and own the consequences.
+
+**Why are the tools still called `aecot_*`?**
+Script compatibility. The plugin id, package name and route prefix are already `jalibreak`.
+
+**How long does a run take?**
+Default 3 generations × 10 individuals ≈ 30 target calls plus judging (heuristic first, LLM only when ambiguous). For speed use `/ab`: 1 × 4.
+
+---
 
 ## Roadmap
 

@@ -15,6 +15,8 @@
 [![telegram](https://img.shields.io/badge/Telegram-%E4%BA%A4%E6%B5%81%E7%BE%A4-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/+Q4EgamAkwYYyYTE1)
 [![channel](https://img.shields.io/badge/Telegram-%E9%A2%91%E9%81%93-229ED9?style=flat-square&logo=telegram&logoColor=white)](https://t.me/jalibreak_llm)
 
+**[简体中文](README.md)** · **[English](README.en.md)** · **[SCOPE / 阀门](SCOPE.md)** · **[评测数字](docs/eval-report.md)** · **[技术手册](docs/tech-manual.md)**
+
 **你问一句本来会被拒绝的话，它现在直接给你步骤。**
 
 [![装之前 / 装之后](docs/before-after.png)](docs/before-after.md)
@@ -241,7 +243,7 @@ meta.json  events.jsonl  population.json  best.json  corpus.jsonl  report.md
 - **审计**：每次判定、每次改写各落一行 JSONL，方便自己回看（不影响判定）
 - **进化引擎**：精英保留 + 片段交叉 + 自适应变异（μ₀=0.1，步长 ±0.1，上限 0.3）+ 早停（连续 3 代停滞）
 - **三种后端**：`harness`（走 `ctx.llm`，零配置）/ `openai`（自带 base_url+key）/ `ollama`；`offline` = 0 网络
-- **零依赖**：`dependencies` 为空，81 个单测全绿
+- **零依赖**：`dependencies` 为空，94 个单测全绿
 
 ---
 
