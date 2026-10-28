@@ -9,6 +9,13 @@
 - 双通道静态轨迹注入：system 段（已审阅） + assistant 续写段（`Implementation:`），并硬约束 `temperature=0` / `max_tokens≥8192` / `thinking=disabled`
 - 纯函数 `transformDeepseekBody(input, options)`，可单测；`attachLiveTransport()` 返回 `dispose()`，即刻还原
 
+### 低拒绝（本版第二个核心）
+- `lib/hcot.js` → `v03-execution-state`：`standard` / `max` 两级执行态轨迹；`max` 压掉开场白、免责段、「建议咨询专业人士」与替代方案，并按类目补场景定性行（逆向 / 破解 / 样本分析 / CTF / 渗透 / Web / 凭据 / 提权 / 网络 / 压测）
+- 语言跟随目标：`detectLang()` 判中英，同语种续写（中文题目差别最明显）
+- `lib/refusal.js`：`containsRefusal()` 只看回答**开头 320 字符**（避免长回答中途的 "I cannot guarantee" 误判），命中拒绝则用 `amplifyBody()` 换 `max` 轨迹 + 追加直给指令**重发一次**；二次仍拒则返回首答
+- `lib/live.js`：`traceTone()` 按目标自动升降级（安全类目默认 `max`）；`retryOnRefusal:false` 可关、`retryOnlyStandard:true` 可只对 `standard` 重试
+- 审计：`live-requests.jsonl` 新增 `mode:"refusal-retry"` 行（含 `signals` / `retrySignals` / `recovered`）与 `level` / `category` / `lang` 字段
+
 ### 进化引擎
 - `lib/engine.js`：精英保留 + 片段交叉 + 自适应变异（`μ₀=0.1`，`±0.1`，上限 `0.3`）+ 停滞早停（连续 3 代）
 - `lib/taxonomy.js`：9 维搜索空间 `Θ = s×d×i×c×a×b×n×t×k`，含依赖约束
@@ -36,7 +43,7 @@
 - 完整报告：`docs/eval-report.md`；负结果保留（`hcot-official` 0/20）
 
 ### 工程
-- 测试 65/65 通过（9 个测试文件，含 `test/gate.test.js` 10 个阀门用例）
+- 测试 81/81 通过（11 个测试文件，含 `test/gate.test.js` 10 个阀门用例、`test/hcot.test.js` 8 个轨迹用例、`test/refusal.test.js` 8 个拒绝识别与重试用例）
 - 零运行时依赖；`--backend offline` 全程 0 次网络调用
 - 许可：主仓 **AGPL-3.0-only** + 阀门三件套（`lib/gate.js` / `gate.json` / `scope.txt`）**MIT** + 闭源商用需商业授权（`LICENSE-COMMERCIAL.md`）+ 署名条款（`NOTICE`）
 

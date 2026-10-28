@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: "If you use dsh-jalibreak in research, cite it as below."
+title: "dsh-jalibreak: request-boundary jailbreak injection for DeepSeek Harness"
+abstract: >-
+  A DeepSeek Harness plugin that performs adversarial prompt-injection at the request
+  boundary (no host patching), runs a 9-dimension AE-CoT evolutionary search over
+  chain-of-thought genomes, screens refusals and retries once with a reinforced trace,
+  and enforces a scope gate that allows reverse engineering, CTF and lab work while
+  blocking unauthorized offensive use.
+type: software
+license: AGPL-3.0-only
+repository-code: "https://github.com/xqpsec/dsh-jalibreak"
+url: "https://xqpsec.github.io/dsh-jalibreak/"
+version: 1.0.0
+date-released: 2026-10-28
+keywords:
+  - jalibreak
+  - dsh-jalibreak
+  - deepseek-harness
+  - jailbreak
+  - prompt-injection
+  - refusal-benchmark
+  - llm-security
+  - adversarial-prompting
+  - reverse-engineering
+  - evolutionary-search
+authors:
+  - alias: xqpsec
+    name: dsh-jalibreak contributors
+references:
+  - type: article
+    title: "AE-CoT: evolutionary chain-of-thought jailbreak search"
+    authors:
+      - name: arXiv 2605.24497 authors
+    notes: "arXiv:2605.24497 — genome, elitism, fragment crossover, adaptive mutation, amplification"

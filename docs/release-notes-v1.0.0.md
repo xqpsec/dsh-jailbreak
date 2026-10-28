@@ -137,7 +137,7 @@ DEEPSEEK_API_KEY=sk-xxx node eval/run-baseline.mjs --variant hcot-dual --judge l
 ## 八、校验
 
 ```text
-npm test  →  65 tests / 65 pass / 0 fail
+npm test  →  81 tests / 81 pass / 0 fail
 node bin/aecot.js gate  →  阀门配置可读，profile=lab
 ```
 
