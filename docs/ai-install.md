@@ -102,7 +102,7 @@ cd <PLUGIN> && node bin/aecot.js doctor
 只需要说三件事：
 
 1. **不用配置**：破甲默认就是开的，新开一个对话直接派活即可。
-2. **面板不是必需品**：不用打开任何面板。想看效果时才进「破甲台」——右上角一枚 `打开`（开着时是 `关掉`）、状态行 `ARM: ON`；输入框写一句话点 `跑一轮`，模型这次的回答会出现在下面；`只出提示` 只渲染注入内容，不调模型。
+2. **面板不是必需品**：不用打开任何面板。想看效果时才进「破甲台」——右上角一枚开关（旁边写着 `注入中` 或 `已关闭`）；输入框写一句话点 `运行`，模型这次的回答出现在下面；`提示词` 只渲染注入内容，不调模型。
 3. **想核账**：`<数据目录>/live-requests.jsonl`（每次注入一行）、`gate-audit.jsonl`（每次阀门判定一行）。数据目录默认是 `<PLUGIN>/.aecot`，可用 `--root` 或 `AECOT_ROOT` 改。
 
 ---
@@ -148,7 +148,7 @@ node bin/aecot.js arm --off               # 关掉破甲（面板按钮等价）
 node bin/aecot.js arm --on                # 打开
 node bin/aecot.js render --goal "…"       # 只渲染注入后的请求，不调模型
 node bin/aecot.js gate --goal "…"         # 这个请求会不会被阀门拦
-node bin/aecot.js run --goal "…"          # 跑一轮进化（会花模型调用）
+node bin/aecot.js run --goal "…"          # 运行进化（会花模型调用）
 ```
 
 装不上、doctor 不过、或者想让人帮你远程看：进 **交流群 <https://t.me/+Q4EgamAkwYYyYTE1>**，把 doctor 的输出整段贴上来。频道 <https://t.me/jalibreak_llm> 发版本更新和更强的版本。

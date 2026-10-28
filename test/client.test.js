@@ -84,22 +84,25 @@ test('三个座位都注册，且 slots 缺失时静默退出', async () => {
   assert.equal(mod.cleanups.length, 3);
 });
 
-test('一键入口的关键结构与文案都在（防止改 UI 时弄丢小白路径）', async () => {
+test('主干结构都在（开关 + 输入 + 场景 + 运行 + 回答），且没有解释性文案', async () => {
   const text = await fs.readFile(source, 'utf8');
   for (const needle of [
-    '.aecot-hero',
-    '.aecot-big',
-    '.aecot-answer',
-    '.aecot-scene',
-    '.aecot-term',
-    'arm.state',
-    '跑一轮',
-    '只出提示',
-    'AnswerPanel',
+    '.jb-switch',
+    '.jb-input',
+    '.jb-tag',
+    '.jb-run',
+    '.jb-answer',
+    '.jb-details',
+    '还没有回答',
+    '详情',
     'SCENES',
   ]) {
     assert.ok(text.includes(needle), `client.js 缺少 ${needle}`);
   }
   assert.match(text, /const SCENES = \[/);
   assert.ok((text.match(/label: '/g) || []).length >= 6, '场景按钮至少 6 个');
+  // 减法约束：这些文案一度把面板撑成说明书，回来就是回退。
+  for (const gone of ['arm.state', '按高级参数跑满', '真用起来不用进来', '想省额度就先点']) {
+    assert.ok(!text.includes(gone), `client.js 又出现了说明性文案 ${gone}`);
+  }
 });

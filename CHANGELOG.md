@@ -32,7 +32,7 @@
 - CLI：`aecot gate`（`--goal` 判一条，`--strict` 拦截 exit 3）
 
 ### 面板与 CLI
-- 面板重写成一屏四件事：`jalibreak // 破甲台` 状态条（`ARM: ON/OFF` + `打开/关掉`）、一句话输入框 + 6 个场景快选、`跑一轮` / `只出提示（不调模型）`、「这次的回答」卡片。模型、代数、种群、判分都折进「高级设置」
+- 面板重写成一屏四件事：`jalibreak // 破甲台` 状态条（`ARM: ON/OFF` + `打开/关掉`）、一句话输入框 + 6 个场景快选、`运行` / `提示词（不调模型）`、「这次的回答」卡片。模型、代数、种群、判分都折进「高级设置」
 - 界面是终端风：等宽字体、acid 绿细线、`[+]` 折叠、`arm.state / endpoint / mode` 三行状态。文案按「去 AI 味」重写过一遍——短句、具体数字、不解释自己（面板不是使用前提，这件事写在 README 里而不是面板里）
 - 三个 GUI 座位：设置页「破甲台」/ 侧栏 panel / 主区
 - 面板 API：`/plugins/jalibreak/api/{state,progress,runs,taxonomy,run,stop,preview,judge,export,profile,profiles,probe,screen,arm,gate}`

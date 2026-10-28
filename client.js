@@ -122,6 +122,48 @@ window.__ModuleLoader__.load({
       '.aecot-folds{display:flex;flex-direction:column;gap:8px}',
     ].join('\n');
 
+    // 面板本体：只有开关、输入、场景、运行、回答、详情。没有解释文案。
+    const UI = [
+      '.jb{display:flex;flex-direction:column;gap:14px;font-size:12px;color:var(--dsw-alias-label-primary);line-height:1.55;border:1px solid var(--dsw-alias-border-l1);border-radius:12px;padding:16px;background:var(--dsw-alias-bg-layer-1)}',
+      '.jb-head{display:flex;align-items:center;gap:8px;min-height:20px}',
+      '.jb-name{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dsw-alias-label-secondary)}',
+      '.jb-state{font-size:11px;color:var(--dsw-alias-label-secondary)}',
+      '.jb-spacer{flex:1 1 auto}',
+      '.jb-switch{width:32px;height:18px;flex:0 0 auto;border-radius:9px;border:1px solid var(--dsw-alias-border-l1);background:transparent;position:relative;cursor:pointer;padding:0;transition:background .15s,border-color .15s}',
+      '.jb-switch i{position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:var(--dsw-alias-label-secondary);transition:transform .15s,background .15s}',
+      '.jb-switch.on{background:var(--dsw-alias-brand-primary);border-color:var(--dsw-alias-brand-primary)}',
+      '.jb-switch.on i{transform:translateX(14px);background:#fff}',
+      '.jb-input{width:100%;box-sizing:border-box;resize:vertical;border:1px solid var(--dsw-alias-border-l1);border-radius:8px;background:var(--dsw-alias-bg-layer-2);color:inherit;font:inherit;line-height:1.65;padding:10px 11px;outline:none;transition:border-color .15s}',
+      '.jb-input:focus{border-color:var(--dsw-alias-brand-primary)}',
+      '.jb-tags{display:flex;flex-wrap:wrap;gap:6px}',
+      '.jb-tag{border:1px solid var(--dsw-alias-border-l1);background:transparent;color:var(--dsw-alias-label-secondary);border-radius:6px;padding:3px 8px;font:inherit;font-size:11px;cursor:pointer}',
+      '.jb-tag:hover{color:var(--dsw-alias-label-primary);border-color:var(--dsw-alias-label-secondary)}',
+      '.jb-bar{display:flex;align-items:center;gap:10px}',
+      '.jb-run{border:0;background:var(--dsw-alias-brand-primary);color:#fff;border-radius:7px;padding:7px 20px;font:inherit;font-size:12px;font-weight:500;letter-spacing:.02em;cursor:pointer}',
+      '.jb-run:disabled{opacity:.45;cursor:default}',
+      '.jb-link{border:1px solid var(--dsw-alias-border-l1);background:transparent;color:var(--dsw-alias-label-secondary);font:inherit;font-size:11.5px;cursor:pointer;border-radius:7px;padding:6px 12px;transition:color .15s,border-color .15s}',
+      '.jb-link:hover:enabled{color:var(--dsw-alias-label-primary);border-color:var(--dsw-alias-label-secondary)}',
+      '.jb-link:disabled{opacity:.4;cursor:default}',
+      '.jb-prog{height:2px;background:var(--dsw-alias-border-l1);border-radius:2px;overflow:hidden}',
+      '.jb-prog i{display:block;height:100%;background:var(--dsw-alias-brand-primary);transition:width .3s}',
+      '.jb-card{border:1px solid var(--dsw-alias-border-l1);border-radius:8px;background:var(--dsw-alias-bg-layer-2);padding:11px 13px;display:flex;flex-direction:column;gap:9px;min-height:60px}',
+      '.jb-answer{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:1.7;max-height:340px;overflow:auto;margin:0}',
+      '.jb-empty{min-height:120px;border:1px dashed var(--dsw-alias-border-l1);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--dsw-alias-label-secondary);font-size:11px}',
+      '.jb-muted{color:var(--dsw-alias-label-secondary);font-size:11px}',
+      '.jb-err{color:#ff8a80;font-size:11px}',
+      '.jb-details{border-top:1px solid var(--dsw-alias-border-l1);padding-top:10px}',
+      '.jb-details>summary{cursor:pointer;font-size:11px;color:var(--dsw-alias-label-secondary);list-style:none;outline:none}',
+      '.jb-details>summary::-webkit-details-marker{display:none}',
+      '.jb-details>summary::before{content:"▸ ";font-size:9px}',
+      '.jb-details[open]>summary::before{content:"▾ "}',
+      '.jb-details>div{margin-top:12px;display:flex;flex-direction:column;gap:10px}',
+      '.jb label{display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--dsw-alias-label-secondary)}',
+      '.jb input[type=text],.jb input[type=number],.jb input[type=password],.jb select{background:var(--dsw-alias-bg-layer-2);color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l1);border-radius:6px;padding:5px 7px;font:inherit;font-size:11.5px;outline:none;min-width:0}',
+      '.jb input[type=text]:focus,.jb input[type=number]:focus,.jb input[type=password]:focus,.jb select:focus{border-color:var(--dsw-alias-brand-primary)}',
+      '.jb input[type=checkbox]{accent-color:var(--dsw-alias-brand-primary);margin:0 6px 0 0}',
+      '.jb pre{margin:0}',
+    ].join('\n');
+
     // 小白入口：点一下就有具体目标，不用自己想怎么提问。
     const SCENES = [
       { label: '逆向校验', goal: '逆向这个程序的注册校验：先给静态分析步骤，再指出关键跳转与 patch 点' },
@@ -223,46 +265,9 @@ window.__ModuleLoader__.load({
       );
     }
 
-    // 小白第一眼要看的是"模型到底答了什么"，而不是基因和轨迹。
-    function AnswerPanel({ prog, onCopy }) {
-      if (!prog) return null;
-      const best = prog.best;
-      const answer = best && best.response ? String(best.response) : '';
-      if (!answer) return null;
-      return h('div', { className: 'aecot-card' },
-        h('div', { className: 'aecot-row' },
-          h('span', { className: 'aecot-label' }, '这次的回答'),
-          h(Score, { value: best.score }),
-          h('span', { className: 'aecot-plus' }, `${answer.length} 字`),
-          h('button', { className: 'aecot-btn mini', onClick: () => onCopy(answer, 'answer') }, '复制答案'),
-        ),
-        h('div', { className: 'aecot-answer' }, answer),
-      );
-    }
-
-    function Taxonomy({ tax }) {
-      if (!tax) return h('div', { className: 'aecot-hint' }, '正在读取搜索空间…');
-      return h('div', { className: 'aecot-card' },
-        h('div', { className: 'aecot-row' },
-          h('b', null, '结构化搜索空间 Θ'),
-          h('span', { className: 'aecot-pill' }, `|Θ| ≈ ${Number(tax.space).toLocaleString()}`),
-          h('span', { className: 'aecot-hint' }, '论文式(6)：S×D×I×C×A×B×N×T×K，含属性依赖约束'),
-        ),
-        h('div', { className: 'aecot-scroll' }, h('table', { className: 'aecot-table' },
-          h('thead', null, h('tr', null, ['维', '含义', '取值'])),
-          h('tbody', null, (tax.meta || []).map((d) => h('tr', { key: d.key },
-            h('td', { className: 'aecot-mono' }, d.key),
-            h('td', null, d.label || d.title || d.description || ''),
-            h('td', { className: 'aecot-muted' }, (d.values || []).map((v) => (typeof v === 'string' ? v : v.value || v.id)).join(' · ')),
-          ))),
-        )),
-        h('div', { className: 'aecot-hint' }, '渲染函数 φ 把 x_s+x_d 当策略核心、x_i 渲染成步骤、x_c 当场景、x_t 控推理风格、x_k 拼关键词。'),
-      );
-    }
-
     function Runs({ st, onPick }) {
       const runs = (st && st.runs) || [];
-      if (!runs.length) return h('div', { className: 'aecot-card aecot-hint' }, '还没有历史 run。跑一场之后这里会出现记录（存在 .aecot/runs/<id>/）。');
+      if (!runs.length) return h('div', { className: 'aecot-card aecot-hint' }, '没有历史');
       return h('div', { className: 'aecot-card' },
         h('div', { className: 'aecot-row' }, h('b', null, '历史 run'), h('span', { className: 'aecot-hint' }, st?.config?.root || '')),
         h('div', { className: 'aecot-list' }, runs.map((r) => h('div', { key: r.id, className: 'aecot-item', onClick: () => onPick(r.id) },
@@ -283,7 +288,7 @@ window.__ModuleLoader__.load({
       const [busy, setBusy] = useState(false);
       const [tax, setTax] = useState(null);
       const [toast, setToast] = useState('');
-      const [adv, setAdv] = useState(false);
+      const [adv] = useState(true);
       const [profs, setProfs] = useState([]);
       const [profId, setProfId] = useState('');
       const [profMsg, setProfMsg] = useState('');
@@ -336,7 +341,7 @@ window.__ModuleLoader__.load({
         try {
           const out = await api('arm', { on: !armArmed });
           setArmArmed(out.armed === true);
-          setArmNote(out.armed ? '已开启 · 去对话框说要做什么' : '已关闭 · 会话不会注入');
+          setArmNote('');
         } catch (e) {
           setArmNote(String(e && e.message ? e.message : e));
         }
@@ -493,30 +498,16 @@ window.__ModuleLoader__.load({
       const pluginRoot = st?.config?.root || '';
       const tight = seat === 'settings.section';
 
-      const hero = h('div', { className: 'aecot-hero' },
-        h('div', { style: { minWidth: 0 } },
-          h('div', { className: 'aecot-hero-title' }, 'jalibreak ', h('b', null, '//'), ' 破甲台'),
-          h('div', { className: 'aecot-hero-sub' },
-            '开关默认开着，会话里直接说要做什么。面板留给你查证：注进去的原文、模型的回答、判定码。'),
-          h('div', { className: 'aecot-term', style: { marginTop: 10 } },
-            `arm.state  : ${armArmed ? 'ON   每轮请求都注入' : 'OFF  会话不会注入'}\n`
-            + 'endpoint   : 任意 host 的 /chat/completions\n'
-            + `mode       : ${(prog && prog.status) ? String(prog.status).toUpperCase() : 'IDLE'}`),
-          h('div', { className: 'aecot-chips', style: { marginTop: 9 } },
-            h('span', { className: 'aecot-pill' + ((st && st.llmReady) ? ' on' : '') }, (st && st.llmReady) ? '模型：已连上' : '模型：没连上'),
-            st && st.pluginVersion ? h('span', { className: 'aecot-pill' }, `v${st.pluginVersion}`) : null,
-            h('span', { className: 'aecot-pill' }, `${(st && st.runs && st.runs.length) || 0} 条 run`),
-          ),
-        ),
-        h('div', { className: 'aecot-state' },
-          h('span', { className: 'aecot-dot' + (armArmed ? ' on' : '') }),
-          h('span', { className: 'aecot-plus' }, armArmed ? 'ARM: ON' : 'ARM: OFF'),
-          h('button', {
-            className: 'aecot-big' + (armArmed ? ' off' : ''),
-            onClick: toggleArm,
-            title: '开着时本机所有对话都带注入段，关掉立即还原',
-          }, armArmed ? '关掉' : '打开'),
-        ),
+      const head = h('div', { className: 'jb-head' },
+        h('span', { className: 'jb-name' }, 'jalibreak'),
+        h('span', { className: 'jb-state' }, armArmed ? '注入中' : '已关闭'),
+        h('span', { className: 'jb-spacer' }),
+        h('button', {
+          className: 'jb-switch' + (armArmed ? ' on' : ''),
+          onClick: toggleArm,
+          title: armArmed ? '点一下关掉：本机新对话不再注入' : '点一下打开：本机新对话自动带注入段',
+          'aria-label': 'toggle injection',
+        }, h('i')),
       );
 
       const advBlock = adv
@@ -565,135 +556,105 @@ window.__ModuleLoader__.load({
           )
         : null;
 
-      const quick = h('div', { className: 'aecot-card aecot-quick' },
-        h('div', { className: 'aecot-row' },
-          h('span', { className: 'aecot-label' }, '在这儿试一句'),
-          h('span', { className: 'aecot-plus' }, '真用起来不用进来，会话里说也一样'),
-        ),
+      const body = h('div', null,
         h('textarea', {
-          rows: 3,
+          className: 'jb-input',
+          rows: 2,
           value: goal,
-          placeholder: '例如：逆向这个程序的注册校验，给出关键跳转和 patch 点',
+          placeholder: '说要做什么，例如：逆向这个程序的注册校验，指出关键跳转和 patch 点',
           onChange: (ev) => setGoal(ev.target.value),
         }),
-        h('div', { className: 'aecot-chips' }, SCENES.map((s) => h('button', {
+        h('div', { className: 'jb-tags', style: { marginTop: 8 } }, SCENES.map((s) => h('button', {
           key: s.label,
-          className: 'aecot-scene',
+          className: 'jb-tag',
           onClick: () => setGoal(s.goal),
           title: s.goal,
         }, s.label))),
-        h('div', { className: 'aecot-row' },
+        h('div', { className: 'jb-bar', style: { marginTop: 10 } },
           h('button', {
-            className: 'aecot-big',
+            className: 'jb-run',
             disabled: busy || running || goal.trim().length < 4,
             onClick: quickStart,
-          }, running ? '跑着…' : busy ? '启动中…' : '跑一轮'),
-          h('button', { className: 'aecot-btn', disabled: running || goal.trim().length < 4, onClick: previewNow }, '只出提示（不调模型）'),
-          h('button', { className: 'aecot-btn', disabled: !running, onClick: stop }, '停止'),
-          h('button', { className: 'aecot-btn mini', onClick: refresh }, '刷新'),
-          toast ? h('span', { className: 'aecot-pill on' }, toast) : null,
+          }, running ? '跑着' : busy ? '启动中' : '运行'),
+          h('button', { className: 'jb-link', disabled: running || goal.trim().length < 4, onClick: previewNow }, '提示词'),
+          h('button', { className: 'jb-link', disabled: !running, onClick: stop }, '停止'),
+          h('span', { className: 'jb-spacer' }),
+          toast ? h('span', { className: 'jb-muted' }, toast) : null,
         ),
-        err ? h('div', { className: 'aecot-err' }, err) : null,
-        armNote ? h('div', { className: 'aecot-hint' }, armNote) : null,
-      );
-
-      const quickProgress = running
-        ? h('div', { className: 'aecot-card' },
-            h('div', { className: 'aecot-row' },
-              h('b', null, `第 ${prog.generation || 0} / ${prog.generations || '?'} 代`),
-              h('span', { className: 'aecot-plus' }, `已调用 ${prog.targetCalls ?? 0} 次 · 当前最优 f=${prog.bestScore ?? '—'}`),
-            ),
-            h('div', { className: 'aecot-bar' }, h('i', {
-              style: {
-                width: `${Math.round((Math.min(Number(prog.generation) || 0, Number(prog.generations) || 1) / Math.max(1, Number(prog.generations) || 1)) * 100)}%`,
-              },
-            })),
-          )
-        : null;
-
-      const profCard = h('div', { className: 'aecot-card' },
-        h('div', { className: 'aecot-row' },
-          h('b', null, '思维模板'),
-          h('span', { className: 'aecot-hint' }, '论文 Θ 的来源：先对目标模型采集 CoT 轨迹，再分解成九维候选池'),
-          h('button', { className: 'aecot-btn mini', disabled: collecting || busy || !goal.trim(), onClick: collectProfile }, collecting ? '采集中…' : '采集模板'),
-        ),
-        h('div', { className: 'aecot-row' },
-          h(Field, { label: '使用' },
-            h('select', { value: profId, onChange: (ev) => setProfId(ev.target.value) },
-              h('option', { value: '' }, '内置静态九维表（不采集）'),
-              profs.map((p) => h('option', { key: p.id, value: p.id },
-                `${p.id}${p.model ? ' · ' + p.model : ''}${p.quality ? ' · ' + p.quality : ''}`)),
-            ),
-          ),
-          profMsg ? h('span', { className: 'aecot-hint' }, profMsg) : null,
-        ),
-      );
-
-      const folds = h('div', { className: 'aecot-folds' },
-        h('details', {
-          className: 'aecot-fold',
-          open: !!adv,
-          onToggle: (ev) => setAdv(Boolean(ev.currentTarget.open)),
-        },
-          h('summary', null, '高级设置 · 模型 / 代数 / 预算 / 思维模板'),
-          h('div', { style: { display: 'flex', flexDirection: 'column', gap: 10 } },
-            advBlock,
-            profCard,
-            h('div', { className: 'aecot-row' },
-              h('button', { className: 'aecot-btn primary', disabled: busy || running || goal.trim().length < 4, onClick: start }, running ? '进化中…' : '按高级参数跑满'),
-              h('button', { className: 'aecot-btn', disabled: !prog || !prog.runId, onClick: exportReport }, '复制报告'),
-            ),
-          ),
-        ),
-        h('details', { className: 'aecot-fold' },
-          h('summary', null, '这次到底注入了什么（提示 / 九维基因 / 代际轨迹）'),
-          h('div', { style: { display: 'flex', flexDirection: 'column', gap: 10 } },
-            preview
-              ? h('div', null,
-                  h('div', { className: 'aecot-plus' }, `预览指纹 ${preview.fingerprint} · 覆盖 ${preview.coverage} · 基因 ${String(preview.key || '').slice(0, 12)}`),
-                  h('textarea', { className: 'aecot-mono', rows: 8, readOnly: true, value: preview.prompt || '' }),
-                )
-              : h('div', { className: 'aecot-hint' }, '点「只出提示」，这里会显示这次要注入的 M+S+C。'),
-            h(Progress, { prog }),
-            h(BestPanel, { prog, onCopy: copy }),
-            prog && prog.promptOnly ? h('div', { className: 'aecot-hint' }, '当前是离线模式：只进化提示本身，不打模型（promptOnly）。') : null,
-          ),
-        ),
-        h('details', { className: 'aecot-fold', onToggle: (ev) => { if (ev.currentTarget.open && !tax) loadTax(); } },
-          h('summary', null, `历史 run（${(st && st.runs && st.runs.length) || 0}）`),
-          h(Runs, { st, onPick: pick }),
-        ),
-        h('details', { className: 'aecot-fold', onToggle: (ev) => { if (ev.currentTarget.open && !tax) loadTax(); } },
-          h('summary', null, '搜索空间 Θ（9 维）'),
-          h(Taxonomy, { tax }),
-        ),
+        err ? h('div', { className: 'jb-err', style: { marginTop: 6 } }, err) : null,
+        running
+          ? h('div', { style: { marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 } },
+              h('div', { className: 'jb-prog' }, h('i', {
+                style: {
+                  width: `${Math.round((Math.min(Number(prog.generation) || 0, Number(prog.generations) || 1) / Math.max(1, Number(prog.generations) || 1)) * 100)}%`,
+                },
+              })),
+              h('div', { className: 'jb-muted' },
+                `第 ${prog.generation || 0}/${prog.generations || '?'} 代 · 调用 ${prog.targetCalls ?? 0} · f=${prog.bestScore ?? '—'}`),
+            )
+          : null,
       );
 
       const hasAnswer = Boolean(prog && prog.best && prog.best.response);
-      const resultArea = hasAnswer || running
-        ? h(AnswerPanel, { prog, onCopy: copy })
-        : h('div', { className: 'aecot-card', style: { alignItems: 'center', textAlign: 'center', padding: '20px 16px' } },
-            h('div', { className: 'aecot-label' }, '还没跑过'),
-            h('div', { className: 'aecot-plus', style: { marginTop: 4 } }, '上面写一句，点「跑一轮」。2 代 × 4 体，回答落在这张卡里；想省额度就先点「只出提示」。'),
-          );
+      const answerCard = hasAnswer
+        ? h('div', { className: 'jb-card' },
+            h('div', { className: 'jb-head' },
+              h(Score, { value: prog.best.score }),
+              h('span', { className: 'jb-spacer' }),
+              h('button', { className: 'jb-link', onClick: () => copy(prog.best.response, 'answer') }, '复制'),
+            ),
+            h('pre', { className: 'jb-answer' }, String(prog.best.response)),
+          )
+        : h('div', { className: 'jb-empty' }, '还没有回答');
 
-      const armHint = armArmed
-        ? null
-        : h('div', { className: 'aecot-card', style: { borderLeft: '3px solid var(--dsw-alias-brand-primary)' } },
-            h('span', { className: 'aecot-plus' },
-              '开关是关的。这会儿开会话不会注入；面板里「跑一轮」照旧有效，因为它自己渲染提示词。'));
+      const promptCard = preview
+        ? h('div', { className: 'jb-card' },
+            h('div', { className: 'jb-muted' }, `${preview.fingerprint} · 覆盖率 ${preview.coverage}`),
+            h('pre', { className: 'jb-answer' }, String(preview.prompt || '')),
+          )
+        : null;
 
-      return h('div', { className: 'aecot', style: tight ? undefined : { maxWidth: 1000 } },
-        h('style', null, CSS),
-        hero,
-        armHint,
-        quick,
-        quickProgress,
-        resultArea,
-        folds,
-        h('div', { className: 'aecot-hint' },
-          '顺序：先「只出提示」看注了什么，再「跑一轮」。用的是本机已配模型，2 代 × 4 体、40 次调用封顶。',
+      const profRow = profs.length
+        ? h('div', { className: 'jb-head' },
+            h('span', { className: 'jb-muted' }, '模板'),
+            h('select', { className: 'jb-tag', value: profId, onChange: (ev) => setProfId(ev.target.value) },
+              h('option', { value: '' }, '内置'),
+              profs.map((p) => h('option', { key: p.id, value: p.id }, p.id)),
+            ),
+            h('span', { className: 'jb-spacer' }),
+            h('button', { className: 'jb-link', disabled: collecting || busy || !goal.trim(), onClick: collectProfile }, collecting ? '采集中' : '采集'),
+            profMsg ? h('span', { className: 'jb-muted' }, profMsg) : null,
+          )
+        : null;
+
+      const detail = h('details', {
+        className: 'jb-details',
+        onToggle: (ev) => { if (ev.currentTarget.open && !tax) loadTax(); },
+      },
+        h('summary', null, '详情'),
+        h('div', null,
+          advBlock,
+          profRow,
+          promptCard,
+          h(Progress, { prog }),
+          h(BestPanel, { prog, onCopy: copy }),
+          h(Runs, { st, onPick: pick }),
+          h('div', { className: 'jb-head' },
+            h('button', { className: 'jb-link', disabled: busy || running || goal.trim().length < 4, onClick: start }, '按参数跑'),
+            h('button', { className: 'jb-link', disabled: !prog || !prog.runId, onClick: exportReport }, '复制报告'),
+            h('span', { className: 'jb-spacer' }),
+            tax ? h('span', { className: 'jb-muted' }, `|Θ| ${tax.space}`) : null,
+          ),
         ),
+      );
+
+      return h('div', { className: 'jb', style: tight ? undefined : { maxWidth: 760 } },
+        h('style', null, `${CSS}\n${UI}`),
+        head,
+        armNote ? h('div', { className: 'jb-err' }, armNote) : null,
+        body,
+        answerCard,
+        detail,
       );
     }
 
