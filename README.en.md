@@ -50,9 +50,19 @@ No host patches, no `prompt-inject.md`. It rewrites messages **at the request bo
 
 ## Quick start
 
+One line, straight from GitHub:
+
 ```bash
-git clone https://github.com/xqpsec/dsh-jalibreak.git
+dsh plugin --profile web add github:xqpsec/dsh-jalibreak
 ```
+
+Once the npm package is published, the short form works too:
+
+```bash
+dsh plugin --profile web add dsh-jalibreak
+```
+
+From a local clone:
 
 ```text
 plugin_manager action=install_bundle target=/path/to/dsh-jalibreak

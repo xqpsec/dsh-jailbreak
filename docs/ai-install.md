@@ -58,7 +58,13 @@ cd <PLUGIN> && node bin/aecot.js doctor
 
 预期：`✓ Node` `✓ 插件文件` `✓ 破甲开关` `✓ 注入端点` `✓ 阀门`，`! 注入记录：还没有看到任何一次注入`（因为还没装进 DSH，也没有对话流量）。
 
-### 第 2 步：装进 DSH（两条路，先用 A）
+### 第 2 步：装进 DSH（三条路，先试 0）
+
+**0. 一行装**（有 `dsh` CLI 时最快）：
+
+```bash
+dsh plugin --profile web add github:xqpsec/dsh-jalibreak
+```
 
 **A. 插件管理器（首选）** —— 在 DSH 的对话里执行：
 

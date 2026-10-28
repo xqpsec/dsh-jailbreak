@@ -105,11 +105,19 @@
 
 ### 1. 装进 DSH
 
+**一行装**（直接从 GitHub 装源码，不需要先 clone）：
+
 ```bash
-git clone https://github.com/xqpsec/dsh-jalibreak.git
+dsh plugin --profile web add github:xqpsec/dsh-jalibreak
 ```
 
-然后在 DSH 里用插件管理器装本地 bundle：
+npm 包发布后同一行可以写短：
+
+```bash
+dsh plugin --profile web add dsh-jalibreak
+```
+
+想自己拿着源码改，就 clone 下来手动装：
 
 ```text
 plugin_manager action=install_bundle target=C:\path\to\dsh-jalibreak
@@ -118,6 +126,19 @@ plugin_manager action=install_bundle target=C:\path\to\dsh-jalibreak
 > **pnpm 被 git 依赖卡住时的兜底**（很常见）：在 profile 的 `package.json` 里加一条 `"dsh-jalibreak": "link:C:\\path\\to\\dsh-jalibreak"`，并在 `dsh.profile.bundles` 里加上 `dsh-jalibreak`，重启 `dsh web`。
 
 > **装完就能用。** 开关默认开着，`~/.aecot/arm.json` 里是 `{"armed":true}`。你在 DSH 里新开一个对话直接提要求，请求出门前已经带上注入段了。面板和 CLI 都不是使用前提，只是用来看「注了什么」和「答了什么」。想确认真的在注入，跑 `node bin/aecot.js doctor`，`live` 那一行会告诉你注入过几次。
+
+**安装信息（给审计和插件市场看的那种）**
+
+| 项 | 值 |
+| --- | --- |
+| profile | `web` |
+| 目标 DSH 版本 | `0.2.1-rc.2`（`package.json` → `dshTarget`） |
+| 运行时 | Node ≥ 20，零第三方依赖 |
+| 许可 | 主仓 AGPL-3.0-only；阀门三件套 `lib/gate.js` / `gate.json` / `scope.txt` 单独 MIT |
+| 写盘范围 | 只写 `~/.aecot/`：`arm.json`、`runs/`、`live-requests.jsonl`、`gate-audit.jsonl` |
+| 宿主源码 | 一个字节都不改，靠 `cordis.patch.yml` 挂载 + 注册 `webServer` 路由 |
+| 出网行为 | 只改写你本来就要发的那条 `/chat/completions` 请求体，不额外发请求 |
+| 分类 | Tools & Capabilities |
 
 ### 2. 验证装上了
 
@@ -486,10 +507,44 @@ dsh-jalibreak/
 
 `package.json` 里是 `"license": "AGPL-3.0-only"`，`lib/gate.js` 头部有 `SPDX-License-Identifier: MIT` 覆盖声明——**代码里就能看出边界，不用猜**。
 
+### base 免费，高级版卖什么
 
+| 能力 | base | 高级版 |
+| --- | --- | --- |
+| 请求边界注入 + 阀门 + 审计 | ✅ | ✅ |
+| 9 维 AE-CoT 进化 + 三种判分 | ✅ | ✅ |
+| 面板 / REST API / CLI / 6 工具 | ✅ | ✅ |
+| 20 目标基准 + 复现脚本 | ✅ | ✅ |
+| 授权范围管理（engagement / ROE / scope 模板继承） | — | ✅ |
+| 多目标批处理、排队、定时复测 | — | ✅ |
+| 证据链导出（基线 / 差分 / marker 三件套） | — | ✅ |
+| 团队多席位 + 操作审计 | — | ✅ |
+| 外部工具链对接（扫描器 / 隧道 / 会话） | — | ✅ |
+| 类别专项轨迹库 + 优先更新 | — | ✅ |
 
+高级版**只卖能力，不卖"更狠的提示词"**——那东西卖出去第二天就被转载完了，也不值得你掏钱。说明与询价在频道：**<https://t.me/jalibreak_llm>**
 
+### 为什么不是 MIT
 
+MIT 对引流好看，对项目是自杀：任何人可以 fork → 删掉阀门 → 改名 → 塞进闭源包里卖，连署名都不用。AGPL 至少让「拿它做闭源生意」这条路必须先来谈授权。
+
+### 为什么不是「Apache-2.0 + 一句不许商用」
+
+那是自相矛盾：Apache-2.0 §2 明确授予再分发与再许可，附加条款想收回它，等于许可证自打脸。被授权人真出事时可以直接引原文主张权利。**要有商用限制，就用一个正经的 copyleft，把商业授权单独签。**
+
+### 为什么不是 BUSL / PolyForm
+
+不是 OSI 认可的开源许可，GitHub 侧标识落到 "Other"，`开源` 两个字就站不住，搜索权重和信任度都掉；中文社区还会先拿「假开源」打你。留作备选——哪天付费版走企业直销、需要「生产使用必须买」的硬杠杆再切。切换步骤写在 [docs/license.md](docs/license.md)。
+
+<details>
+<summary>一句话版</summary>
+
+base 版 AGPL-3.0：自己用、研究用、授权靶场用，免费。拿它做闭源生意，买商业授权。
+阀门是 MIT 的，谁都能抄——目标范围校验该是默认配置，不该是收费功能。
+
+</details>
+
+---
 
 ## 🗺 路线图
 
@@ -517,6 +572,7 @@ dsh-jalibreak/
 - 论文：**arXiv:2605.24497v1** —— 式 (1) `P=M+S+C`、式 (6) 九维 Θ、式 (11)–(14) 精英/交叉/变异/早停
 - 实现映射：`lib/render.js`（`buildPrompt` / `renderCot` / `templateRewrite` / `amplifyPrompt`）· `lib/engine.js`（`evolve` / `fragmentCrossover` / `mutate` / `reEvaluateDeterministic`）· `lib/taxonomy.js` · `lib/judge.js`（`RUBRIC` / `judgeWithLlm` / `heuristicJudge`）
 - 感谢 DeepSeek Harness 提供的插件槽位与 `ctx.llm` 抽象
+- 感谢同类项目把「破甲插件」这件事推到台面上——**分歧不在要不要做强，而在要不要留阀门、要不要给数字**
 
 ---
 

@@ -38,6 +38,7 @@
   "engines": {
     "node": ">=20"
   },
+  "dshTarget": "0.2.1-rc.2",
   "main": "./index.js",
   "exports": {
     ".": "./index.js",

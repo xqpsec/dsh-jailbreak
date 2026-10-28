@@ -78,11 +78,13 @@
   </table>
 
   <h2>60 秒装上</h2>
-<pre>git clone https://github.com/xqpsec/dsh-jalibreak.git</pre>
-<pre>plugin_manager action=install_bundle target=/path/to/dsh-jalibreak
+<pre>dsh plugin --profile web add github:xqpsec/dsh-jalibreak
+# 装完开关就是开的，回 DSH 直接提要求
 # 面板：设置页「破甲台 · jalibreak」/ 侧栏 / 主区
-# CLI：node bin/aecot.js gate       ← 先看阀门判定
-# 自测：node eval/run-baseline.mjs --variant hcot-dual --dry-run</pre>
+# 自测：node bin/aecot.js doctor</pre>
+<pre># 想改源码就 clone 后手动装
+git clone https://github.com/xqpsec/dsh-jalibreak.git
+plugin_manager action=install_bundle target=/path/to/dsh-jalibreak</pre>
 
   <h2>装完就能用，不用打开面板</h2>
   <p>生效点在请求边界：开关开着，你在 DSH 里<strong>直接开新对话提要求</strong>就带框架——不加前缀、不换模型、不花额外 key。面板只干一件事：让你亲眼看见「注了什么、模型答了什么」。</p>
