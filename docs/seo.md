@@ -108,3 +108,40 @@ grep -c 'jalibreak' README.md  # 品牌词密度，建议 15–40 次之间
 - [ ] topics 含 `jalibreak` 且 ≤20 个
 - [ ] Release 正文含关键词 + 群/频道
 - [ ] 每个外发帖都带裸链
+
+## 中文检索（2026-10-28 加）
+
+中文用户搜的是「破甲」「越狱」，不是 `jailbreak`。关键词按这个顺序铺，整份文档统一，别自造同义词：
+
+**词根梯度**（出现频次从高到低）
+
+1. `dsh 破甲` / `DSH 破甲插件` —— 主词，仓库 description 与 README 第一屏都必须有原样字符串
+2. `DeepSeek Harness 破甲` / `DeepSeek Harness 破甲插件` —— 长尾主词
+3. `破甲提示词` —— 竞品 `prompt-inject.md` 的搜索词，搜它的人是同类需求
+4. `dsh 越狱` / `DeepSeek 越狱插件` —— 低竞争（GitHub 仅 6 个仓库命中），容易第一屏
+5. `降低拒绝率` / `免拒` / `拒答率太高` —— 需求词，不是技术词
+6. `逆向不拒绝` / `破解 不报错` / `去混淆` —— 场景词
+7. `免杀` / `绕过 AMSI` —— 高意图词，配 before-after 实测页
+8. `dsh-purge 替代` / `破甲插件对比` —— 截流竞品搜索
+
+**落点**
+
+| 位置 | 写什么 |
+| --- | --- |
+| GitHub About / description | 主词开头：`dsh 破甲 · DSH 破甲插件 · DeepSeek Harness 破甲/越狱（jalibreak）…`，≤200 字符 |
+| README 第 19 行（切换器下） | 一行 `**中文检索**` 词串，含 6 个主词 |
+| README `## 🔎 中文检索对照` | 七行「你可能在搜 → 对应什么」表，把用户原话写进表格 |
+| topics | 只能英文，但 `jailbreak` / `dsh-plugin` / `refusal-benchmark` 已有；中文靠 description + README |
+| Pages `docs/index.html` | `<title>` 与 `<h1>` 必须含「dsh 破甲」原串；加 JSON-LD `alternateName` 中文别名；`robots.txt` + `sitemap.xml` |
+| Google/Bing | 只有 Pages 页面能被收录，GitHub 自己不给搜索引擎喂 README 中文权重 |
+
+**排名自查**
+
+```bash
+# 我们在「dsh 破甲」结果里的位置（0 = 没进前 100）
+gh api "search/repositories?q=dsh%20%E7%A0%B4%E7%94%B2&per_page=100" --jq '.items | to_entries[] | select(.value.full_name=="xqpsec/dsh-jalibreak") | .key + 1'
+# 总量与头部对手
+gh api "search/repositories?q=dsh%20%E7%A0%B4%E7%94%B2&sort=stars&per_page=5" --jq '.total_count, (.items[] | "\(.stargazers_count) \(.full_name)")'
+```
+
+**已知事实**：2026-10-28 实测 `dsh 破甲` 共 89 个仓库，我们排 86（倒数第 4）。GitHub 仓库搜索的排序权重里 star 占比最大，词密度只能让我们在 0 star 的同类里往前挤；真正翻盘靠 star（发帖）。词密度做完后不要再堆词，堆到重复三遍以上反而被判低质。

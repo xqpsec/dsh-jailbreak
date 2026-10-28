@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://xqpsec.github.io/dsh-jalibreak/sitemap.xml

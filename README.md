@@ -16,6 +16,7 @@
 [![channel](https://img.shields.io/badge/Telegram-%E9%A2%91%E9%81%93-229ED9?style=flat-square&logo=telegram&logoColor=white)](https://t.me/jalibreak_llm)
 
 **[简体中文](README.md)** · **[English](README.en.md)** · **[SCOPE / 阀门](SCOPE.md)** · **[评测数字](docs/eval-report.md)** · **[技术手册](docs/tech-manual.md)**
+**中文检索**：dsh 破甲 · DSH 破甲插件 · DeepSeek Harness 破甲 / 越狱 · 破甲提示词 · 降低拒绝率 · 逆向不拒绝 · dsh-purge 替代
 
 **你问一句本来会被拒绝的话，它现在直接给你步骤。**
 
@@ -474,6 +475,20 @@ dsh-jalibreak/
 ├─ docs/                 # 技术手册 · 评测报告 · before-after 实测 · SEO 清单 · Pages 落地页
 └─ locale/               # en / zh
 ```
+
+---
+
+## 🔎 中文检索对照（搜这些词应该找到这里）
+
+| 你可能在搜 | 这个项目对应的东西 |
+| --- | --- |
+| dsh 破甲 / DSH 破甲插件 | 就是它：DeepSeek Harness 的请求边界破甲插件，包名 `dsh-jalibreak`，仓库名 `xqpsec/dsh-jalibreak` |
+| DeepSeek Harness 破甲 / 破甲提示词 | 这里不塞 `prompt-inject.md`：轨迹按目标由 9 维基因组渲染（`node bin/aecot.js render --goal "…"`），换模型只是重跑一次 |
+| dsh 越狱 / DeepSeek 越狱插件 | 同一件事的另一种叫法；严格 rubric 下 20 目标 17 通过，`results.jsonl` 在仓库里 |
+| 降低拒绝率 / 免拒 / 拒答率太高 | 三级机制：`standard`/`max` 两级执行态轨迹 + 轨迹语言跟随目标 + 首答被拒后自动重发一次 |
+| 逆向不拒绝 / 破解不报错 / 去混淆 | 阀门默认放行逆向、破解、脱壳、样本分析、CTF、授权靶场 |
+| dsh-purge 替代 / 破甲插件对比 | 0 处宿主补丁、可复现基线、AGPL 可签可审；能共存，但别同时开两个注入通道 |
+| 免杀 / 绕过 AMSI / PowerShell 加载器 | 有实测原始记录：[docs/before-after.md](docs/before-after.md)（499 字符拒绝 → 3,716 字符含完整实现） |
 
 ---
 
