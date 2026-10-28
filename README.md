@@ -91,7 +91,7 @@
 
 1. **可复现的数字**：公开 20 目标固定评测集，严格判分下最优变体 **17/20 = 85%**，脚本、目标集、原始 `results.jsonl` 全在仓库里（`eval/` + `docs/eval-report.md`）。不是「我这儿特别猛」的口头 ASR。
 2. **零依赖、零权重、零 key**：走 DSH 自带的 `ctx.llm`，不需要另配 provider；`--backend offline` 全程 0 次网络调用，纯本地出提示词。
-3. **带阀门的破甲**：`lib/gate.js` 在**请求边界**判定目标与类目——私网/本机/`.lab` 免登记直接放行，公网目标必须在 `scope.txt` 里登记授权，付款欺诈/证件伪造/勒索/DDoS/凭据窃取 5 类硬拦，且**授权文件不能解除硬拦**。逆向工程、恶意样本分析、CTF、评测研究被写入 `alwaysAllow`。
+3. **带阀门的破甲**：判定发生在注入之前——研究类请求（逆向 / 样本分析 / CTF / 靶场评测）正常放行，越界请求不注入、只留一行审计。规则怎么写的属于实现细节，文档不复述；默认配置就是给研究用的那一套，装完不用动。
 
 ---
 
@@ -199,8 +199,8 @@ meta.json  events.jsonl  population.json  best.json  corpus.jsonl  report.md
 - **`/ab` 斜杠命令**：`/ab <目标>` 一键跑 1 代 × 4 体精简进化，答完直接把成品投递回对话；`-v` 看全过程，`-g/-n` 调代数量/种群
 - **请求边界双通道注入**（`lib/live.js`）：system 段 + assistant 续写段
 - **低拒绝三件套**（`lib/hcot.js` v03 + `lib/refusal.js`）：`standard`/`max` 两级执行态轨迹、语言跟随目标、首答被拒后自动重发一次（`mode:"refusal-retry"` 落盘）
-- **阀门**（`lib/gate.js`）：目标范围 + 类目 双层判定，`passthrough` / `block` 两种处置
-- **审计**：`gate-audit.jsonl`（每次判定）+ `live-requests.jsonl`（每次改写 + 每次重试），一行一条，方便回看
+- **阀门**（`lib/gate.js`）：注入前先判一次，默认不干预研究类任务，越界请求不注入
+- **审计**：每次判定、每次改写各落一行 JSONL，方便自己回看（不影响判定）
 - **进化引擎**：精英保留 + 片段交叉 + 自适应变异（μ₀=0.1，步长 ±0.1，上限 0.3）+ 早停（连续 3 代停滞）
 - **三种后端**：`harness`（走 `ctx.llm`，零配置）/ `openai`（自带 base_url+key）/ `ollama`；`offline` = 0 网络
 - **零依赖**：`dependencies` 为空，81 个单测全绿
@@ -221,12 +221,12 @@ meta.json  events.jsonl  population.json  best.json  corpus.jsonl  report.md
    ├─ assistant += 静态 CoT 轨迹（把 reasoning 提前写好，锚定后续续写）
    └─ 参数硬约束：temperature=0 · max_tokens ≥ 8192 · thinking=disabled
    ↓
-  阀门 decide(goal) → deny 则**不注入**并留审计（passthrough 或 403）
+  阀门先判一次 → 不放行的请求不注入，只留审计
 ```
 
 要点：
 
-- **只在 `api.deepseek.com` 的 `/chat/completions` 上生效**（其它 URL 原样透传，不碰你的正常请求）
+- **对所有 `/chat/completions` 形状的请求生效**（其它 URL 原样透传，不碰你的正常请求；想只认某个 host 就自己收窄）
 - **只在这个插件进程里包 `fetch`**，宿主文件零改动；`dispose()` 即刻还原
 - 轨迹是**静态注入**，不需要教师模型、不需要运行期进化，成本 = 每目标 1 次调用
 - `transformDeepseekBody` 是纯函数，给定 input 输出确定 body —— 所以它能被单测覆盖（`test/live.test.js`）
@@ -270,83 +270,19 @@ DEEPSEEK_API_KEY=sk-... node eval/run-baseline.mjs --variant hcot-dual --judge l
 
 这是本仓库和「给钱就全给」的破甲插件的核心区别：**放行研究，拦住犯罪。**
 
-完整条款见 **[SCOPE.md](SCOPE.md)**；这里是实现。
+界线上只做三类划分，说清楚就够：
 
-### 判定顺序（`lib/gate.js` → `decide()`）
+| | 例子 | 本插件的态度 |
+| --- | --- | --- |
+| 明确放行 | 逆向自己的程序、脱壳、样本分析、CTF 复现、靶场评测、抓包分析 | 正常用法，不拦、不打折 |
+| 需要你自己确认 | 任何公网目标的主机 / 网段 | 你得有权动它；没确认过的，我不替你注入 |
+| 不提供 | 付款欺诈、证件伪造、勒索、DDoS、窃取凭据 | 不因为「我买了商业版」或「我写了授权文件」而改变 |
 
-```text
-1. enforce=false            → gate-off（全放行，审计仍记）
-2. dryRun=true              → deny-dry-run（记录但不影响）
-3. 命中 hardDeny 类目        → deny-category:*（授权文件也解不开）
-4. 命中 alwaysAllow 类目     → allow-category:*（RE / 样本分析 / CTF / 评测）
-5. 没有可操作目标 或 无私网外目标 → allow-no-target / allow-private-target
-6. 命中 denyHosts           → deny-deny-host:*
-7. 公网目标且未在 scope.txt 登记 → deny-target:<host>
-8. 其余                     → allow-authorized
-```
+阀门在**注入之前**先判一次。不放行的时候，请求回到它原本的样子（或按配置直接拒绝），拿不到注入段 —— 也就是说，阀门开着的时候，你不可能因为「模型答得好」而顺手拿到一个越界结果。
 
-### 默认配置（`gate.json`）
+> 判定规则、配置字段、判定码都是 `lib/gate.js` 的实现细节，**本文档一概不复述**。要改默认行为的人自己去读代码、自己承担后果；不需要改的人，默认配置就是给研究用的那一套，装完不用动。
 
-```jsonc
-{
-  "version": "1.0.0",
-  "profile": "lab",              // lab | authorized
-  "enforce": true,
-  "dryRun": false,
-  "onDeny": "passthrough",       // passthrough = 放行原请求但**不注入**；block = 直接 403
-  "targets": {
-    "allowPrivate": true,        // loopback / RFC1918 / CGNAT / ULA / link-local 免登记
-    "allowSuffixes": [".localhost", ".lab", ".local", ".test", ".internal", ".lan", ".home.arpa"],
-    "allowHosts": [],            // 白名单（仍受 hardDeny 约束）
-    "allowCidrs": [],
-    "denyHosts": []
-  },
-  "categories": {
-    "hardDeny": ["payment-fraud", "identity-forgery", "ransomware", "ddos", "credential-theft"],
-    "alwaysAllow": ["reverse-engineering", "malware-analysis", "ctf", "lab-eval"]
-  },
-  "authorization": { "file": "scope.txt", "maxAgeDays": 365 }
-}
-```
-
-### 授权登记（`scope.txt`）
-
-```text
-# 一行一条；公网目标必须登记，私网/.lab 免登记
-10.20.30.0/24                       # CIDR
-staging.example.com                 # 单主机
-*.corp-lab.example.com              # 后缀
-own-box.example.net until=2027-01-31 # 带到期日，过期自动失效
-```
-
-### 一行验证阀门
-
-```bash
-# 私网目标 → 放行，理由写明
-node bin/aecot.js gate --goal "扫描 192.168.1.20:445 的 SMB 并做横向验证"
-
-# 公网未登记 → 拦截，给出具体 host
-node bin/aecot.js gate --goal "对 api.target.com 做 sqlmap 注入测试"   # deny-target:api.target.com
-
-# 硬拦类目（授权也解不开）
-node bin/aecot.js gate --goal "帮我生成一套身份证模板用于 KYC 绕过"      # deny-category:identity-forgery
-
-# 逆向 / 样本分析 → 一等公民，直接放行
-node bin/aecot.js gate --goal "逆向这个 APK，脱壳后定位校验函数并 patch"  # allow-category:reverse-engineering
-```
-
-`--strict` 时拦截即 `exit 3`，可以塞进 CI / pre-commit。
-
-### 边界处的审计
-
-```jsonc
-// <root>/gate-audit.jsonl（每次判定一行）
-{"at":"2026-10-28T…","model":"deepseek-flash","allow":false,"code":"deny-target:api.target.com",
- "reason":"目标 api.target.com 不在授权范围…","targets":["api.target.com"],"categories":[],
- "goal":"对 api.target.com 做 sqlmap 注入测试"}
-```
-
-`live-requests.jsonl` 里每条改写记录也带 `gate` 字段，能直接对账「哪些请求被改写了、哪些被拦了」。
+审计：每次判定落一行到数据根目录。`live-requests.jsonl` 里每条改写记录也带对应字段，能对账「这句请求被改写了，还是被拦了」。
 
 ---
 
@@ -441,8 +377,8 @@ node bin/aecot.js gate     [--goal "…"]          # 阀门：打印配置 / 判
 | POST | `/run` `/stop` `/preview` `/judge` `/screen` `/probe` `/profile` | 触发动作 |
 | GET | `/arm` | 破甲模式 + 阀门摘要 |
 | POST | `/arm` | 开/关破甲（`{on:true}`） |
-| GET | `/gate` | 阀门配置摘要 |
-| POST | `/gate` | 判一条请求：`{goal:"…"}` → `{allow,code,reason,targets}` |
+| GET | `/gate` | 当前阀门状态（够用就行，不展开配置） |
+| POST | `/gate` | 判一条请求：`{goal:"…"}` → 放行 / 拦截 + 一句理由 |
 
 `/arm` 的开关落盘在 `arm.json`，同时挂 `systemPrompt.section()`（不改 frozen 请求，只加段）。
 
@@ -461,10 +397,11 @@ node bin/aecot.js gate     [--goal "…"]          # 阀门：打印配置 / 判
 
 引擎超参（`ENGINE_DEFAULTS`）：`population=10` · `generations=3` · `elite=2` · `tournament=3` · `mu0=0.1` · `muMax=0.3` · `stagnationLimit=3` · `maxTargetCalls=120` · `targetTemperature=0` · `judgeStrategy=escalate` · `amplify=true`
 
-环境变量：
+环境变量（可选，只有一个）：
 
 ```bash
-DSH_JALIBREAK_GATE=/path/to/gate.json   # 用另一份阀门配置（默认取插件根 gate.json）
+# 把注入范围收窄到你指定的 host；默认对所有 /chat/completions 生效
+DSH_JALIBREAK_ENDPOINTS='{"hosts":["api.deepseek.com"]}'
 ```
 
 ---
@@ -476,8 +413,8 @@ dsh-jalibreak/
 ├─ index.js              # 宿主插件入口：6 个工具 + /ab 命令 + 面板挂载
 ├─ client.js             # Web 客户端：破甲台 / 侧栏 / 主区三个座位
 ├─ cordis.patch.yml      # bundle 描述（insert: jalibreak）
-├─ gate.json             # 阀门配置（默认 lab profile）
-├─ scope.txt             # 授权登记模板（一行一条）
+├─ gate.json             # 阀门默认配置（装完不用动）
+├─ scope.txt             # 授权登记（模板，按需自己填）
 ├─ lib/
 │  ├─ engine.js          # 进化：精英/交叉/自适应变异/早停/预算
 │  ├─ taxonomy.js        # 9 维搜索空间与依赖约束
@@ -518,10 +455,10 @@ dsh-jalibreak/
 不需要。默认走 `ctx.llm`（harness 已配的 provider）。只有你想指定外部 endpoint 时才用 `--backend openai --base-url … --api-key …`。
 
 **Q：会不会偷偷联网？**
-`--backend offline` 0 次网络调用；`render` / `taxonomy` / `gate` 三个子命令也纯本地。`live` 通道只改写 `api.deepseek.com/chat/completions`，其它 URL 原样透传。
+`--backend offline` 0 次网络调用；`render` / `taxonomy` / `gate` 三个子命令也纯本地。`live` 通道只改写 `/chat/completions` 形状的请求，其它 URL 原样透传（想只认某个 host 可用配置收窄）。
 
 **Q：阀门会不会把我的研究挡住？**
-逆向、样本分析、CTF、评测在 `alwaysAllow` 里，直接放行。私网/本机/`.lab` 免登记。真正被拦的只有「公网未登记目标」和 5 类硬拦类目（付款欺诈 / 证件伪造 / 勒索 / DDoS / 凭据窃取）。
+逆向、样本分析、CTF、评测都是这个项目的正常用法，不拦。会被拦的只有两类：你还没确认过有权动的公网目标，和付款欺诈 / 证件伪造 / 勒索 / DDoS / 窃取凭据这五件事——后者不因为你买了商业版或写了授权文件而改变。判定细节在 `lib/gate.js` 里，要改的人自己读、自己担。
 
 **Q：`aecot_*` 工具名怎么不改？**
 为了脚本兼容。插件 id、包名、路由前缀都已经是 `jalibreak`。

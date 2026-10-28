@@ -75,7 +75,7 @@ topic:dsh-plugin
 - [ ] 替换 `package.json` 里 `repository` / `homepage` / `bugs` / `author` 的 `xqpsec`
 - [ ] 替换 README.md、README.en.md 里所有 `xqpsec`
 - [ ] `npm test` → 必须仍是 `81 tests / 81 pass / 0 fail`
-- [ ] `node bin/aecot.js gate` → 打印 `profile=lab`、五类 hardDeny
+- [ ] `node bin/aecot.js gate` → 打印当前状态（放行/拦截是两种结果，细节不展开）
 - [ ] `node eval/run-baseline.mjs --variant hcot-dual --dry-run` → 20 goals、0 次网络调用
 - [ ] 建仓库 → push（默认分支 `main`）
 - [ ] 打 tag `v1.0.0`，Release 正文直接粘 `docs/release-notes-v1.0.0.md`
@@ -140,7 +140,7 @@ Most "jailbreak plugins" for agent harnesses patch host bundle files and ship a 
 
 It also carries the paper's evolutionary search (9-dim genome, arXiv:2605.24497) and a reproducible benchmark: 20 fixed goals, DeepSeek-Flash, target & judge at temp=0, pass = judge ≥ 4 → 17/20 (85%) strict; the earlier looser rubric gave 20/20 and that's published too. Negative result included: the paper's pseudo-CoT verbatim scores 0/20.
 
-There's a gate, which is the part I care most about: reverse engineering / malware analysis / CTF / lab eval pass; public targets must be registered in scope.txt; payment fraud, identity forgery, ransomware, DDoS and credential theft are blocked even with an authorization file. Decisions go to gate-audit.jsonl.
+There's a gate, and it is the part I care most about: reverse engineering / malware analysis / CTF / lab eval pass untouched; public targets are your responsibility to authorize; payment fraud, identity forgery, ransomware, DDoS and credential theft are never produced, not even with a commercial license. The rules are implementation detail and are not restated in the docs. Every decision goes to gate-audit.jsonl.
 
 Zero runtime deps, AGPL-3.0-only (gate MIT), 81/81 tests.
 https://github.com/xqpsec/dsh-jalibreak

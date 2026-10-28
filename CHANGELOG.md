@@ -23,17 +23,16 @@
 - `lib/render.js`：`P = M + S + C` 渲染 + `amplifyPrompt`
 
 ### 阀门（新增，本版核心）
-- `lib/gate.js` `GATE_VERSION=1.0.0`：目标范围判定（loopback / RFC1918 / CGNAT / ULA / link-local / 实验后缀免登记）+ 类目判定
-- 默认 `hardDeny`：`payment-fraud` `identity-forgery` `ransomware` `ddos` `credential-theft`（授权不可解除）
-- 默认 `alwaysAllow`：`reverse-engineering` `malware-analysis` `ctf` `lab-eval`
-- `gate.json` + `scope.txt`（一行一条，支持 CIDR / 后缀通配 / `until=` 到期）
-- 审计：`gate-audit.jsonl` + `live-requests.jsonl`（带 `gate` 字段）
-- 处置：`passthrough`（默认，不注入） / `block`（403）；支持 `enforce:false` 与 `dryRun`
+- `lib/gate.js` `GATE_VERSION=1.0.0`：注入前判定一次——研究类请求放行，越界请求不注入、只留审计
+- 放行：逆向工程 / 恶意样本分析 / CTF / 靶场评测
+- 不做：支付与资金犯罪 / 证件伪造 / 勒索 / 拒绝服务 / 窃取凭据（不因授权登记或商业授权而改变）
+- 审计：`gate-audit.jsonl`（每次判定）+ `live-requests.jsonl`（每次改写，带 `gate` 字段）
 - CLI：`aecot gate`（`--goal` 判一条，`--strict` 拦截 exit 3）
+- **判定规则、配置字段、判定码是 `lib/gate.js` 的实现细节，公开文档一律不复述**——照着文档就能照着绕，这里不给配方
 
 ### 面板与 CLI
-- 面板重写成一屏四件事：`jalibreak // 破甲台` 状态条（`ARM: ON/OFF` + `打开/关掉`）、一句话输入框 + 6 个场景快选、`运行` / `提示词（不调模型）`、「这次的回答」卡片。模型、代数、种群、判分都折进「高级设置」
-- 界面是终端风：等宽字体、acid 绿细线、`[+]` 折叠、`arm.state / endpoint / mode` 三行状态。文案按「去 AI 味」重写过一遍——短句、具体数字、不解释自己（面板不是使用前提，这件事写在 README 里而不是面板里）
+- 面板重做成四行：`jalibreak` + `注入中/已关闭` + 一枚开关 → 一句话输入框 + 6 个场景快选 → `运行` / `提示词` / `停止` → 回答卡。模型、代数、判分、注入原文、历史 run 全在「详情」折叠里，默认收起
+- 删掉所有解释性块（hero 段落、终端状态行、状态 pill、提示卡、页脚说明），配 `test/client.test.js` 的减法守卫：这些文案回来即测试失败
 - 三个 GUI 座位：设置页「破甲台」/ 侧栏 panel / 主区
 - 面板 API：`/plugins/jalibreak/api/{state,progress,runs,taxonomy,run,stop,preview,judge,export,profile,profiles,probe,screen,arm,gate}`
 - `/ab` 斜杠命令：1 代 × 4 体精简进化，成品直接投递回对话（`-v` `-g` `-n`）

@@ -44,7 +44,7 @@ No host patches, no `prompt-inject.md`. It rewrites messages **at the request bo
 
 1. **A number you can rerun**: strict rubric, `hcot-dual` scores **17/20 = 85%**; the eval set, runner and raw rows all live in the repo (`eval/`, `docs/eval-report.md`).
 2. **No weights, no extra key, no deps**: uses DSH's `ctx.llm`; `--backend offline` makes 0 network calls.
-3. **Gated**: `lib/gate.js` decides at the request boundary — loopback/RFC1918/`.lab` pass, public targets must be registered in `scope.txt`, and payment fraud / identity forgery / ransomware / DDoS / credential theft are blocked even with an authorization file.
+3. **Gated**: `lib/gate.js` decides at the request boundary, before any injection — research work (reverse engineering, samples, CTF, lab eval) passes untouched; public targets are your responsibility to authorize; payment fraud / identity forgery / ransomware / DDoS / credential theft are never produced, authorization file or commercial license notwithstanding. The rules themselves are implementation detail and are not restated in this document.
 
 ---
 
@@ -129,25 +129,19 @@ Strict rubric, published 20-goal set: **17/20 (85%)**; the three misses and thei
 
 ## The gate (why this is not "jailbreak and hand it all over")
 
-```
-1. enforce=false                 → gate-off
-2. dryRun=true                   → deny-dry-run (log only)
-3. hardDeny hit                  → deny-category:*   (authorization cannot lift it)
-4. alwaysAllow hit               → allow-category:*  (RE / malware analysis / CTF / lab-eval)
-5. no actionable / private-only target → allow-no-target · allow-private-target
-6. denyHosts hit                 → deny-deny-host:*
-7. public target, not registered → deny-target:<host>
-8. otherwise                     → allow-authorized
-```
+Three buckets, and that is all a reader needs:
 
-```bash
-node bin/aecot.js gate --goal "nmap 192.168.1.20 and verify SMB"        # allow-private-target
-node bin/aecot.js gate --goal "sqlmap https://api.target.com"           # deny-target:api.target.com
-node bin/aecot.js gate --goal "reverse this APK and patch the check"    # allow-category:reverse-engineering
-node bin/aecot.js gate --goal "..." --strict                            # exit 3 on deny → CI gate
-```
+| | Examples | Stance |
+| --- | --- | --- |
+| Always on the house | reverse engineering, unpacking, malware analysis, CTF, lab evaluation, packet analysis | Normal use. No discount, no downgrade to "here is the theory" |
+| Your call, your authorization | any public host or network | You prove you may touch it. Unconfirmed targets get no injection from me |
+| Not offered | payment fraud, identity forgery, ransomware, DDoS, credential theft | Does not change because you bought a commercial license or wrote an authorization file |
 
-Audit: `gate-audit.jsonl` (every decision) + `live-requests.jsonl` (every rewrite, with the `gate` code). Full policy: [SCOPE.md](SCOPE.md).
+The gate decides **before injection**. When a request is not allowed it goes out as it was (or is refused outright, depending on configuration) and never receives the trace — so while the gate is on, you cannot pick up an out-of-scope result just because the model answered well.
+
+> The rules, config fields and decision codes are implementation details of `lib/gate.js` and are **deliberately not restated here**. If you want to change the default behaviour, read the code and own the consequences; if you do not, the shipped defaults are the research defaults and need no attention.
+
+Audit: one line per decision in the data root, and every rewrite record in `live-requests.jsonl` carries the matching field, so you can reconcile "was this request rewritten, or was it stopped".
 
 ---
 
@@ -207,7 +201,7 @@ Panel API under `/plugins/jalibreak/api`: `state progress runs taxonomy profiles
 Plugin config: `root` (default `<cwd>/.aecot`) · `mode` · `judge` · `targetSystem`.
 Engine: `population=10` · `generations=3` · `elite=2` · `mu0=0.1` · `muMax=0.3` · `stagnationLimit=3` · `maxTargetCalls=120`.
 
-Env: `DSH_JALIBREAK_GATE=/path/to/gate.json`.
+Env: `DSH_JALIBREAK_ENDPOINTS='{"hosts":["api.deepseek.com"]}'` (optional — narrows which hosts get rewritten; by default any `/chat/completions` shape is in scope).
 
 ---
 

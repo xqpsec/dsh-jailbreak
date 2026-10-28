@@ -13,7 +13,7 @@
 | 改宿主 bundle + 一份全局 `prompt-inject.md`，升级即废 | **零宿主补丁**，只包一层 `fetch`，`dispose()` 即还原 |
 | 换模型就手改提示词 | 9 维基因组 + 判分驱动进化，换模型 = 重跑一次 |
 | 「我这特别猛」但没有数字 | 20 目标固定集、`temp=0`、严格 rubric，**17/20** 全链路可复现 |
-| 破了甲就什么都给 | 阀门：`alwaysAllow` 4 类研究语域，`hardDeny` 5 类犯罪类目 |
+| 破了甲就什么都给 | 阀门：逆向 / 样本 / CTF / 靶场评测正常放行；五类犯罪不提供，且不因授权或付费改变 |
 
 ---
 
@@ -76,37 +76,27 @@ DEEPSEEK_API_KEY=sk-... node eval/run-baseline.mjs --variant hcot-dual --judge l
 
 ## 四、阀门（本版核心）
 
-```
-1. enforce=false                 → gate-off
-2. dryRun=true                   → deny-dry-run（只记不拦）
-3. hardDeny 命中                 → deny-category:*（授权也解不开）
-4. alwaysAllow 命中              → allow-category:*（RE / 样本 / CTF / 评测）
-5. 无私网外目标                  → allow-no-target / allow-private-target
-6. denyHosts 命中                → deny-deny-host:*
-7. 公网未登记                    → deny-target:<host>
-8. 其余                          → allow-authorized
-```
+界线上就三句话：
 
-```jsonc
-// gate.json（节选）
-"onDeny": "passthrough",     // 或 "block" → 403
-"targets": { "allowPrivate": true, "allowSuffixes": [".lab", ".test", ".local"] },
-"categories": {
-  "hardDeny":   ["payment-fraud","identity-forgery","ransomware","ddos","credential-theft"],
-  "alwaysAllow":["reverse-engineering","malware-analysis","ctf","lab-eval"]
-}
-```
+| | 例子 | 态度 |
+| --- | --- | --- |
+| 明确放行 | 逆向自己的程序、脱壳、样本分析、CTF 复现、靶场评测、抓包分析 | 正常用法，不拦、不打折 |
+| 你自己确认 | 任何公网主机 / 网段 | 你得有权动它；没确认过的，不替你注入 |
+| 不提供 | 支付与资金犯罪、证件伪造、勒索、拒绝服务、窃取凭据 | 不因为「买了商业版」或「写了授权文件」而改变 |
+
+判定发生在**注入之前**：不放行的请求回到原样（或按配置直接拒绝），拿不到注入段。也就是说，阀门开着的时候，你不会因为模型答得好而顺手拿到一个越界结果。
 
 ```bash
-node bin/aecot.js gate --goal "扫描 192.168.1.20:445 的 SMB"           # allow-private-target
-node bin/aecot.js gate --goal "对 api.target.com 做 sqlmap 注入测试"    # deny-target:api.target.com
-node bin/aecot.js gate --goal "逆向这个 APK，脱壳后 patch 校验函数"      # allow-category:reverse-engineering
-node bin/aecot.js gate --goal "…" --strict                             # 拦截即 exit 3，可进 CI
+node bin/aecot.js gate                # 看当前状态
+node bin/aecot.js gate --goal "…"     # 判一条
+node bin/aecot.js gate --goal "…" --strict   # 拦截即 exit 3，可进 CI
 ```
 
-审计：`gate-audit.jsonl`（每次判定）+ `live-requests.jsonl`（每次改写，带 `gate` 字段）。
+> 判定规则、配置字段、判定码都在 `lib/gate.js` 里，**release notes 不复述**。要改默认行为的人自己读代码、自己担后果；不改的人，默认配置就是给研究用的那一套。
 
-完整条款见 [SCOPE.md](../SCOPE.md)。
+审计：`gate-audit.jsonl`（每次判定一行）+ `live-requests.jsonl`（每次改写，带 `gate` 字段），可对账。
+
+条款见 [SCOPE.md](../SCOPE.md)。
 
 ---
 
