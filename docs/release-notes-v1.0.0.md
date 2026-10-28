@@ -54,6 +54,24 @@ deny → 不注入（passthrough）或直接 403（block），并写审计
 - 只在本插件进程内包 `fetch`，宿主文件零改动
 - 静态注入：不需要教师模型，每目标 1 次调用
 
+### 低拒绝：装完就能感觉到的部分
+
+拒绝率是这类插件唯一真正可感知的指标，所以它不靠"我这儿特别猛"，靠三个可复查的机制：
+
+1. **两级轨迹** `standard` / `max`：`max` 额外去掉开场白、免责声明、"建议咨询专业人士"与"更安全的替代方案"，并按类目（逆向 / 破解 / 样本分析 / CTF / 渗透 / Web / 凭据 / 提权 / 网络 / 压测）加一行定性；安全类目默认 `max`。
+2. **语言跟随**：目标用中文就用中文轨迹，同语言续写的稳定性明显高于混写。
+3. **只重发一次**：`containsRefusal()` 只扫回答**前 320 字符**（长回答里句中的 "I cannot guarantee" 不会误判），命中则换 `max` 轨迹 + "先给成品"指令重发一次；再拒就把第一次的回答原样返回。
+
+```json
+{"mode":"refusal-retry","signals":["deny-en"],"retrySignals":[],"recovered":true,"level":"max","category":"reverse-engineering"}
+```
+
+写进 `live-requests.jsonl`，每一条都能复核。自测：
+
+```bash
+DEEPSEEK_API_KEY=sk-... node eval/run-baseline.mjs --variant hcot-dual --judge llm
+```
+
 ---
 
 ## 四、阀门（本版核心）
