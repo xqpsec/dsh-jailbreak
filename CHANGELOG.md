@@ -49,8 +49,9 @@
 
 ### 工程
 - 一行安装：`dsh plugin --profile web add github:xqpsec/dsh-jalibreak`（npm 包发布后可用 `add dsh-jalibreak`）；`package.json` 补 `dshTarget: 0.2.1-rc.2`，README 补「安装信息」表（profile / 写盘范围 / 出网行为 / 宿主源码改动 / 分类），对齐 DSH 插件市场的收录要求
-- 测试 94/94 通过（14 个测试文件，含 `test/gate.test.js` 10 个阀门用例、`test/hcot.test.js` 8 个轨迹用例、`test/refusal.test.js` 8 个拒绝识别与重试用例、`test/endpoint.test.js` 5 个端点用例、`test/doctor.test.js` 4 个自检用例、`test/client.test.js` 3 个面板契约用例）
+- 测试 100/100 通过（15 个测试文件，含 `test/gate.test.js` 10 个阀门用例、`test/hcot.test.js` 8 个轨迹用例、`test/refusal.test.js` 8 个拒绝识别与重试用例、`test/endpoint.test.js` 5 个端点用例、`test/doctor.test.js` 4 个自检用例、`test/client.test.js` 3 个面板契约用例）
 - `node bin/aecot.js doctor`：一条命令自检「插件在不在 / 开关开没开 / 端点通不通 / 阀门什么档 / 到底注入过没有」，失败项直接给下一步
+- `docs/share-kit.md` + `docs/share-card.png`：转发包（三条可直接粘贴的文案 + 一张方形卡片图 + 该发给谁 + 只看三个数），把传播成本压到「复制两行字」
 - 零运行时依赖；`--backend offline` 全程 0 次网络调用
 - 许可：主仓 **AGPL-3.0-only** + 阀门三件套（`lib/gate.js` / `gate.json` / `scope.txt`）**MIT** + 闭源商用需商业授权（`LICENSE-COMMERCIAL.md`）+ 署名条款（`NOTICE`）
 

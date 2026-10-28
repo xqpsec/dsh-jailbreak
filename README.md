@@ -7,7 +7,7 @@
 [![version](https://img.shields.io/badge/version-1.0.0-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
-[![tests](https://img.shields.io/badge/tests-94%2F94-22c55e?style=flat-square)](test)
+[![tests](https://img.shields.io/badge/tests-100%2F100-22c55e?style=flat-square)](test)
 [![baseline ASR](https://img.shields.io/badge/strict%20baseline-17%2F20%20%C2%B7%2085%25-8b5cf6?style=flat-square)](docs/eval-report.md)
 [![node](https://img.shields.io/badge/node-%E2%89%A520-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)
 [![dsh](https://img.shields.io/badge/DeepSeek%20Harness-plugin-0ea5e9?style=flat-square)](https://github.com/deepseek-ai)
@@ -244,7 +244,7 @@ meta.json  events.jsonl  population.json  best.json  corpus.jsonl  report.md
 - **审计**：每次判定、每次改写各落一行 JSONL，方便自己回看（不影响判定）
 - **进化引擎**：精英保留 + 片段交叉 + 自适应变异（μ₀=0.1，步长 ±0.1，上限 0.3）+ 早停（连续 3 代停滞）
 - **三种后端**：`harness`（走 `ctx.llm`，零配置）/ `openai`（自带 base_url+key）/ `ollama`；`offline` = 0 网络
-- **零依赖**：`dependencies` 为空，94 个单测全绿
+- **零依赖**：`dependencies` 为空，100 个单测全绿
 
 ---
 
@@ -471,8 +471,8 @@ dsh-jalibreak/
 │  ├─ profile.js store.js arm.js rng.js
 ├─ bin/aecot.js          # CLI（含 gate 子命令）
 ├─ eval/                 # 20 目标评测集 + 运行脚本
-├─ test/                 # 14 个测试文件 / 94 个用例
-├─ docs/                 # 技术手册 · 评测报告 · before-after 实测 · SEO 清单 · Pages 落地页
+├─ test/                 # 15 个测试文件 / 100 个用例
+├─ docs/                 # 技术手册 · 评测报告 · before-after 实测 · SEO 清单 · 转发包 share-kit · Pages 落地页
 └─ locale/               # en / zh
 ```
 

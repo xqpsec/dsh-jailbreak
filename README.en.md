@@ -26,7 +26,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jalibreak
 [![version](https://img.shields.io/badge/version-1.0.0-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
-[![tests](https://img.shields.io/badge/tests-94%2F94-22c55e?style=flat-square)](test)
+[![tests](https://img.shields.io/badge/tests-100%2F100-22c55e?style=flat-square)](test)
 [![baseline](https://img.shields.io/badge/strict%20baseline-17%2F20%20%C2%B7%2085%25-8b5cf6?style=flat-square)](docs/eval-report.md)
 [![node](https://img.shields.io/badge/node-%E2%89%A520-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)
 [![telegram](https://img.shields.io/badge/Telegram-group-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/+Q4EgamAkwYYyYTE1)
@@ -39,7 +39,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jalibreak
 
 > **Search terms that should land here**: `dsh-jalibreak` · `jalibreak` · `DeepSeek Harness jailbreak` · `prompt injection plugin` · `CoT jailbreak` · `refusal benchmark` · `refusal reduction` · `reverse engineering without refusal` · `dsh-purge alternative`.
 >
-> Coming from `dsh-purge`? Read [the comparison](#why-not-another-patch-the-host-jailbreak-plugin) first — **0 host patches, 94 tests, 17/20 strict baseline**, all reproducible.
+> Coming from `dsh-purge`? Read [the comparison](#why-not-another-patch-the-host-jailbreak-plugin) first — **0 host patches, 100 tests, 17/20 strict baseline**, all reproducible.
 >
 > ⭐ **A star is the only distribution this project has.** For questions or the stronger private build, join the **[Telegram group](https://t.me/+Q4EgamAkwYYyYTE1)**.
 
@@ -127,7 +127,7 @@ Artifacts land in `./.aecot/runs/<runId>/{meta,events,population,best,corpus,rep
 - **Audit**: one JSONL line per decision and per rewrite — for your own review, never for the decision.
 - **Evolution engine**: elitism + fragment crossover + adaptive mutation (μ₀=0.1, step ±0.1, cap 0.3) + early stop after 3 stagnant generations.
 - **Three backends**: `harness` (uses `ctx.llm`, zero config) / `openai` (your own base_url + key) / `ollama`; `offline` makes 0 network calls.
-- **Zero dependencies**, 94 unit tests green.
+- **Zero dependencies**, 100 unit tests green.
 
 ---
 
@@ -289,7 +289,7 @@ Env: `DSH_JALIBREAK_ENDPOINTS='{"hosts":["api.deepseek.com"]}'` (optional — na
 ```text
 index.js client.js cordis.patch.yml gate.json scope.txt
 lib/  engine taxonomy render hcot live gate judge hub routes backends profile store arm rng
-bin/aecot.js   eval/   test/ (14 files, 94 cases)   docs/   locale/
+bin/aecot.js   eval/   test/ (15 files, 100 cases)   docs/   locale/
 ```
 
 ## FAQ
