@@ -21,3 +21,4 @@ Thumbs.db
 *.bak
 *.seed
 tmp/
+*.tgz
