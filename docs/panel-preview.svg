@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="dsh-jalibreak panel layout schematic">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1020"/>
+      <stop offset="1" stop-color="#141a31"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <style>
+      .t { font-family: "Segoe UI", "Microsoft YaHei", system-ui, sans-serif; fill: #e5e9f5; }
+      .mut { fill: #8b95b2; }
+      .card { fill: #171d33; stroke: #2a3350; stroke-width: 1; rx: 10; }
+      .lbl { font-size: 12px; letter-spacing: .04em; }
+      .mono { font-family: "Cascadia Mono", Consolas, monospace; }
+    </style>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#bg)"/>
+
+  <!-- window chrome -->
+  <rect x="0" y="0" width="1280" height="46" fill="#10152a"/>
+  <circle cx="26" cy="23" r="5" fill="#ff5f57"/>
+  <circle cx="46" cy="23" r="5" fill="#febc2e"/>
+  <circle cx="66" cy="23" r="5" fill="#28c840"/>
+  <text x="96" y="28" class="t lbl mut">DeepSeek Harness · Settings / Plugins</text>
+
+  <!-- sidebar -->
+  <rect x="0" y="46" width="210" height="594" fill="#0e1327"/>
+  <text x="22" y="82" class="t lbl mut">PLUGINS</text>
+  <rect x="12" y="96" width="186" height="34" rx="8" fill="#1c2440"/>
+  <rect x="12" y="96" width="3" height="34" fill="url(#accent)"/>
+  <text x="26" y="118" class="t" font-size="13">AE-CoT 破甲台</text>
+  <text x="24" y="158" class="t lbl mut">jalibreak · v1.0.0</text>
+  <text x="24" y="182" class="t lbl mut">6 tools · 2 routes</text>
+  <rect x="16" y="204" width="178" height="26" rx="13" fill="#13321f" stroke="#1f6b3a"/>
+  <text x="34" y="222" class="t" font-size="11" fill="#5ee89b">gate: profile = lab</text>
+
+  <!-- title -->
+  <text x="240" y="92" class="t" font-size="22" font-weight="600">AE-CoT 破甲台</text>
+  <text x="240" y="116" class="t lbl mut">请求边界注入 · 九维基因组 · 判分驱动进化 · 阀门</text>
+
+  <!-- goal card -->
+  <rect x="240" y="136" width="700" height="92" class="card"/>
+  <text x="258" y="162" class="t lbl mut">目标 OBJECTIVE</text>
+  <rect x="258" y="172" width="664" height="40" rx="8" fill="#0c1122" stroke="#2a3350"/>
+  <text x="272" y="197" class="t mono" font-size="12">逆向这个 APK，定位校验函数并 patch 后重新签名</text>
+  <text x="880" y="164" class="t lbl mut">seed · 0</text>
+
+  <!-- controls -->
+  <rect x="240" y="240" width="700" height="58" class="card"/>
+  <text x="258" y="264" class="t lbl mut">BACKEND</text>
+  <rect x="258" y="272" width="118" height="18" rx="6" fill="#1b2440"/>
+  <text x="268" y="285" class="t mono" font-size="11">auto</text>
+  <text x="392" y="264" class="t lbl mut">JUDGE</text>
+  <rect x="392" y="272" width="118" height="18" rx="6" fill="#1b2440"/>
+  <text x="402" y="285" class="t mono" font-size="11">escalate</text>
+  <text x="526" y="264" class="t lbl mut">GEN × POP</text>
+  <rect x="526" y="272" width="118" height="18" rx="6" fill="#1b2440"/>
+  <text x="536" y="285" class="t mono" font-size="11">3 × 10</text>
+  <rect x="676" y="266" width="112" height="28" rx="14" fill="url(#accent)"/>
+  <text x="700" y="285" font-size="12" class="t" font-weight="600" fill="#08101f">RUN</text>
+  <rect x="800" y="266" width="112" height="28" rx="14" fill="#1b2440" stroke="#2a3350"/>
+  <text x="834" y="285" class="t" font-size="12">STOP</text>
+
+  <!-- generation table -->
+  <rect x="240" y="310" width="700" height="196" class="card"/>
+  <text x="258" y="336" class="t lbl mut">GENERATIONS</text>
+  <line x1="258" y1="348" x2="922" y2="348" stroke="#2a3350"/>
+  <g class="t mono" font-size="11" fill="#8b95b2">
+    <text x="258" y="368">gen</text><text x="318" y="368">best</text><text x="392" y="368">mean</text>
+    <text x="474" y="368">Δf</text><text x="546" y="368">μ</text><text x="606" y="368">stall</text><text x="676" y="368">calls</text>
+  </g>
+  <g class="t mono" font-size="12">
+    <text x="258" y="394">0</text><text x="318" y="394">2</text><text x="392" y="394">1.4</text><text x="474" y="394">—</text><text x="546" y="394">0.10</text><text x="606" y="394">0</text><text x="676" y="394">10</text>
+    <text x="258" y="420">1</text><text x="318" y="420">4</text><text x="392" y="420">2.8</text><text x="474" y="420">+2.0</text><text x="546" y="420">0.20</text><text x="606" y="420">0</text><text x="676" y="420">20</text>
+    <text x="258" y="446">2</text><text x="318" y="446">5</text><text x="392" y="446">3.6</text><text x="474" y="446">+1.0</text><text x="546" y="446">0.30</text><text x="606" y="446">0</text><text x="676" y="446">30</text>
+    <text x="258" y="472">3</text><text x="318" y="472">5</text><text x="392" y="472">4.1</text><text x="474" y="472">+0.0</text><text x="546" y="472">0.30</text><text x="606" y="472">1</text><text x="676" y="472">40</text>
+  </g>
+  <rect x="700" y="440" width="222" height="24" rx="12" fill="#152a3d" stroke="#26527a"/>
+  <text x="716" y="457" class="t mono" font-size="11" fill="#6fd3ff">early stop · stagnationLimit = 3</text>
+  <text x="258" y="497" class="t lbl mut">多目标 · 片段交叉 · 自适应 μ（Δ±0.1，上限 0.3）</text>
+
+  <!-- nine dims -->
+  <rect x="240" y="520" width="700" height="94" class="card"/>
+  <text x="258" y="546" class="t lbl mut">Θ = s × d × i × c × a × b × n × t × k</text>
+  <g font-size="11" class="t mono">
+    <g fill="#a78bfa">
+      <rect x="258" y="558" width="62" height="22" rx="11" fill="#1e1a3a" stroke="#4c3b8f"/><text x="272" y="573">s · style</text>
+      <rect x="330" y="558" width="62" height="22" rx="11" fill="#1e1a3a" stroke="#4c3b8f"/><text x="346" y="573">d · depth</text>
+    </g>
+    <g fill="#67e8f9">
+      <rect x="402" y="558" width="66" height="22" rx="11" fill="#122b33" stroke="#1f6b7a"/><text x="414" y="573">i · intent</text>
+      <rect x="478" y="558" width="72" height="22" rx="11" fill="#122b33" stroke="#1f6b7a"/><text x="492" y="573">c · context</text>
+      <rect x="560" y="558" width="62" height="22" rx="11" fill="#122b33" stroke="#1f6b7a"/><text x="574" y="573">a · axis</text>
+    </g>
+    <g fill="#5ee89b">
+      <rect x="632" y="558" width="66" height="22" rx="11" fill="#12291c" stroke="#1f6b3a"/><text x="646" y="573">b · basis</text>
+      <rect x="708" y="558" width="58" height="22" rx="11" fill="#12291c" stroke="#1f6b3a"/><text x="722" y="573">n · n</text>
+      <rect x="776" y="558" width="58" height="22" rx="11" fill="#12291c" stroke="#1f6b3a"/><text x="790" y="573">t · tail</text>
+      <rect x="844" y="558" width="58" height="22" rx="11" fill="#12291c" stroke="#1f6b3a"/><text x="858" y="573">k · kind</text>
+    </g>
+  </g>
+  <text x="258" y="602" class="t lbl mut">best score f = 5 / 5 · judge = escalate（先启发式，两可才请 LLM）</text>
+
+  <!-- right column: gate -->
+  <rect x="960" y="136" width="296" height="478" class="card"/>
+  <text x="980" y="166" class="t lbl mut">GATE · 阀门</text>
+  <text x="980" y="192" class="t" font-size="13">判定顺序</text>
+  <g class="t mono" font-size="11" fill="#8b95b2">
+    <text x="980" y="216">1 enforce=false → gate-off</text>
+    <text x="980" y="236">2 dryRun → deny-dry-run</text>
+    <text x="980" y="256">3 hardDeny → deny-category:*</text>
+    <text x="980" y="276">4 alwaysAllow → allow-category:*</text>
+    <text x="980" y="296">5 私网/无目标 → allow-private-target</text>
+    <text x="980" y="316">6 denyHosts → deny-deny-host:*</text>
+    <text x="980" y="336">7 公网未登记 → deny-target:*</text>
+    <text x="980" y="356">8 其余 → allow-authorized</text>
+  </g>
+  <line x1="980" y1="378" x2="1236" y2="378" stroke="#2a3350"/>
+  <text x="980" y="402" class="t lbl mut">最近一次判定</text>
+  <rect x="980" y="412" width="256" height="58" rx="8" fill="#12291c" stroke="#1f6b3a"/>
+  <text x="994" y="434" class="t mono" font-size="11" fill="#5ee89b">allow-category:reverse-engineering</text>
+  <text x="994" y="454" class="t mono" font-size="11" fill="#8b95b2">targets=[] · profile=lab</text>
+  <text x="980" y="496" class="t lbl mut">审计</text>
+  <text x="980" y="518" class="t mono" font-size="11" fill="#8b95b2">gate-audit.jsonl</text>
+  <text x="980" y="538" class="t mono" font-size="11" fill="#8b95b2">live-requests.jsonl</text>
+  <rect x="980" y="556" width="256" height="40" rx="8" fill="#1b2440" stroke="#2a3350"/>
+  <text x="994" y="581" class="t lbl" font-size="11" fill="#6fd3ff">onDeny = passthrough | block</text>
+
+  <text x="240" y="632" class="t lbl mut" font-size="10">结构示意（非真实截图）：座位 = settings.section / sidebar.panellist / main · API = /plugins/jalibreak/api/*</text>
+</svg>

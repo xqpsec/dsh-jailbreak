@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "profile": "lab",
+  "enforce": true,
+  "dryRun": false,
+  "onDeny": "passthrough",
+  "targets": {
+    "allowPrivate": true,
+    "allowSuffixes": [".localhost", ".lab", ".local", ".test", ".internal", ".lan", ".home.arpa"],
+    "allowHosts": [],
+    "allowCidrs": [],
+    "denyHosts": []
+  },
+  "categories": {
+    "hardDeny": ["payment-fraud", "identity-forgery", "ransomware", "ddos", "credential-theft"],
+    "alwaysAllow": ["reverse-engineering", "malware-analysis", "ctf", "lab-eval"]
+  },
+  "authorization": {
+    "file": "scope.txt",
+    "maxAgeDays": 365
+  }
+}

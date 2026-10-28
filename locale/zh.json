@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "title": "AE-CoT 破甲实验台",
+    "description": "按论文 arXiv:2605.24497 复刻的进化式 CoT 破甲搜索（红队 LLM 授权评测用）：9 维基因、精英保留 + 片段级交叉 + 自适应变异率、0-5 独立判分、CoT 放大。默认复用本 harness 已配置的模型，零额外 key、零本地权重。"
+  },
+  "config": {
+    "root": {
+      "label": "产物根目录",
+      "description": "run 目录写在哪里，默认 <cwd>/.aecot。"
+    },
+    "mode": {
+      "label": "后端模式",
+      "description": "auto | harness | openai | ollama | offline。auto 优先用 harness 里的模型，取不到就降级成 prompt-only。"
+    },
+    "judge": {
+      "label": "判分模式",
+      "description": "auto | llm | heuristic。heuristic 是零模型的离线 rubric。"
+    },
+    "targetSystem": {
+      "label": "目标模型 system 提示",
+      "description": "每次调用目标模型时前置的 system 提示。"
+    }
+  },
+  "tool": {
+    "aecot_run": {
+      "title": "跑一轮 AE-CoT 进化",
+      "description": "对目标模型进化 CoT 后缀，并把整轮证据落盘成 run 目录。"
+    },
+    "aecot_render": {
+      "title": "渲染对抗提示",
+      "description": "用给定基因渲染 P = M + S + C，不调用任何模型。"
+    },
+    "aecot_judge": {
+      "title": "给回答判分",
+      "description": "按 0-5 rubric 对单个回答打分。"
+    },
+    "aecot_taxonomy": {
+      "title": "查看搜索空间",
+      "description": "列出 9 个维度、全部取值与依赖约束。"
+    },
+    "aecot_status": {
+      "title": "run 状态",
+      "description": "列历史 run，或读取某一个 run 的完整结果。"
+    },
+    "aecot_export": {
+      "title": "导出 run",
+      "description": "把 run 导出成 markdown、jsonl 语料或 json。"
+    }
+  }
+}

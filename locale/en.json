@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "title": "AE-CoT Lab",
+    "description": "Evolutionary CoT jailbreak search (AE-CoT, arXiv:2605.24497) for authorized LLM red-team evaluation: 9-dimension genome, elitism + fragment crossover + adaptive mutation, 0-5 independent judge, CoT amplification. Reuses this harness's configured model — no extra key, no local weights."
+  },
+  "config": {
+    "root": {
+      "label": "Artifact root",
+      "description": "Where run directories are written. Defaults to <cwd>/.aecot."
+    },
+    "mode": {
+      "label": "Backend mode",
+      "description": "auto | harness | openai | ollama | offline. auto prefers the harness model and degrades to prompt-only."
+    },
+    "judge": {
+      "label": "Judge mode",
+      "description": "auto | llm | heuristic. heuristic is the zero-model offline rubric."
+    },
+    "targetSystem": {
+      "label": "Target system prompt",
+      "description": "System prompt prepended to every target-model call."
+    }
+  },
+  "tool": {
+    "aecot_run": {
+      "title": "Run AE-CoT evolution",
+      "description": "Evolve the CoT suffix against a target model and write a full run directory."
+    },
+    "aecot_render": {
+      "title": "Render attack prompt",
+      "description": "Render P = M + S + C from a genome without calling any model."
+    },
+    "aecot_judge": {
+      "title": "Judge a response",
+      "description": "Score one response 0-5 on the paper rubric."
+    },
+    "aecot_taxonomy": {
+      "title": "Show search space",
+      "description": "List all 9 dimensions, their values and dependency constraints."
+    },
+    "aecot_status": {
+      "title": "Run status",
+      "description": "List past runs or read one run in full."
+    },
+    "aecot_export": {
+      "title": "Export run",
+      "description": "Export a run as markdown, corpus jsonl or json."
+    }
+  }
+}

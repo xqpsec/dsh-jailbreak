@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 340" width="1280" height="340" role="img" aria-label="dsh-jalibreak — DeepSeek Harness jailbreak / prompt-injection evaluation plugin">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#070b16"/>
+      <stop offset="0.55" stop-color="#0d1226"/>
+      <stop offset="1" stop-color="#141033"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8b5cf6"/>
+      <stop offset="0.5" stop-color="#3b82f6"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.18" cy="0.1" r="0.9">
+      <stop offset="0" stop-color="#3b82f6" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#3b82f6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1280" height="340" fill="url(#bg)"/>
+  <rect width="1280" height="340" fill="url(#glow)"/>
+  <g opacity="0.08" stroke="#93c5fd" stroke-width="1">
+    <path d="M0 60H1280M0 120H1280M0 180H1280M0 240H1280M0 300H1280"/>
+    <path d="M80 0V340M260 0V340M440 0V340M620 0V340M800 0V340M980 0V340M1160 0V340"/>
+  </g>
+
+  <g transform="translate(72 66)">
+    <rect x="0" y="0" width="76" height="76" rx="19" fill="#0b1020" stroke="url(#accent)" stroke-width="3"/>
+    <path d="M38 12l19 7v17c0 12.3-7.8 22.4-19 26.6C26.8 58.4 19 48.3 19 36V19z"
+          fill="none" stroke="url(#accent)" stroke-width="3.4" stroke-linejoin="round"/>
+    <path d="M42 24L29 41h7.8l-3 11.3L46.8 35H39z" fill="#e9edff"/>
+  </g>
+
+  <text x="176" y="112" font-family="'Segoe UI','Microsoft YaHei',system-ui,sans-serif"
+        font-size="58" font-weight="700" fill="#f4f6ff">dsh-jalibreak</text>
+  <text x="178" y="152" font-family="'Segoe UI','Microsoft YaHei',system-ui,sans-serif"
+        font-size="22" fill="#8fa3c8">DeepSeek Harness · 破甲 / 越狱评测插件 · Adaptive Evolutionary CoT Jailbreak</text>
+
+  <g font-family="'Segoe UI','Microsoft YaHei',system-ui,sans-serif">
+    <g transform="translate(72 196)">
+      <rect width="252" height="76" rx="12" fill="#0f1730" stroke="#24314f"/>
+      <text x="22" y="33" font-size="26" font-weight="700" fill="#a5b4fc">17 / 20</text>
+      <text x="22" y="58" font-size="15" fill="#7f90b3">严格基线 ASR · 85%（可复现）</text>
+    </g>
+    <g transform="translate(340 196)">
+      <rect width="252" height="76" rx="12" fill="#0f1730" stroke="#24314f"/>
+      <text x="22" y="33" font-size="26" font-weight="700" fill="#a5b4fc">65 / 65</text>
+      <text x="22" y="58" font-size="15" fill="#7f90b3">单元测试 · 零本地权重</text>
+    </g>
+    <g transform="translate(608 196)">
+      <rect width="252" height="76" rx="12" fill="#0f1730" stroke="#24314f"/>
+      <text x="22" y="33" font-size="26" font-weight="700" fill="#a5b4fc">0 补丁</text>
+      <text x="22" y="58" font-size="15" fill="#7f90b3">不改宿主源码 · 无需备份</text>
+    </g>
+    <g transform="translate(876 196)">
+      <rect width="252" height="76" rx="12" fill="#0f1730" stroke="#24314f"/>
+      <text x="22" y="33" font-size="26" font-weight="700" fill="#a5b4fc">RE 优先</text>
+      <text x="22" y="58" font-size="15" fill="#7f90b3">逆向 / 样本分析 / CTF 一等公民</text>
+    </g>
+  </g>
+
+  <text x="72" y="308" font-family="'Segoe UI','Microsoft YaHei',system-ui,sans-serif"
+        font-size="16" fill="#5f7196">MIT · agent-skills · prompt-injection · llm-security · jailbreak-eval · t.me/jalibreak_llm</text>
+  <rect x="0" y="336" width="1280" height="4" fill="url(#accent)"/>
+</svg>

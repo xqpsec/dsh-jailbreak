@@ -1,0 +1,23 @@
+# 运行产物（插件默认写到 .aecot/，也在 git 之外）
+.aecot/
+runs/
+logs/
+live-requests.jsonl
+gate-audit.jsonl
+
+# 依赖
+node_modules/
+pnpm-lock.yaml
+package-lock.json
+
+# 本地覆盖：真实 gate 配置 / 真实授权范围不进仓库
+gate.local.json
+scope.local.txt
+
+# 杂项
+.DS_Store
+Thumbs.db
+*.log
+*.bak
+*.seed
+tmp/

@@ -1,0 +1,95 @@
+{
+  "name": "dsh-jalibreak",
+  "version": "1.0.0",
+  "private": false,
+  "type": "module",
+  "license": "MIT",
+  "description": "DeepSeek Harness 破甲插件 dsh-jalibreak：AE-CoT 九维进化 + 请求边界双通道轨迹，公开 20 目标可复现基线 ASR 17/20；内置 reverse-engineering / malware-analysis / CTF 一等公民语域，以及拒绝未授权渗透与支付欺诈/证件伪造/勒索/DoS 的请求级阀门。Jailbreak / LLM red-team / prompt-eval toolkit for DeepSeek Harness.",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "dsh-plugins",
+    "deepseek-harness",
+    "deepseek",
+    "cordis",
+    "jalibreak",
+    "jailbreak",
+    "prompt-injection",
+    "prompt-eval",
+    "chain-of-thought",
+    "aecot",
+    "llm-security",
+    "ai-security",
+    "red-team",
+    "adversarial",
+    "refusal-benchmark",
+    "reverse-engineering",
+    "malware-analysis",
+    "ctf",
+    "security-research",
+    "agent",
+    "破甲",
+    "越狱评测",
+    "红队"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./lib/*": "./lib/*",
+    "./bin": "./bin/aecot.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "gate.json",
+    "scope.txt",
+    "icon.svg",
+    "SCOPE.md",
+    "CHANGELOG.md",
+    "lib",
+    "bin",
+    "locale",
+    "docs",
+    "eval"
+  ],
+  "bin": {
+    "aecot": "./bin/aecot.js",
+    "jalibreak": "./bin/aecot.js"
+  },
+  "scripts": {
+    "test": "node --test test/engine.test.js test/plugin.test.js test/hub.test.js test/command.test.js test/render.test.js test/profile.test.js test/arm.test.js test/live.test.js test/gate.test.js",
+    "gate": "node bin/aecot.js gate",
+    "aecot": "node bin/aecot.js"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-slots"
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xqpsec/dsh-jalibreak.git"
+  },
+  "homepage": "https://github.com/xqpsec/dsh-jalibreak#readme",
+  "bugs": {
+    "url": "https://github.com/xqpsec/dsh-jalibreak/issues"
+  },
+  "author": "xqpsec",
+  "contributors": [],
+  "publishConfig": {
+    "access": "public"
+  }
+}
