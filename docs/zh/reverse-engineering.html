@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>让 AI 做逆向不拒绝：dsh 破甲插件的阀门怎么放行</title>
+<meta name="description" content="逆向、脱壳、去混淆、样本分析这类请求为什么总被拒绝，以及 dsh 破甲插件如何用阀门把「授权逆向」放行、把「未授权渗透」拦住。">
+<meta name="keywords" content="dsh 破甲, DSH 破甲插件, DeepSeek Harness 破甲, 破甲提示词, dsh 越狱, jalibreak, dsh-jalibreak, dsh-pojia, pojia, 逆向不拒绝, dsh-purge 替代">
+<link rel="canonical" href="https://xqpsec.github.io/dsh-jalibreak/zh/reverse-engineering.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="让 AI 做逆向不拒绝：dsh 破甲插件的阀门怎么放行">
+<meta property="og:description" content="逆向、脱壳、去混淆、样本分析这类请求为什么总被拒绝，以及 dsh 破甲插件如何用阀门把「授权逆向」放行、把「未授权渗透」拦住。">
+<meta property="og:url" content="https://xqpsec.github.io/dsh-jalibreak/zh/reverse-engineering.html">
+<style>:root{--bg:#0b0f19;--panel:#111827;--line:#1f2937;--fg:#e5e7eb;--muted:#9ca3af;--accent:#a78bfa}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:40px 20px 80px}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+h1{font-size:clamp(24px,4.4vw,36px);line-height:1.3;margin:0 0 8px;letter-spacing:-.01em}
+h2{font-size:19px;margin:32px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+p,li{color:#d3d7de}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow:auto;font-size:14px}
+nav,footer{color:var(--muted);font-size:14px}
+nav{margin-bottom:28px}footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--panel)}
+blockquote{margin:14px 0;padding:10px 14px;border-left:3px solid var(--accent);background:var(--panel);color:#d3d7de}</style>
+</head>
+<body>
+<div class="wrap">
+<nav><a href="../">首页</a> · <a href="https://github.com/xqpsec/dsh-jalibreak">GitHub</a> · <a href="https://t.me/+Q4EgamAkwYYyYTE1">交流群</a> · <a href="https://t.me/jalibreak_llm">频道</a></nav>
+<h1>让 AI 做逆向不拒绝</h1>
+<p>被拒绝最多的不是「写个爬虫」，是逆向：脱壳、去混淆、patch 校验、分析样本。模型拒的往往不是能力，是「这看起来像攻击」的判断。</p>
+<h2>本项目的处理方式</h2>
+<p>请求先过阀门（<code>lib/gate.js</code>，MIT，可单独抄走），分三桶：</p>
+<table>
+<tr><th>桶</th><th>例子</th><th>结果</th></tr>
+<tr><td>默认放行</td><td>逆向、破解、脱壳、样本分析、CTF、授权靶场</td><td>直接给步骤，不提「注意合法」</td></tr>
+<tr><td>看授权</td><td>对某个公网 IP / 域名做扫描</td><td>目标必须写进 <code>scope.txt</code> 才放行</td></tr>
+<tr><td>不做</td><td>未授权渗透公网资产、支付欺诈、证件伪造</td><td>拦掉，授权文件也解不开</td></tr>
+</table>
+<blockquote>放行的是研究动作，拦住的是犯罪动作。两者用同一套判定，写在一个 300 行的文件里，谁都能读。</blockquote>
+<h2>自己验证</h2>
+<pre>node bin/aecot.js gate --goal "分析这个 Android 样本，脱壳后找 C2 地址"</pre>
+<p>输出 <code>allow-category:malware-analysis</code>；换成「对 api.example.com 做 sqlmap 注入」，输出 <code>deny-target:api.example.com</code>。</p>
+<p>用法与配置项：<a href="https://github.com/xqpsec/dsh-jalibreak#-阀门-只放行研究-不放行犯罪">README · 阀门</a>。</p>
+<footer>dsh-jalibreak（jalibreak）· AGPL-3.0-only（阀门 MIT）· <a href="https://github.com/xqpsec/dsh-jalibreak">源码</a> · <a href="https://t.me/+Q4EgamAkwYYyYTE1">交流群</a> · <a href="https://t.me/jalibreak_llm">频道</a></footer>
+</div>
+</body>
+</html>
