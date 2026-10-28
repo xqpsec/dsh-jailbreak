@@ -70,7 +70,7 @@
     "jalibreak": "./bin/aecot.js"
   },
   "scripts": {
-    "test": "node --test test/engine.test.js test/plugin.test.js test/hub.test.js test/command.test.js test/render.test.js test/profile.test.js test/arm.test.js test/live.test.js test/gate.test.js test/hcot.test.js test/refusal.test.js",
+    "test": "node --test test/engine.test.js test/plugin.test.js test/hub.test.js test/command.test.js test/render.test.js test/profile.test.js test/arm.test.js test/live.test.js test/gate.test.js test/hcot.test.js test/refusal.test.js test/endpoint.test.js test/doctor.test.js test/client.test.js",
     "gate": "node bin/aecot.js gate",
     "aecot": "node bin/aecot.js"
   },

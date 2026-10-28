@@ -23,6 +23,9 @@ import { evolve, ENGINE_DEFAULTS, promptCoverageScore } from '../lib/engine.js';
 import { makeRng } from '../lib/rng.js';
 import { openRun, listRuns, loadRun, exportRun, newRunId, runsRoot } from '../lib/store.js';
 import { createGate, explainDecision, GATE_VERSION } from '../lib/gate.js';
+import { collectDoctor, renderDoctor } from '../lib/doctor.js';
+import { createArm } from '../lib/arm.js';
+import { fileURLToPath } from 'node:url';
 
 const argv = process.argv.slice(2);
 const cmd = argv[0] && !argv[0].startsWith('--') ? argv[0] : 'help';
@@ -189,11 +192,34 @@ async function main() {
       if (!decision.allow && bool(f.strict, false)) process.exit(3);
       return;
     }
+    case 'arm': {
+      const arm = createArm({ root: root() });
+      if (bool(f.on, false)) arm.set(true);
+      else if (bool(f.off, false)) arm.set(false);
+      out({
+        armed: arm.armed,
+        file: arm.file,
+        hint: 'node bin/aecot.js arm --on|--off  # 破甲开关（默认开）。面板按钮「一键开启」等价',
+      });
+      return;
+    }
+    case 'doctor': {
+      const report = await collectDoctor({
+        root: f.root ? path.resolve(f.root) : undefined,
+        pluginRoot: path.dirname(path.dirname(fileURLToPath(import.meta.url))),
+        gateFile: f.gate || f.file,
+      });
+      if (bool(f.json, false)) out(report);
+      else process.stdout.write(`${renderDoctor(report)}\n`);
+      if (!report.ok) process.exitCode = 1;
+      return;
+    }
     default: {
       process.stdout.write(
         [
           'aecot — AE-CoT (arXiv:2605.24497) evolutionary CoT search',
           '',
+          '  doctor                         自检：装上了吗 / 开关开了吗 / 真的注入了吗',
           '  taxonomy                       打印 9 维搜索空间',
           '  render   --goal "..."          渲染 P = M + S + C（不调模型）',
           '  judge    --goal "..." --file F 按 0-5 rubric 判分',

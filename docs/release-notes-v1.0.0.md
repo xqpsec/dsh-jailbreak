@@ -27,7 +27,7 @@ git clone https://github.com/xqpsec/dsh-jalibreak.git
 plugin_manager action=install_bundle target=C:\path\to\dsh-jalibreak
 ```
 
-验证：`node <dsh>/bin.js --profile web --dump-config | findstr jalibreak`，面板出现「AE-CoT 破甲台」，工具列表出现 6 个 `aecot_*`。
+验证：`node <dsh>/bin.js --profile web --dump-config | findstr jalibreak`，面板出现「破甲台 · jalibreak」，工具列表出现 6 个 `aecot_*`。
 
 第一次跑，不花钱：
 

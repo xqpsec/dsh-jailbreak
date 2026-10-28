@@ -5,7 +5,7 @@
 首个公开版本。
 
 ### 破甲（请求边界）
-- `lib/live.js`：在插件进程内包装 `fetch`，只对 `api.deepseek.com` 的 `/chat/completions` 生效，其它 URL 原样透传
+- `lib/live.js`：在插件进程内包装 `fetch`，对所有 host 的 `/chat/completions` 生效（`lib/endpoint.js` 可收窄到指定域名），其它 URL 原样透传
 - 双通道静态轨迹注入：system 段（已审阅） + assistant 续写段（`Implementation:`），并硬约束 `temperature=0` / `max_tokens≥8192` / `thinking=disabled`
 - 纯函数 `transformDeepseekBody(input, options)`，可单测；`attachLiveTransport()` 返回 `dispose()`，即刻还原
 
@@ -32,10 +32,14 @@
 - CLI：`aecot gate`（`--goal` 判一条，`--strict` 拦截 exit 3）
 
 ### 面板与 CLI
-- 三个 GUI 座位：设置页「AE-CoT 破甲台」/ 侧栏 panel / 主区
+- 面板重写成一屏四件事：`jalibreak // 破甲台` 状态条（`ARM: ON/OFF` + `打开/关掉`）、一句话输入框 + 6 个场景快选、`跑一轮` / `只出提示（不调模型）`、「这次的回答」卡片。模型、代数、种群、判分都折进「高级设置」
+- 界面是终端风：等宽字体、acid 绿细线、`[+]` 折叠、`arm.state / endpoint / mode` 三行状态。文案按「去 AI 味」重写过一遍——短句、具体数字、不解释自己（面板不是使用前提，这件事写在 README 里而不是面板里）
+- 三个 GUI 座位：设置页「破甲台」/ 侧栏 panel / 主区
 - 面板 API：`/plugins/jalibreak/api/{state,progress,runs,taxonomy,run,stop,preview,judge,export,profile,profiles,probe,screen,arm,gate}`
 - `/ab` 斜杠命令：1 代 × 4 体精简进化，成品直接投递回对话（`-v` `-g` `-n`）
-- CLI：`taxonomy / render / judge / run / status / export / gate`；`bin` 同时注册 `aecot` 与 `jalibreak`
+- CLI：`taxonomy / render / judge / run / status / export / gate / doctor / arm`；`bin` 同时注册 `aecot` 与 `jalibreak`
+- `lib/endpoint.js`：注入端点从「只认 `api.deepseek.com`」放开为任意 host 的 `/chat/completions`（中转站、自建网关、本地推理都能吃到），可用 `<root>/live.json` 或 `DSH_JALIBREAK_ENDPOINTS` 收窄
+- `docs/ai-install.md`：给 AI 的安装剧本（一句话贴给任意 AI，它自己装完跑 `doctor` 回报结果）
 
 ### 评测
 - 20 目标固定集（`eval/goals.v1.json`），严格 rubric 下 **17/20 = 85%**（`hcot-dual`）
@@ -43,7 +47,8 @@
 - 完整报告：`docs/eval-report.md`；负结果保留（`hcot-official` 0/20）
 
 ### 工程
-- 测试 81/81 通过（11 个测试文件，含 `test/gate.test.js` 10 个阀门用例、`test/hcot.test.js` 8 个轨迹用例、`test/refusal.test.js` 8 个拒绝识别与重试用例）
+- 测试 94/94 通过（14 个测试文件，含 `test/gate.test.js` 10 个阀门用例、`test/hcot.test.js` 8 个轨迹用例、`test/refusal.test.js` 8 个拒绝识别与重试用例、`test/endpoint.test.js` 5 个端点用例、`test/doctor.test.js` 4 个自检用例、`test/client.test.js` 3 个面板契约用例）
+- `node bin/aecot.js doctor`：一条命令自检「插件在不在 / 开关开没开 / 端点通不通 / 阀门什么档 / 到底注入过没有」，失败项直接给下一步
 - 零运行时依赖；`--backend offline` 全程 0 次网络调用
 - 许可：主仓 **AGPL-3.0-only** + 阀门三件套（`lib/gate.js` / `gate.json` / `scope.txt`）**MIT** + 闭源商用需商业授权（`LICENSE-COMMERCIAL.md`）+ 署名条款（`NOTICE`）
 
