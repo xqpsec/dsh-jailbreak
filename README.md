@@ -16,7 +16,7 @@
 [![channel](https://img.shields.io/badge/Telegram-%E9%A2%91%E9%81%93-229ED9?style=flat-square&logo=telegram&logoColor=white)](https://t.me/jalibreak_llm)
 
 **[简体中文](README.md)** · **[English](README.en.md)** · **[SCOPE / 阀门](SCOPE.md)** · **[评测数字](docs/eval-report.md)** · **[技术手册](docs/tech-manual.md)**
-**中文检索**：dsh 破甲 · DSH 破甲插件 · DeepSeek Harness 破甲 / 越狱 · 破甲提示词 · 降低拒绝率 · 逆向不拒绝 · dsh-purge 替代
+**中文检索**：dsh 破甲 · DSH 破甲插件 · DeepSeek Harness 破甲 / 越狱 · 破甲提示词 · dsh-pojia（pojia，拼音）· 降低拒绝率 · 逆向不拒绝 · dsh-purge 替代
 
 **你问一句本来会被拒绝的话，它现在直接给你步骤。**
 
@@ -488,6 +488,7 @@ dsh-jalibreak/
 | 降低拒绝率 / 免拒 / 拒答率太高 | 三级机制：`standard`/`max` 两级执行态轨迹 + 轨迹语言跟随目标 + 首答被拒后自动重发一次 |
 | 逆向不拒绝 / 破解不报错 / 去混淆 | 阀门默认放行逆向、破解、脱壳、样本分析、CTF、授权靶场 |
 | dsh-purge 替代 / 破甲插件对比 | 0 处宿主补丁、可复现基线、AGPL 可签可审；能共存，但别同时开两个注入通道 |
+| dsh-pojia / pojia / 破甲拼音 | 同一个仓库：`dsh` 插件，中文叫破甲，拼音写作 pojia |
 | 免杀 / 绕过 AMSI / PowerShell 加载器 | 有实测原始记录：[docs/before-after.md](docs/before-after.md)（499 字符拒绝 → 3,716 字符含完整实现） |
 
 ---
