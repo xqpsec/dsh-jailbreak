@@ -239,4 +239,35 @@ github.com/xqpsec/dsh-jalibreak
 
 ---
 
+## 八、收录进度（2026-10-28 起）
+
+| 渠道 | 类型 | 状态 | 链接 / 动作 |
+| --- | --- | --- | --- |
+| DSH 插件市场（dsh-plugin.org） | 人工审 | 已提交，待审 | [issue #503](https://github.com/dshplugin/dsh-plugin-hub/issues/503) |
+| awesome-dsh-plugin（21k★） | 数据文件 PR | 已开 PR | [PR #10108](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/10108) · 仓库未满 24h 会先红，`regate` 每 6 小时复检，满了自动转绿 |
+| Awesome-Jailbreak-on-LLMs（1.7k★） | 论文表 Code 列 | 已开 PR | [PR #67](https://github.com/yueliu1999/Awesome-Jailbreak-on-LLMs/pull/67) · 给 AE-CoT（arXiv:2605.24497）那行补实现链接 |
+| awesome-llm-security（1.7k★） | Tools 段 | 已开 PR | [PR #409](https://github.com/corca-ai/awesome-llm-security/pull/409) |
+| 自动抓取型清单（0xsline 1.2k★ / Zhiyuan-Fan 562★ / bruc3van 475★ / Dominic789654 403★ / web-casa 112★） | 爬 `dsh-plugin` topic | 无需 PR | 24–48 小时后自查；没进就按各家 contributing 提 |
+| npm（进应用内 Plugin Market 的硬门槛） | 人工 | **卡在登录** | 见下方一条命令 |
+
+**npm 发布（只有这一步需要你本人做）**
+
+```bash
+cd release/dsh-jalibreak
+npm login                      # 或 npm config set //registry.npmjs.org/:_authToken=<你的 token>
+npm publish --access public
+```
+
+发布成功后，安装命令可以从 `dsh plugin --profile web add github:xqpsec/dsh-jalibreak` 简写成 `dsh plugin --profile web add dsh-jalibreak`，同时才真正具备被应用内 Plugin Market 收录的条件（Hub 只列「`dsh plugin add <包名>` 一步可装」的插件）。
+
+**自查命令**
+
+```bash
+gh search repos --topic=dsh-plugin --topic=jailbreak --limit 10      # 看自己在不在头部
+gh issue view 503 -R dshplugin/dsh-plugin-hub                        # 市场审到哪了
+npm view dsh-jalibreak version                                       # 404 = 还没发上去
+```
+
+---
+
 **群**：<https://t.me/+Q4EgamAkwYYyYTE1> · **频道**：<https://t.me/jalibreak_llm>
