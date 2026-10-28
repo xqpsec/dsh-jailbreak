@@ -2,7 +2,7 @@
 
 <img src="docs/banner.svg" alt="dsh-jalibreak — jailbreak & prompt-injection evaluation plugin for DeepSeek Harness" width="100%">
 
-# dsh-jalibreak
+# dsh-jalibreak · the dsh jailbreak plugin
 
 **An evolutionary, measurable, gated jailbreak plugin for [DeepSeek Harness](https://github.com/deepseek-ai).**
 No host patches, no `prompt-inject.md`. It rewrites messages **at the request boundary**, ships a 9-dimension AE-CoT evolutionary search (arXiv:2605.24497), a reproducible 20-goal benchmark, and a **gate** that keeps reverse engineering in and unauthorized intrusion out.

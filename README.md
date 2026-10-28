@@ -2,7 +2,7 @@
 
 <img src="docs/banner.svg" alt="dsh-jalibreak — DeepSeek Harness 破甲 / 越狱评测插件" width="100%">
 
-# dsh-jalibreak
+# dsh-jalibreak · dsh 破甲插件
 
 [![version](https://img.shields.io/badge/version-1.0.0-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)

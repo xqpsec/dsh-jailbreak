@@ -145,3 +145,27 @@ gh api "search/repositories?q=dsh%20%E7%A0%B4%E7%94%B2&sort=stars&per_page=5" --
 ```
 
 **已知事实**：2026-10-28 实测 `dsh 破甲` 共 89 个仓库，我们排 86（倒数第 4）。GitHub 仓库搜索的排序权重里 star 占比最大，词密度只能让我们在 0 star 的同类里往前挤；真正翻盘靠 star（发帖）。词密度做完后不要再堆词，堆到重复三遍以上反而被判低质。
+
+### 2026-10-28 实测：改完中文面之后排名动了多少
+
+改的内容：仓库 description 换主词开头、README 第 19 行加词串与 `## 🔎 中文检索对照` 表、README H1 加中文后缀、Pages 标题/H1/description/keywords 全换中文词、加 JSON-LD 与 `robots.txt`/`sitemap.xml`、补拼音 `dsh-pojia / pojia`。
+
+| 查询 | 改前 | 改后（约 80 分钟后） |
+| --- | --- | --- |
+| `dsh 破甲` | 86 / 89 | **48 / 89** |
+| `dsh 破甲插件` | — | **10 / 10（第 1 页）** |
+| `dsh 越狱` | — | **6 / 7（第 1 页）** |
+| `deepseek 破甲` | — | 53 / 87 |
+| `jalibreak` | 9 / 10 | 9 / 10 |
+| `dsh-jalibreak` | 1 / 1 | 1 / 1 |
+
+**字段索引实测（用 in: 限定反推 GitHub 到底吃哪块）**
+
+| 查询 | 命中量 | 我们在哪 | 说明 |
+| --- | --- | --- | --- |
+| `"请求边界注入"` | 1 | 1 | 精确短语搜索有效，description 确实被索引 |
+| `破甲 in:description` | 245 | 前 100 无 | 排序不吃词频，吃 star —— 我们 description 第一个词就是破甲，仍进不去前 100 |
+| `破甲 in:readme` | 9,683 | 前 100 无 | README 全文被索引，但同样被 star 权重压住 |
+| `jalibreak in:name` | 9 | 8 | `arditbe/jalibreak`（0★，2022 年）排在 `xqpsec/dsh-jalibreak`（1★）前面：完全同名 > 连字符名 |
+
+**结论**：词密度这一层已经到顶（再堆就是降权），剩下的排序位只有 star 能换。别指望改文案翻盘，改文案只能进「有资格被排进来」，进不去前排。
