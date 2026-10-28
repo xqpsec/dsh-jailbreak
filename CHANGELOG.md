@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.1 — 2026-10-28
+
+**修一个会让人装不上的问题**：GitHub 上的 1.0.0 少了 5 个被 `lib/policy.js` / `lib/live.js` 直接 import 的文件（`lib/infer.js`、`lib/research-engine.js`、`lib/kb-artifact.js`、`lib/kb-augment.js`、`lib/kb-primitivize.js`，以及 `scripts/vendor-kb.mjs`、`test/policy.test.js`）。从仓库直装会撞上模块找不到，`npm test` 也起不来。现在补齐，仓库里 85 个文件与本地一致。
+
+- 补 `docs/share-kit.md` + `docs/share-card.png`：转发包（三条可直接粘贴的文案、一张方形卡片图、该发给谁、只看三个数）
+- 测试计数同步为 **100/100（15 个文件）**
+- `aecot run` 结束时打一行来源提示（仅 CLI，不影响面板）
+
 ## 1.0.0 — 2026-10-28
 
 首个公开版本。

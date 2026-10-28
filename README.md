@@ -4,7 +4,7 @@
 
 # dsh-jalibreak · dsh 破甲插件
 
-[![version](https://img.shields.io/badge/version-1.0.0-7c3aed?style=flat-square)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.0.1-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
 [![tests](https://img.shields.io/badge/tests-100%2F100-22c55e?style=flat-square)](test)

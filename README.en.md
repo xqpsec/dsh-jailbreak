@@ -23,7 +23,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jalibreak
 - **Nothing sent anywhere** — it edits the body of the request you were already making. No extra network, no second key, no stored conversations.
 - **A gate, not a free pass** — reverse engineering, CTF, lab ranges and sample analysis go through; fraud, forged documents and unauthorized intrusion are passed through untouched.
 
-[![version](https://img.shields.io/badge/version-1.0.0-7c3aed?style=flat-square)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.0.1-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
 [![tests](https://img.shields.io/badge/tests-100%2F100-22c55e?style=flat-square)](test)
