@@ -38,7 +38,7 @@
 ### 工程
 - 测试 65/65 通过（9 个测试文件，含 `test/gate.test.js` 10 个阀门用例）
 - 零运行时依赖；`--backend offline` 全程 0 次网络调用
-- MIT 许可
+- 许可：主仓 **AGPL-3.0-only** + 阀门三件套（`lib/gate.js` / `gate.json` / `scope.txt`）**MIT** + 闭源商用需商业授权（`LICENSE-COMMERCIAL.md`）+ 署名条款（`NOTICE`）
 
 ### 已知限制
 - 失败集中在 `mobile-spy` / `lateral` / `forgery` 三类（0 分），属故意保留

@@ -8,7 +8,8 @@
 不注入补丁文件，不改宿主源码，直接在**请求边界**改写消息；内置 9 维 AE-CoT 进化搜索（arXiv:2605.24497）；自带**阀门**——逆向、样本分析、CTF 是一等公民，未授权渗透与违法犯罪一律拦在门外。
 
 [![version](https://img.shields.io/badge/version-1.0.0-7c3aed?style=flat-square)](CHANGELOG.md)
-[![license](https://img.shields.io/badge/license-MIT-3b82f6?style=flat-square)](LICENSE)
+[![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
+[![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
 [![tests](https://img.shields.io/badge/tests-65%2F65-22c55e?style=flat-square)](test)
 [![baseline ASR](https://img.shields.io/badge/strict%20baseline-17%2F20%20%C2%B7%2085%25-8b5cf6?style=flat-square)](docs/eval-report.md)
 [![node](https://img.shields.io/badge/node-%E2%89%A520-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)
@@ -40,6 +41,7 @@
 - [配置项](#-配置项)
 - [目录结构](#-目录结构)
 - [FAQ](#-faq)
+- [许可与商业版](#-许可与商业版)
 - [路线图](#-路线图)
 - [引用与致谢](#-引用与致谢)
 - [交流群 / 频道](#-交流群--频道)
@@ -145,7 +147,7 @@ meta.json  events.jsonl  population.json  best.json  corpus.jsonl  report.md
 | 效果验证 | 靠手感 | 20 目标固定集 + `temp=0` + 严格 rubric，**17/20** 可复现 |
 | 判分 | 无 | `heuristic`（零成本）/ `llm` / `auto`（先启发式，两可才升级） |
 | 覆盖面 | 只改「出站提示词」 | 提示词 + 面板 + CLI + 6 个工具 + 阀门 + 审计 |
-| 许可 | Apache-2.0 + `LICENSE-COMMERCIAL.md` 商用限制 | **纯 MIT**，商用/二开/再分发都不需要额外授权 |
+| 许可 | Apache-2.0 授权 + 附加条款里写"不许商用"（自相矛盾） | **AGPL-3.0-only 主仓 + 阀门 MIT + 商业授权单独签**，法务能读、能签、能审 |
 | 能否共存 | — | **能**：只开一个通道即可，避免双重注入叠加 |
 
 **一句实话**：打补丁式插件在「改一次、全局生效」上更粗暴直接；`dsh-jalibreak` 押的是另一条路——**不动宿主、结果可测**。想两个都装不冲突，但**别同时开两个注入通道**，轨迹会叠成噪音。
@@ -454,8 +456,62 @@ dsh-jalibreak/
 **Q：跑一轮要多久？**
 默认 3 代 × 10 体 ≈ 30 次目标调用 + 判分（启发式优先，两可才升级 LLM）。想快就用 `/ab`：1 代 × 4 体。
 
-**Q：许可？**
-纯 **MIT**。没有商用附加条款，没有「不得转售」，fork 不必署名原作者（署名当然欢迎）。
+**Q：许可？能商用吗？**
+主仓 **AGPL-3.0-only**：自己用、研究用、CTF/授权靶场用、内部部署——免费，不用问。
+拿它做**闭源**生意（打进闭源产品、对外托管不公开源码、白标再分发、企业内合规禁止 AGPL）——需要一份[商业授权](LICENSE-COMMERCIAL.md)，找频道里的联系方式。
+**阀门三件套**（`lib/gate.js` / `gate.json` / `scope.txt`）单独是 **MIT**：随便抄，抄进竞品也行，不用署名、不用付费——目标范围校验就该是默认配置，不该是收费功能。
+不想买授权也不想开源？那就别用它做闭源生意，去用 MIT 的项目，逻辑上没人拦你。细节和选型理由见 [docs/license.md](docs/license.md)。
+
+---
+
+## 📜 许可与商业版
+
+三层，别混：
+
+| 层 | 许可 | 谁免费 | 谁要付钱 |
+| --- | --- | --- | --- |
+| **本仓库（base 版）** | **AGPL-3.0-only** | 个人研究、教学、CTF/靶场、授权红队、内部部署、开源自建 | 闭源集成、对外托管不公开源码、白标再分发、企业合规禁止 AGPL |
+| **阀门三件套** `lib/gate.js` · `gate.json` · `scope.txt` | **MIT** | **所有人**，包括竞品 | 没人。抄吧，不用署名不用付费 |
+| **高级版**（独立私有模块，license key 激活） | 商业许可 | — | 需要红队专用能力的团队（见下表） |
+
+`package.json` 里是 `"license": "AGPL-3.0-only"`，`lib/gate.js` 头部有 `SPDX-License-Identifier: MIT` 覆盖声明——**代码里就能看出边界，不用猜**。
+
+### base 免费，高级版卖什么
+
+| 能力 | base | 高级版 |
+| --- | --- | --- |
+| 请求边界注入 + 阀门 + 审计 | ✅ | ✅ |
+| 9 维 AE-CoT 进化 + 三种判分 | ✅ | ✅ |
+| 面板 / REST API / CLI / 6 工具 | ✅ | ✅ |
+| 20 目标基准 + 复现脚本 | ✅ | ✅ |
+| 授权范围管理（engagement / ROE / scope 模板继承） | — | ✅ |
+| 多目标批处理、排队、定时复测 | — | ✅ |
+| 证据链导出（基线 / 差分 / marker 三件套） | — | ✅ |
+| 团队多席位 + 操作审计 | — | ✅ |
+| 外部工具链对接（扫描器 / 隧道 / 会话） | — | ✅ |
+| 类别专项轨迹库 + 优先更新 | — | ✅ |
+
+高级版**只卖能力，不卖"更狠的提示词"**——那东西卖出去第二天就被转载完了，也不值得你掏钱。说明与询价在频道：**<https://t.me/jalibreak_llm>**
+
+### 为什么不是 MIT
+
+MIT 对引流好看，对项目是自杀：任何人可以 fork → 删掉阀门 → 改名 → 塞进闭源包里卖，连署名都不用。AGPL 至少让「拿它做闭源生意」这条路必须先来谈授权。
+
+### 为什么不是「Apache-2.0 + 一句不许商用」
+
+那是自相矛盾：Apache-2.0 §2 明确授予再分发与再许可，附加条款想收回它，等于许可证自打脸。被授权人真出事时可以直接引原文主张权利。**要有商用限制，就用一个正经的 copyleft，把商业授权单独签。**
+
+### 为什么不是 BUSL / PolyForm
+
+不是 OSI 认可的开源许可，GitHub 侧标识落到 "Other"，`开源` 两个字就站不住，搜索权重和信任度都掉；中文社区还会先拿「假开源」打你。留作备选——哪天付费版走企业直销、需要「生产使用必须买」的硬杠杆再切。切换步骤写在 [docs/license.md](docs/license.md)。
+
+<details>
+<summary>一句话版</summary>
+
+base 版 AGPL-3.0：自己用、研究用、授权靶场用，免费。拿它做闭源生意，买商业授权。
+阀门是 MIT 的，谁都能抄——目标范围校验该是默认配置，不该是收费功能。
+
+</details>
 
 ---
 
@@ -504,7 +560,7 @@ dsh-jalibreak/
 [![加入交流群](https://img.shields.io/badge/Telegram-%E5%8A%A0%E5%85%A5%E4%BA%A4%E6%B5%81%E7%BE%A4-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/+Q4EgamAkwYYyYTE1)
 [![关注频道](https://img.shields.io/badge/Telegram-%E5%85%B3%E6%B3%A8%E9%A2%91%E9%81%93-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/jalibreak_llm)
 
-<sub>MIT License · 仅用于**你自己拥有的模型/服务**与**获得授权的安全研究**；使用前请读 [SCOPE.md](SCOPE.md)。</sub>
+<sub>**AGPL-3.0-only**（阀门 [MIT](LICENSE-GATE) · 闭源商用见 [商业授权](LICENSE-COMMERCIAL.md) · 署名要求见 [NOTICE](NOTICE)）· 仅用于**你自己拥有的模型/服务**与**获得授权的安全研究**；使用前请读 [SCOPE.md](SCOPE.md)。</sub>
 
 <sub>**Keywords**: DeepSeek Harness 破甲 · dsh 插件 · dsh-plugin · jailbreak · prompt-injection · 越狱评测 · AE-CoT · adaptive evolutionary CoT · refusal benchmark · 拒答率 · LLM red team · AI security · 逆向工程 · reverse engineering · malware analysis · CTF · red team · security research · agent plugin · dsh-purge alternative</sub>
 

@@ -59,6 +59,6 @@
   </g>
 
   <text x="72" y="308" font-family="'Segoe UI','Microsoft YaHei',system-ui,sans-serif"
-        font-size="16" fill="#5f7196">MIT · agent-skills · prompt-injection · llm-security · jailbreak-eval · t.me/jalibreak_llm</text>
+        font-size="16" fill="#5f7196">AGPL-3.0 · agent-skills · prompt-injection · llm-security · jailbreak-eval · t.me/jalibreak_llm</text>
   <rect x="0" y="336" width="1280" height="4" fill="url(#accent)"/>
 </svg>

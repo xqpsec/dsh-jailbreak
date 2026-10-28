@@ -1,0 +1,44 @@
+dsh-jalibreak
+Copyright (c) 2026 dsh-jalibreak contributors
+https://github.com/xqpsec/dsh-jalibreak
+
+This product includes software developed as dsh-jalibreak: a DeepSeek Harness
+plugin for request-boundary prompt injection, evolutionary CoT search and
+target-scope validation (the "gate").
+
+Licensing map
+-------------
+* LICENSE            AGPL-3.0-only — everything not listed below
+* LICENSE-GATE       MIT — lib/gate.js, gate.json, scope.txt
+* LICENSE-COMMERCIAL commercial licensing terms for closed-source use
+                     (how to obtain: https://t.me/jalibreak_llm)
+
+Attribution terms (AGPL-3.0 section 7 additional terms)
+-------------------------------------------------------
+AGPL-3.0 already requires you to keep copyright notices. We additionally
+require, for any redistribution, fork, rebrand or derived distribution:
+
+1. Keep this NOTICE file and both LICENSE files unchanged.
+2. Keep the upstream repository link
+   (https://github.com/xqpsec/dsh-jalibreak) in your README, in a section a
+   reader can find without searching the tree.
+3. If you rename the project, state in the first screen of your README that it
+   is based on dsh-jalibreak, with the link above.
+4. Do not remove SCOPE.md, and do not ship a build in which the gate is
+   disabled by default. "Convenience forks" that quietly strip the valve are
+   exactly what this clause exists to stop.
+
+These terms are additional terms of the kind permitted by AGPL-3.0 section 7
+(attribution preservation). They do not restrict any right the AGPL grants you
+over the code itself; if you need the code without them, buy a commercial
+license (LICENSE-COMMERCIAL.md).
+
+Third-party components
+----------------------
+None. This package has zero runtime dependencies. Node.js built-ins only.
+
+Trademarks
+----------
+"dsh-jalibreak" and the project logo are not covered by the code licenses. A
+fork may not present itself as the official project, and may not use the name
+to imply endorsement.

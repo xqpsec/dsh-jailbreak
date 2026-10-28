@@ -1,6 +1,6 @@
 # dsh-jalibreak v1.0.0
 
-> DeepSeek Harness 破甲 / 越狱评测插件 · 请求边界注入 · 9 维 AE-CoT 进化 · 内置阀门 · MIT
+> DeepSeek Harness 破甲 / 越狱评测插件 · 请求边界注入 · 9 维 AE-CoT 进化 · 内置阀门 · AGPL-3.0-only
 
 首个公开版本。四件事一次做完：**能破甲、能量化、能治理、能共存。**
 
@@ -121,7 +121,7 @@ DEEPSEEK_API_KEY=sk-xxx node eval/run-baseline.mjs --variant hcot-dual --judge l
 **能共存，但只开一个注入通道。**
 
 - 它：改宿主 + 全局提示词文件 + `host-backups/` 恢复体系；Apache-2.0 + 商用附加条款
-- 这里：零补丁 + 请求边界 + 基因组 + 评测集 + 阀门；纯 MIT
+- 这里：零补丁 + 请求边界 + 基因组 + 评测集 + 阀门；AGPL-3.0-only + 阀门 MIT
 - 同时装、同时开 → 一个请求叠两层轨迹，判分和效果都失真。选一个。
 
 ---

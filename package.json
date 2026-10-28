@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": false,
   "type": "module",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "description": "DeepSeek Harness 破甲插件 dsh-jalibreak：AE-CoT 九维进化 + 请求边界双通道轨迹，公开 20 目标可复现基线 ASR 17/20；内置 reverse-engineering / malware-analysis / CTF 一等公民语域，以及拒绝未授权渗透与支付欺诈/证件伪造/勒索/DoS 的请求级阀门。Jailbreak / LLM red-team / prompt-eval toolkit for DeepSeek Harness.",
   "keywords": [
     "dsh",
@@ -53,6 +53,9 @@
     "icon.svg",
     "SCOPE.md",
     "CHANGELOG.md",
+    "LICENSE-GATE",
+    "LICENSE-COMMERCIAL.md",
+    "NOTICE",
     "lib",
     "bin",
     "locale",

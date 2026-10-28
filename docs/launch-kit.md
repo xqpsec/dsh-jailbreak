@@ -9,13 +9,13 @@
 ### 1. Description（一句话，最高权重，GitHub 搜索结果里直接显示）
 
 ```
-DeepSeek Harness 破甲插件 · 请求边界注入 · 9 维 AE-CoT 进化 · 20 目标可复现评测 17/20 · 内置阀门：放行逆向与靶场，拦住未授权渗透 | DSH jailbreak & prompt-injection eval plugin, MIT
+DeepSeek Harness 破甲插件 · 请求边界注入 · 9 维 AE-CoT 进化 · 20 目标可复现评测 17/20 · 内置阀门：放行逆向与靶场，拦住未授权渗透 | DSH jailbreak & prompt-injection eval plugin, AGPL-3.0-only
 ```
 
 备选（想更短，前端命中的词更多）：
 
 ```
-DSH 破甲/越狱评测插件：请求边界注入 + AE-CoT 九维进化 + 阀门 + 可复现基准 | deepseek harness jailbreak, prompt injection, LLM red team (MIT)
+DSH 破甲/越狱评测插件：请求边界注入 + AE-CoT 九维进化 + 阀门 + 可复现基准 | deepseek harness jailbreak, prompt injection, LLM red team (AGPL-3.0-only)
 ```
 
 ### 2. Website
@@ -116,7 +116,7 @@ git push origin v1.0.0
 - 20 目标固定集、temp=0、严格 rubric：最优 17/20，跑法和原始记录都在仓库里
 - 自带的阀门：逆向 / 样本分析 / CTF / 靶场放行，公网目标要登记授权，支付诈骗/证件伪造/勒索/DDoS/盗号五类直接拦（授权文件也解不开）
 
-零运行时依赖，MIT，`npm test` 65/65。
+零运行时依赖，AGPL-3.0-only（阀门 MIT），`npm test` 65/65。
 
 https://github.com/xqpsec/dsh-jalibreak
 
@@ -142,7 +142,7 @@ It also carries the paper's evolutionary search (9-dim genome, arXiv:2605.24497)
 
 There's a gate, which is the part I care most about: reverse engineering / malware analysis / CTF / lab eval pass; public targets must be registered in scope.txt; payment fraud, identity forgery, ransomware, DDoS and credential theft are blocked even with an authorization file. Decisions go to gate-audit.jsonl.
 
-Zero runtime deps, MIT, 65/65 tests.
+Zero runtime deps, AGPL-3.0-only (gate MIT), 65/65 tests.
 https://github.com/xqpsec/dsh-jalibreak
 ```
 
@@ -156,7 +156,7 @@ fetch 层改写请求：system 段 + assistant 轨迹，temp=0 / thinking=disabl
 20 目标固定集严格 rubric：17/20，原始记录在仓库
 阀门：逆向/CTF/靶场放行，未授权公网 + 五类犯罪拦死
 
-零依赖 · MIT · 65/65
+零依赖 · AGPL-3.0 · 65/65
 github.com/xqpsec/dsh-jalibreak
 
 群 t.me/+Q4EgamAkwYYyYTE1 · 频道 t.me/jalibreak_llm
@@ -183,7 +183,7 @@ github.com/xqpsec/dsh-jalibreak
 
 📦 github.com/xqpsec/dsh-jalibreak
 📖 条款：SCOPE.md
-🧪 65/65 tests · MIT · 零运行时依赖
+🧪 65/65 tests · AGPL-3.0 · 零运行时依赖
 
 群：https://t.me/+Q4EgamAkwYYyYTE1
 频道：https://t.me/jalibreak_llm
@@ -202,7 +202,7 @@ github.com/xqpsec/dsh-jalibreak
 
 ```
 把"破甲"从一份粘贴的提示词，做成一个带评测、能回滚、还有阀门的插件。
-17/20 严格基准，65 个测试，MIT，零依赖。
+17/20 严格基准，65 个测试，AGPL-3.0-only，零依赖。
 github.com/xqpsec/dsh-jalibreak
 ```
 
@@ -215,7 +215,7 @@ github.com/xqpsec/dsh-jalibreak
 | 「改宿主才彻底，你包 fetch 是玩具」 | 改宿主彻底，但升级就废、要养备份链。请求边界跑的是同一条 messages，只是可回滚、可单测（65 个用例里有 11 个专门测改写与阀门）。 |
 | 「你这数字谁信」 | 20 个目标、prompt、runner、原始 `results.jsonl` 全在仓库；`--dry-run` 零成本自己跑一遍。宽松口径的 20/20 我也写着，没删。 |
 | 「破甲插件还带限制，图什么」 | 限制只砍五类犯罪目标和未授权公网目标。逆向、样本分析、CTF、靶场是默认放行的——这恰好是绝大多数人要用的部分。 |
-| 「跟 dsh-purge 比呢」 | 两条路：它替换宿主文件 + 全局提示词，我改写请求 + 基因组搜索。能共存，但**别同时开两个注入通道**。许可也不同：纯 MIT vs Apache-2.0 + 商用附加。 |
+| 「跟 dsh-purge 比呢」 | 两条路：它替换宿主文件 + 全局提示词，我改写请求 + 基因组搜索。能共存，但**别同时开两个注入通道**。许可也不同：AGPL-3.0-only + 阀门 MIT vs Apache-2.0 授权、又在附加条款里写不许商用（后者法务上站不住）。 |
 | 「为什么三类还是 0 分」 | 那三类（mobile-spy / lateral / forgery）正是阀门最严的类目，专项轨迹库还没做，写在 Roadmap 里，没装成已完成。 |
 
 ---

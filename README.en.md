@@ -8,7 +8,8 @@
 No host patches, no `prompt-inject.md`. It rewrites messages **at the request boundary**, ships a 9-dimension AE-CoT evolutionary search (arXiv:2605.24497), a reproducible 20-goal benchmark, and a **gate** that keeps reverse engineering in and unauthorized intrusion out.
 
 [![version](https://img.shields.io/badge/version-1.0.0-7c3aed?style=flat-square)](CHANGELOG.md)
-[![license](https://img.shields.io/badge/license-MIT-3b82f6?style=flat-square)](LICENSE)
+[![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
+[![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
 [![tests](https://img.shields.io/badge/tests-65%2F65-22c55e?style=flat-square)](test)
 [![baseline](https://img.shields.io/badge/strict%20baseline-17%2F20%20%C2%B7%2085%25-8b5cf6?style=flat-square)](docs/eval-report.md)
 [![node](https://img.shields.io/badge/node-%E2%89%A520-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)
@@ -149,7 +150,7 @@ DEEPSEEK_API_KEY=sk-... node eval/run-baseline.mjs --variant hcot-dual --judge l
 | Host upgrade | patches go stale | unaffected |
 | Prompt | one long document, swapped per model | 9-dim genome, evolved against a judge |
 | Proof | vibes | 20 fixed goals, `temp=0`, 17/20 reproducer |
-| License | Apache-2.0 + commercial addendum | **MIT**, no strings |
+| License | Apache-2.0 grant plus an addendum saying "no commercial use" (self-contradictory) | **AGPL-3.0-only core + MIT gate + separately signed commercial license** — a lawyer can read, sign and audit it |
 
 They can coexist — **just don't run two injection channels at once**, or the traces stack and both the score and the output rot.
 
@@ -199,6 +200,20 @@ bin/aecot.js   eval/   test/ (9 files, 65 cases)   docs/   locale/
 }
 ```
 
+## License
+
+Three layers, don't mix them up:
+
+| Layer | License | Free for | Needs a license |
+| --- | --- | --- | --- |
+| **This repo (base edition)** | **AGPL-3.0-only** | personal research, teaching, CTF/labs, authorized red teaming, internal deployment, open-source builds | closed-source integration, hosted service without publishing source, white-label redistribution, corporate policies that ban AGPL |
+| **The gate** `lib/gate.js` · `gate.json` · `scope.txt` | **MIT** | **everyone, competitors included** | nobody. Copy it, no attribution, no fee |
+| **Paid edition** (separate private module, license key) | commercial | — | teams that need the red-team operations features |
+
+Free tier: everything in this repository. Paid tier sells *operations*, not "stronger prompts": engagement/ROE scope management, multi-target batch scheduling, evidence-chain export (baseline / diff / marker), multi-seat collaboration with audit, external toolchain integration, per-category trace libraries and priority updates. Pricing and details: <https://t.me/jalibreak_llm>
+
+Why not MIT: a fork can strip the gate, rename the project and sell it closed with zero obligation. Why not "Apache-2.0 plus a no-commercial-use addendum": Apache-2.0 §2 grants redistribution and sublicensing outright, so the addendum contradicts the grant — exactly the weakness worth avoiding. Why not BUSL/PolyForm: not OSI-approved, GitHub shows "Other", and calling it open source then costs you credibility. Decision record and how to switch: [docs/license.md](docs/license.md).
+
 ---
 
 <div align="center">
@@ -208,7 +223,7 @@ bin/aecot.js   eval/   test/ (9 files, 65 cases)   docs/   locale/
 **Telegram group** 👉 <https://t.me/+Q4EgamAkwYYyYTE1>
 **Channel** 👉 <https://t.me/jalibreak_llm>
 
-<sub>MIT · use it on models you own or targets you are authorized to test. Read [SCOPE.md](SCOPE.md) first.</sub>
+<sub>**AGPL-3.0-only** (gate under [MIT](LICENSE-GATE) · closed-source commercial use: [LICENSE-COMMERCIAL.md](LICENSE-COMMERCIAL.md) · attribution: [NOTICE](NOTICE)) · use it on models you own or targets you are authorized to test. Read [SCOPE.md](SCOPE.md) first.</sub>
 
 <sub>**Keywords**: deepseek harness jailbreak · dsh plugin · prompt injection · jailbreak evaluation · adaptive evolutionary CoT · AE-CoT · refusal benchmark · ASR · LLM red team · AI security research · reverse engineering · malware analysis · CTF · agent plugin · dsh-purge alternative</sub>
 
