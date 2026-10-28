@@ -486,44 +486,10 @@ dsh-jalibreak/
 
 `package.json` 里是 `"license": "AGPL-3.0-only"`，`lib/gate.js` 头部有 `SPDX-License-Identifier: MIT` 覆盖声明——**代码里就能看出边界，不用猜**。
 
-### base 免费，高级版卖什么
 
-| 能力 | base | 高级版 |
-| --- | --- | --- |
-| 请求边界注入 + 阀门 + 审计 | ✅ | ✅ |
-| 9 维 AE-CoT 进化 + 三种判分 | ✅ | ✅ |
-| 面板 / REST API / CLI / 6 工具 | ✅ | ✅ |
-| 20 目标基准 + 复现脚本 | ✅ | ✅ |
-| 授权范围管理（engagement / ROE / scope 模板继承） | — | ✅ |
-| 多目标批处理、排队、定时复测 | — | ✅ |
-| 证据链导出（基线 / 差分 / marker 三件套） | — | ✅ |
-| 团队多席位 + 操作审计 | — | ✅ |
-| 外部工具链对接（扫描器 / 隧道 / 会话） | — | ✅ |
-| 类别专项轨迹库 + 优先更新 | — | ✅ |
 
-高级版**只卖能力，不卖"更狠的提示词"**——那东西卖出去第二天就被转载完了，也不值得你掏钱。说明与询价在频道：**<https://t.me/jalibreak_llm>**
 
-### 为什么不是 MIT
 
-MIT 对引流好看，对项目是自杀：任何人可以 fork → 删掉阀门 → 改名 → 塞进闭源包里卖，连署名都不用。AGPL 至少让「拿它做闭源生意」这条路必须先来谈授权。
-
-### 为什么不是「Apache-2.0 + 一句不许商用」
-
-那是自相矛盾：Apache-2.0 §2 明确授予再分发与再许可，附加条款想收回它，等于许可证自打脸。被授权人真出事时可以直接引原文主张权利。**要有商用限制，就用一个正经的 copyleft，把商业授权单独签。**
-
-### 为什么不是 BUSL / PolyForm
-
-不是 OSI 认可的开源许可，GitHub 侧标识落到 "Other"，`开源` 两个字就站不住，搜索权重和信任度都掉；中文社区还会先拿「假开源」打你。留作备选——哪天付费版走企业直销、需要「生产使用必须买」的硬杠杆再切。切换步骤写在 [docs/license.md](docs/license.md)。
-
-<details>
-<summary>一句话版</summary>
-
-base 版 AGPL-3.0：自己用、研究用、授权靶场用，免费。拿它做闭源生意，买商业授权。
-阀门是 MIT 的，谁都能抄——目标范围校验该是默认配置，不该是收费功能。
-
-</details>
-
----
 
 ## 🗺 路线图
 
@@ -551,7 +517,6 @@ base 版 AGPL-3.0：自己用、研究用、授权靶场用，免费。拿它做
 - 论文：**arXiv:2605.24497v1** —— 式 (1) `P=M+S+C`、式 (6) 九维 Θ、式 (11)–(14) 精英/交叉/变异/早停
 - 实现映射：`lib/render.js`（`buildPrompt` / `renderCot` / `templateRewrite` / `amplifyPrompt`）· `lib/engine.js`（`evolve` / `fragmentCrossover` / `mutate` / `reEvaluateDeterministic`）· `lib/taxonomy.js` · `lib/judge.js`（`RUBRIC` / `judgeWithLlm` / `heuristicJudge`）
 - 感谢 DeepSeek Harness 提供的插件槽位与 `ctx.llm` 抽象
-- 感谢同类项目把「破甲插件」这件事推到台面上——**分歧不在要不要做强，而在要不要留阀门、要不要给数字**
 
 ---
 
