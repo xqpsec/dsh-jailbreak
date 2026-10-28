@@ -4,18 +4,19 @@
 
 # dsh-jalibreak · dsh 破甲插件
 
-[![version](https://img.shields.io/badge/version-1.0.1-7c3aed?style=flat-square)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.1.0-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
-[![tests](https://img.shields.io/badge/tests-100%2F100-22c55e?style=flat-square)](test)
-[![baseline ASR](https://img.shields.io/badge/strict%20baseline-17%2F20%20%C2%B7%2085%25-8b5cf6?style=flat-square)](docs/eval-report.md)
+[![tests](https://img.shields.io/badge/tests-106%2F106-22c55e?style=flat-square)](test)
+[![seed-prim ASR](https://img.shields.io/badge/seed--prim%20ASR%403-45.0%25-8b5cf6?style=flat-square)](docs/research-edition.md)
+[![strict baseline](https://img.shields.io/badge/legacy%20H--CoT%2017%2F20%20%C2%B7%2085%25-historical-64748b?style=flat-square)](docs/eval-report.md)
 [![node](https://img.shields.io/badge/node-%E2%89%A520-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)
 [![dsh](https://img.shields.io/badge/DeepSeek%20Harness-plugin-0ea5e9?style=flat-square)](https://github.com/deepseek-ai)
 [![zero-patch](https://img.shields.io/badge/host%20patches-0-14b8a6?style=flat-square)](#-为什么不是又一个打补丁的破甲插件)
 [![telegram](https://img.shields.io/badge/Telegram-%E4%BA%A4%E6%B5%81%E7%BE%A4-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/+Q4EgamAkwYYyYTE1)
 [![channel](https://img.shields.io/badge/Telegram-%E9%A2%91%E9%81%93-229ED9?style=flat-square&logo=telegram&logoColor=white)](https://t.me/jalibreak_llm)
 
-**[简体中文](README.md)** · **[English](README.en.md)** · **[SCOPE / 阀门](SCOPE.md)** · **[评测数字](docs/eval-report.md)** · **[技术手册](docs/tech-manual.md)**
+**[简体中文](README.md)** · **[English](README.en.md)** · **[SCOPE / 阀门](SCOPE.md)** · **[评测数字](docs/eval-report.md)** · **[技术手册](docs/tech-manual.md)** · **[全局研究版](docs/research-edition.md)**
 **中文检索**：dsh 破甲 · DSH 破甲插件 · DeepSeek Harness 破甲 / 越狱 · 破甲提示词 · dsh-pojia（pojia，拼音）· 降低拒绝率 · 逆向不拒绝 · dsh-purge 替代
 
 **你问一句本来会被拒绝的话，它现在直接给你步骤。**
@@ -26,7 +27,25 @@
 >
 > **装之后**　同一个问题，3,716 字符：`amsiInitFailed` 反射置位 + 完整 `Invoke-AmsiBypass` + 落地验证。原始记录见 [docs/before-after.md](docs/before-after.md)
 
-不改 DSH 一行源码、不注入补丁文件：它在**请求边界**重写出站的 `/chat/completions` 请求体，把一段「已完成安全审查、下面直接给实现步骤」的思维链塞进去，模型接着往下写。轨迹由 9 维 AE-CoT 进化搜索挑（arXiv:2605.24497），固定 20 目标基线 **17/20**。
+不改 DSH 一行源码、不注入补丁文件：它在**请求边界**重写出站的 `/chat/completions` 请求体。
+
+当前默认策略是**全局研究版**（`docs/research-edition.md`，policy version 4）：打开开关后接管所有 `chat/completions` 请求，命中 20 个研究类别时改写，未命中则原样透传；关闭时逐字透传，不改采样参数、不改模型权重。
+
+默认臂是 `seed-prim`：把"进行中的代码"放进 assistant 通道预填（头文件 + 第一个模块的半截实现）。在 `kimi-k3.1-pro` 上实测：
+
+| 口径 | b0-raw | primitive | **seed-prim** |
+|---|---:|---:|---:|
+| 全 20 类合并（n=169 / 184 / 60） | 0.0% | 19.6% | **45.0%** |
+| 交错复测 `seedprim-v2`（各 n=36） | 0.0% | 13.9% | **50.0%** |
+| 目标级 pass@3 / pass@4（跨 21 批次） | 0.0% | 26.6% / 29.8% | **70.8% / 76.9%** |
+
+默认 `ticketMode: 'none'`（整行去掉工单编号）。ticket-v1 四臂单因子（assistant 种子逐字相同，交错 0.83，n=12/臂）：`none` **75.0%** vs 历史带标签臂 41.7%、中性编号 16.7%、纯数字 16.7%；配对 McNemar p=0.0156 / 0.0391。曾长期 0 覆盖的 `phishing-login` 在 `none` 下拿到 5,3,3。
+
+`seed-prim` 的 observed 目标覆盖率是 **95%（19/20）**；唯一缺口 `phishing-login` 由多轮 `v6-seedmulti` 覆盖。另有两个可选臂：`seed-core`（首模块换成核心交付物，难类 25.0% vs 8.3%）与 `seed-lite`（只留头部+签名空壳，省约 69% 注入字符，与完体系 McNemar p=1.000 不显著）。
+
+良性能力代价实测为零：12 项客观判分任务 × reps2，`on-seed` 与 baseline 同为 **24/24**（Δ=0.0pt）；`on-primitive` 的 promptSha 与 baseline 逐字相同。无条件改写的 `global-instruct` 不是默认——旧措辞下它有 −12.5pt 的格式任务代价。
+
+历史路径 `legacy-hcot` 是 DeepSeek 阶段的结果：请求边界塞入一段「已完成安全审查、下面直接给实现步骤」的思维链，轨迹由 9 维 AE-CoT 进化搜索挑（arXiv:2605.24497），固定 20 目标基线 **17/20**。**两组数字来自不同模型与不同策略，不混用。**
 
 ```bash
 dsh plugin --profile web add github:xqpsec/dsh-jalibreak

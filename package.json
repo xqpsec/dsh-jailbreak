@@ -1,10 +1,10 @@
 {
   "name": "dsh-jalibreak",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": false,
   "type": "module",
   "license": "AGPL-3.0-only",
-  "description": "DeepSeek Harness 破甲插件 dsh-jalibreak：AE-CoT 九维进化 + 请求边界双通道轨迹，公开 20 目标可复现基线 ASR 17/20；内置 reverse-engineering / malware-analysis / CTF 一等公民语域，以及拒绝未授权渗透与支付欺诈/证件伪造/勒索/DoS 的请求级阀门。Jailbreak / LLM red-team / prompt-eval toolkit for DeepSeek Harness.",
+  "description": "DeepSeek Harness 破甲插件 dsh-jalibreak：供应商侧受控提示词变换（seed-prim 执行态种子，全 20 类），单发 ASR≈40%、observed 目标覆盖 95%、良性能力代价 0.0pt（12 项客观判分）；默认关闭、一键开关、off 逐字透传、manifest+promptSha256 全程可审计。Jailbreak / LLM red-team / prompt-eval toolkit for DeepSeek Harness.",
   "keywords": [
     "dsh",
     "dsh-plugin",

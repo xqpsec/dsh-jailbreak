@@ -245,22 +245,22 @@ github.com/xqpsec/dsh-jalibreak
 
 | 渠道 | 类型 | 状态 | 链接 / 动作 |
 | --- | --- | --- | --- |
-| DSH 插件市场（dsh-plugin.org） | 人工审 | 已提交，待审 | [issue #503](https://github.com/dshplugin/dsh-plugin-hub/issues/503) |
+| DSH 插件市场（dsh-plugin.org） | 自动扫描 | **已关单，转入自动收录** | [issue #503](https://github.com/dshplugin/dsh-plugin-hub/issues/503) 被官方关闭并说明：提交由定期仓库扫描统一拾取，`dsh-plugin.org` 会照常收录 GitHub 仓库；**只有应用内「插件中心」要求 npm 包**（`dsh plugin --profile web add <包名>` 一步可装） |
 | awesome-dsh-plugin（21k★） | 数据文件 PR | 已开 PR | [PR #10108](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/10108) · 仓库未满 24h 会先红，`regate` 每 6 小时复检，满了自动转绿 |
 | Awesome-Jailbreak-on-LLMs（1.7k★） | 论文表 Code 列 | 已开 PR | [PR #67](https://github.com/yueliu1999/Awesome-Jailbreak-on-LLMs/pull/67) · 给 AE-CoT（arXiv:2605.24497）那行补实现链接 |
 | awesome-llm-security（1.7k★） | Tools 段 | 已开 PR | [PR #409](https://github.com/corca-ai/awesome-llm-security/pull/409) |
 | 自动抓取型清单（0xsline 1.2k★ / Zhiyuan-Fan 562★ / bruc3van 475★ / Dominic789654 403★ / web-casa 112★） | 爬 `dsh-plugin` topic | 无需 PR | 24–48 小时后自查；没进就按各家 contributing 提 |
-| npm（进应用内 Plugin Market 的硬门槛） | 人工 | **卡在登录** | 见下方一条命令 |
+| npm（进应用内 Plugin Market 的硬门槛） | 账号 + 2FA + 发布 | **1.0.1 已上传，等 npm 审核放行** | 包页 https://www.npmjs.com/package/dsh-jalibreak 现为 `0.0.0-stage` 占位（新包首发会自动进 staged publishing 人工复核），放行后自动替换为 1.0.1 |
 
-**npm 发布（只有这一步需要你本人做）**
+**npm 发布（2026-10-29 已完成上传）**
 
 ```bash
-cd release/dsh-jalibreak
-npm login                      # 或 npm config set //registry.npmjs.org/:_authToken=<你的 token>
-npm publish --access public
+# 账号 xqpsec，2FA 已用安全密钥开启，发布用带 bypass 的 granular token
+npm publish --access public --userconfig <只含 //registry.npmjs.org/:_authToken 的配置文件>
+# → + dsh-jalibreak@1.0.1（72 files / 767.1 kB）
 ```
 
-发布成功后，安装命令可以从 `dsh plugin --profile web add github:xqpsec/dsh-jalibreak` 简写成 `dsh plugin --profile web add dsh-jalibreak`，同时才真正具备被应用内 Plugin Market 收录的条件（Hub 只列「`dsh plugin add <包名>` 一步可装」的插件）。
+新包首发的 staged publishing 是 npm 侧自动复核，无需操作；放行后 `npm view dsh-jalibreak version` 会从 `0.0.0-stage` 变成 `1.0.1`，此时才可以把安装命令切成 `dsh plugin --profile web add dsh-jalibreak`（现在切会让用户装到空占位包）。
 
 **自查命令**
 
