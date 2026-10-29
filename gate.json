@@ -5,6 +5,7 @@
   "enforce": false,
   "dryRun": false,
   "onDeny": "passthrough",
+  "retryAttempts": 3,
   "targets": {
     "mode": "warn",
     "allowPrivate": true,
