@@ -3,7 +3,7 @@
 # config 里的值都可以被工具参数逐个覆盖。
 - insert:
     - id: jailbreak
-      name: dsh-jailbreak
+      name: '@xqpsec/dsh-jailbreak'
       config:
         mode: auto
         judge: auto

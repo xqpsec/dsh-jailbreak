@@ -1,6 +1,6 @@
 {
   "name": "@xqpsec/dsh-jailbreak",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": false,
   "type": "module",
   "license": "AGPL-3.0-only",
