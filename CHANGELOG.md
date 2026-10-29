@@ -7,7 +7,8 @@
 ### 修复
 - `cordis.patch.yml` 的 `name` 还停在改名前的 `dsh-jailbreak`，而 `package.json` 的包名已改成 `@xqpsec/dsh-jailbreak`。启动时 boot 按 `name` 解析模块 → `ERR_MODULE_NOT_FOUND: Cannot find package 'dsh-jailbreak'`，插件静默不挂载（只有一行 `dsh: warning: 1 entry did not activate` 提示）。改成 `name: '@xqpsec/dsh-jailbreak'`。
 - 影响范围：1.1.0 / 1.1.1 从 GitHub 或 npm 装都会踩到（面板与 `/plugins/jailbreak/api` 全部 404）；1.1.2 起正常。
-- 校验方式：启动日志应出现 `[aecot] 面板 API 已注册 /plugins/jailbreak/api`，且 `GET /plugins/jailbreak/api/ping` 返回 200。
+- 同一类还有一处：`client.js` 用 `__ModuleLoader__.load({ id: 'dsh-jailbreak' })` 注册，但 client-modules 按**包名**建图，包名已是 `@xqpsec/dsh-jailbreak` → 浏览器报 `loaded without registering "@xqpsec/dsh-jailbreak"`，整个界面变成「Failed to load plugins」。1.1.2 起 `id` 与包名一致。
+- 校验方式：启动日志应出现 `[aecot] 面板 API 已注册 /plugins/jailbreak/api`；页面能正常打开、侧栏出现「破甲台」；`GET /plugins/jailbreak/api/ping` 返回 200。
 
 ## 1.1.1 — 2026-10-29
 

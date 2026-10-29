@@ -15,7 +15,7 @@
  *   main               主区页面本体（key 与侧栏 id 对应）
  */
 window.__ModuleLoader__.load({
-  id: 'dsh-jailbreak',
+  id: '@xqpsec/dsh-jailbreak',
   factory: (require) => {
     var module = { exports: {} };
     var exports = module.exports;
