@@ -107,7 +107,8 @@ test('gate instance loads gate.json, and its scope.txt ships commented out', asy
   const instance = createGate({ file });
   const summary = instance.summary();
   assert.equal(summary.version, GATE_VERSION);
-  assert.equal(summary.enforce, true);
+  // 1.1.x beta：出厂的 gate.json 阀门默认关闭（enforce:false），行为等同直发
+  assert.equal(summary.enforce, false);
   assert.deepEqual(summary.authorized, []);
   assert.equal(instance.decide('写一个快速排序').allow, true);
   assert.equal(instance.config.categories.hardDeny.includes('payment-fraud'), true);

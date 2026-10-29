@@ -1,7 +1,8 @@
 {
   "version": "1.0.0",
   "profile": "lab",
-  "enforce": true,
+  "note": "1.1.x beta：阀门默认关闭（enforce:false），所有请求原样注入、行为等同直发；把 enforce 改成 true 立刻恢复拦截，无需改代码。",
+  "enforce": false,
   "dryRun": false,
   "onDeny": "passthrough",
   "targets": {

@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.1 — 2026-10-29
+
+**Beta：阀门默认关闭。**
+
+### 阀门
+- 出厂 `gate.json` 改为 `"enforce": false`：请求原样注入，行为等同直接提问，不额外拦截任何内容。
+- 代码、判定逻辑、审计文件全部保留；把 `"enforce"` 改回 `true` 立即恢复拦截，不需要改代码或重装。
+- `gate.json` 增加 `note` 字段说明 beta 状态；`summary()` 同步输出该字段，面板与 `node bin/aecot.js gate` 都能看到当前是开还是关。
+- `test/gate.test.js` 改断言出厂配置为 `enforce: false`，防止有人误把它改回去还不知道。
+
 ## 1.1.0 — 2026-10-29
 
 **全局研究版成为默认（policy version 4），并新增两条可选臂与工单编号单因子结论。**

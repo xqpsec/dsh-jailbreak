@@ -23,7 +23,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 - **Nothing sent anywhere** — it edits the body of the request you were already making. No extra network, no second key, no stored conversations.
 - **A gate, not a free pass** — reverse engineering, CTF, lab ranges and sample analysis go through; fraud, forged documents and unauthorized intrusion are passed through untouched.
 
-[![version](https://img.shields.io/badge/version-1.1.0-7c3aed?style=flat-square)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.1.1-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
 [![tests](https://img.shields.io/badge/tests-100%2F100-22c55e?style=flat-square)](test)
@@ -67,7 +67,7 @@ into my DeepSeek Harness profile "web" for me. Then tell me, in one line, how to
 | Hand-tuned `prompt-inject.md`, breaks when the model changes | 9-dimension genome × evolutionary search, scored per generation (0–5 rubric) |
 | "Feels stronger" | 20 fixed goals, `temperature=0`, per-goal `results.jsonl`, reproducible ASR |
 | Host patches that die on upgrade | **Zero host patches**: one `fetch` wrapper, `dispose()` restores everything |
-| Jailbroken and unbounded | **Gate**: RE / malware analysis / CTF / lab-eval allowed; unauthorized targets and 5 crime categories stopped and audited |
+| Jailbroken and unbounded | **Optional gate**: with `enforce:true`, RE / malware analysis / CTF / lab-eval pass and out-of-scope requests are stopped and audited — the beta ships with it off |
 
 ### Three hard selling points
 

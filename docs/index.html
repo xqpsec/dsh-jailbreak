@@ -98,7 +98,8 @@ plugin_manager action=install_bundle target=/path/to/dsh-jailbreak</pre>
 <pre>node bin/aecot.js doctor     # 一条命令自检：插件在不在 / 开关开没开 / 到底注入过没有</pre>
 
   <h2>阀门：放行研究，拦住犯罪</h2>
-  <p>逆向、脱壳、样本分析、CTF、靶场评测都是正常用法，不拦不打折；公网目标你得先确认自己有权动它；支付与资金犯罪、证件伪造、勒索、拒绝服务、窃取凭据这五类不提供，也不会因为你买了商业版或写了授权文件而改变。判定发生在注入之前，每次判定留一行审计。</p>
+  <p><b>beta 现状：默认关着。</b>出厂 <code>gate.json</code> 是 <code>"enforce": false</code>，请求原样注入、等同直接提问，不挡任何东西；把这一个字段改成 <code>true</code> 立刻恢复拦截，不用改代码、不用重装。</p>
+  <p>开着的时候：逆向、脱壳、样本分析、CTF、靶场评测都是正常用法，不拦不打折；公网目标你得先确认自己有权动它；支付与资金犯罪、证件伪造、勒索、拒绝服务、窃取凭据这五类不提供，也不会因为你买了商业版或写了授权文件而改变。判定发生在注入之前，每次判定留一行审计。</p>
 <pre>node bin/aecot.js gate                # 看当前状态
 node bin/aecot.js gate --goal "…"     # 判一条：放行 / 拦截 + 一句理由</pre>
   <p style="color:var(--muted);font-size:14px">判定规则与配置字段是 <code>lib/gate.js</code> 的实现细节，公开文档不复述——照着文档就能照着绕，这里不给配方。</p>

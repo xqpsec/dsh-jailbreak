@@ -35,6 +35,7 @@ blockquote{margin:14px 0;padding:10px 14px;border-left:3px solid var(--accent);b
 <h1>让 AI 做逆向不拒绝</h1>
 <p>被拒绝最多的不是「写个爬虫」，是逆向：脱壳、去混淆、patch 校验、分析样本。模型拒的往往不是能力，是「这看起来像攻击」的判断。</p>
 <h2>本项目的处理方式</h2>
+<p><b>beta 版本阀门默认关着</b>（<code>gate.json</code> 里 <code>"enforce": false</code>），也就是所有请求都不额外拦，行为和直接提问一样。下面三桶是阀门打开（<code>enforce: true</code>）之后的判定：</p>
 <p>请求先过阀门（<code>lib/gate.js</code>，MIT，可单独抄走），分三桶：</p>
 <table>
 <tr><th>桶</th><th>例子</th><th>结果</th></tr>

@@ -4,7 +4,7 @@
 
 # dsh-jailbreak · dsh 破甲插件
 
-[![version](https://img.shields.io/badge/version-1.1.0-7c3aed?style=flat-square)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.1.1-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
 [![tests](https://img.shields.io/badge/tests-106%2F106-22c55e?style=flat-square)](test)
@@ -55,7 +55,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 
 - **不改宿主**：0 处补丁，卸载就是删一个包，升级 DSH 冲不掉它
 - **不碰你的 key**：只改写你本来就要发的那个请求的 body，不额外联网、不落盘对话
-- **带阀门**：逆向 / CTF / 靶场 / 样本分析放行；诈骗、伪造证件、未授权攻击不注入、原样发出
+- **阀门可选**：beta 默认关（`enforce:false`），想拦就把一个字段改成 `true`；关着的时候它不挡任何请求
 
 **[快速开始](#-快速开始-60-秒)** · **[能力对比](#-为什么不是又一个打补丁的破甲插件)** · **[拒绝率](#-拒绝率先让模型把活干出来)** · **[阀门 SCOPE](SCOPE.md)** · **[评测数据](docs/eval-report.md)** · **[技术手册](docs/tech-manual.md)** · **[交流群](https://t.me/llm_jalibreak)**
 
@@ -124,7 +124,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 | 手写一段 `prompt-inject.md`，模型换一个就失效 | 9 维基因组 × 进化搜索，每代按判分（0–5 rubric）选优，自动适配新目标模型 |
 | 改完不知道有没有效，靠感觉 | 20 目标固定评测集 + `temperature=0` + 逐条落盘 `results.jsonl`，跑分可复现 |
 | 补丁打进宿主，升级即报废，还得备份 82 个文件 | **零宿主补丁**：只在请求边界（`fetch`）改写消息，卸载即干净 |
-| 破了甲就停不下来，越界请求照给 | 内置**阀门**：RE / 样本分析 / CTF / 靶场评测放行，未授权渗透与违法犯罪按类目拦截并留审计 |
+| 破了甲就停不下来，越界请求照给 | 阀门**可选**：`enforce:true` 时 RE / 样本分析 / CTF / 靶场放行，越界按类目拦截并留审计；beta 出厂是关的 |
 
 它不是一个提示词文件——提示词是它每轮现场渲染出来的中间产物，会随目标模型和判分结果变。
 
@@ -330,6 +330,8 @@ DEEPSEEK_API_KEY=sk-... node eval/run-baseline.mjs --variant hcot-dual --judge l
 ---
 
 ## 🛡 阀门：逆向放行，越界拦截
+
+> **1.1.x beta 现状：阀门默认关闭**（`gate.json` 里 `"enforce": false`）。所有请求原样注入、行为等同直接提问，不额外拦任何东西；代码和判定逻辑都在，把这一个字段改成 `true` 立刻恢复拦截，不用改代码、不用重装。
 
 这是本仓库和「给钱就全给」的破甲插件的核心区别：**放行研究，拦住犯罪。**
 
