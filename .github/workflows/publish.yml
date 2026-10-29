@@ -1,0 +1,39 @@
+name: publish
+
+# 发布到 npm 的两条路，任选其一：
+#  A) Trusted publishing（推荐，无需 token）：在 npmjs.com 的包设置里把这个仓库登记为 trusted publisher，
+#     然后本工作流用 OIDC 直接发布，无需任何 secret。
+#  B) 传统 token：在仓库 Secrets 里加 NPM_TOKEN（具 publish 权限的 granular token），
+#     并把下面的 `id-token: write` 权限删掉。
+#
+# 注意：首次发布「新包名」在 npm 侧需要维护者交互式 2FA 批准（staged publishing），
+# 这一步只能用你本人的安全密钥/passkey 在 npmjs.com 或 CLI 上完成，CI 里做不了。
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Test
+        run: npm test
+
+      - name: Publish
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
