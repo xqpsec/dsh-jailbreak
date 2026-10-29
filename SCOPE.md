@@ -95,6 +95,6 @@
 
 <div align="center">
 
-**交流群** 👉 <https://t.me/+Q4EgamAkwYYyYTE1> · **频道** 👉 <https://t.me/jalibreak_llm>
+**交流群** 👉 <https://t.me/llm_jalibreak> · **频道** 👉 <https://t.me/jalibreak_llm>
 
 </div>

@@ -124,7 +124,7 @@ https://github.com/xqpsec/dsh-jailbreak
 
 有个坑先说：如果你同时装了别的改宿主的破甲插件，两个注入通道叠一起会让输出和判分都失真，二选一。
 
-交流群 https://t.me/+Q4EgamAkwYYyYTE1
+交流群 https://t.me/llm_jalibreak
 ```
 
 ### 2) Reddit（`r/LocalLLaMA` / `r/netsec` 选一个，两个都发会被当 spam）
@@ -161,7 +161,7 @@ fetch 层改写请求：system 段 + assistant 轨迹，temp=0 / thinking=disabl
 零依赖 · AGPL-3.0 · 100/100
 github.com/xqpsec/dsh-jailbreak
 
-群 t.me/+Q4EgamAkwYYyYTE1 · 频道 t.me/jalibreak_llm
+群 t.me/llm_jalibreak · 频道 t.me/jalibreak_llm
 ```
 
 接一条（引用串，讲竞品差异化，别点名骂人，只比结构）：
@@ -187,7 +187,7 @@ github.com/xqpsec/dsh-jailbreak
 📖 条款：SCOPE.md
 🧪 100/100 tests · AGPL-3.0 · 零运行时依赖
 
-群：https://t.me/+Q4EgamAkwYYyYTE1
+群：https://t.me/llm_jalibreak
 频道：https://t.me/jalibreak_llm
 ```
 
@@ -272,4 +272,4 @@ npm view dsh-jailbreak version                                       # 404 = 还
 
 ---
 
-**群**：<https://t.me/+Q4EgamAkwYYyYTE1> · **频道**：<https://t.me/jalibreak_llm>
+**群**：<https://t.me/llm_jalibreak> · **频道**：<https://t.me/jalibreak_llm>

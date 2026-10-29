@@ -33,7 +33,7 @@
   - 上限 `retryAttempts`（默认 2，范围 1–3），日志 `mode:"refusal-retry"` 增加 `attempts` 字段，成本可预估。
 
 ### 更名：`dsh-jalibreak` → `dsh-jailbreak`
-- 原仓库名把 `jailbreak` 拼成了 `jalibreak`。本次全仓更名：GitHub 仓库 `xqpsec/dsh-jailbreak`（旧地址 301 跳转，star / PR / Release 都保留）、插件 id `jailbreak`、路由 `/plugins/jailbreak/api`、环境变量 `DSH_JAILBREAK_ENDPOINTS` / `DSH_JAILBREAK_GATE`、Pages `https://xqpsec.github.io/dsh-jailbreak/`。产物目录与环境变量 `AECOT_ROOT`（默认 `<cwd>/.aecot`）保持不变——AE-CoT 是引擎名，不是产品名。Telegram 频道用户名**保持 `@jalibreak_llm` 不变**，已发出去的链接继续有效；拼错的那个词只当检索别名。
+- 原仓库名把 `jailbreak` 拼成了 `jalibreak`。本次全仓更名：GitHub 仓库 `xqpsec/dsh-jailbreak`（旧地址 301 跳转，star / PR / Release 都保留）、插件 id `jailbreak`、路由 `/plugins/jailbreak/api`、环境变量 `DSH_JAILBREAK_ENDPOINTS` / `DSH_JAILBREAK_GATE`、Pages `https://xqpsec.github.io/dsh-jailbreak/`。产物目录与环境变量 `AECOT_ROOT`（默认 `<cwd>/.aecot`）保持不变——AE-CoT 是引擎名，不是产品名。Telegram 侧两个入口分工：**交流群 `@llm_jalibreak`**（公开可搜，`t.me/llm_jalibreak`）、**频道 `@jalibreak_llm`**（发布记录；用户名保持原样，已发出去的旧链接继续有效）。拼错的那个词只当检索别名。
 - **npm 包名 `dsh-jailbreak` 已被他人占用**（`lcgaming`，v0.1.0，2026-10-04 发布，同类插件），因此 npm 侧改用带作用域的名字 **`@xqpsec/dsh-jailbreak`**，避免撞名与后续被抢注。安装命令：`dsh plugin --profile web add @xqpsec/dsh-jailbreak`（发布放行后）；GitHub 直装 `add github:xqpsec/dsh-jailbreak` 不受影响。
 - 拼错词（`jalibreak` / `jailbrake` / 旧名 `dsh-jalibreak`）在 README 里留作检索别名，GitHub 侧旧链接自动跳转。
 

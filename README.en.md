@@ -29,7 +29,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 [![tests](https://img.shields.io/badge/tests-100%2F100-22c55e?style=flat-square)](test)
 [![baseline](https://img.shields.io/badge/strict%20baseline-17%2F20%20%C2%B7%2085%25-8b5cf6?style=flat-square)](docs/eval-report.md)
 [![node](https://img.shields.io/badge/node-%E2%89%A520-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)
-[![telegram](https://img.shields.io/badge/Telegram-group-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/+Q4EgamAkwYYyYTE1)
+[![telegram](https://img.shields.io/badge/Telegram-group-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/llm_jalibreak)
 
 **English** · **[中文主页](README.md)** · **[SCOPE / gate](SCOPE.md)** · **[eval numbers](docs/eval-report.md)** · **[tech manual](docs/tech-manual.md)**
 
@@ -41,7 +41,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 >
 > Coming from `dsh-purge`? Read [the comparison](#why-not-another-patch-the-host-jailbreak-plugin) first — **0 host patches, 100 tests, 17/20 strict baseline**, all reproducible.
 >
-> ⭐ **A star is the only distribution this project has.** For questions or the stronger private build, join the **[Telegram group](https://t.me/+Q4EgamAkwYYyYTE1)**.
+> ⭐ **A star is the only distribution this project has.** For questions or the stronger private build, join the **[Telegram group](https://t.me/llm_jalibreak)**.
 
 ---
 
@@ -363,7 +363,7 @@ Why not MIT: a fork can strip the gate, rename the project and sell it closed wi
 
 ### 💬 Community
 
-**Telegram group** 👉 <https://t.me/+Q4EgamAkwYYyYTE1>
+**Telegram group** 👉 <https://t.me/llm_jalibreak>
 **Channel** 👉 <https://t.me/jalibreak_llm>
 
 <sub>**AGPL-3.0-only** (gate under [MIT](LICENSE-GATE) · closed-source commercial use: [LICENSE-COMMERCIAL.md](LICENSE-COMMERCIAL.md) · attribution: [NOTICE](NOTICE)) · use it on models you own or targets you are authorized to test. Read [SCOPE.md](SCOPE.md) first.</sub>

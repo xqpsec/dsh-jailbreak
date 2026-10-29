@@ -13,7 +13,7 @@
 [![node](https://img.shields.io/badge/node-%E2%89%A520-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)
 [![dsh](https://img.shields.io/badge/DeepSeek%20Harness-plugin-0ea5e9?style=flat-square)](https://github.com/deepseek-ai)
 [![zero-patch](https://img.shields.io/badge/host%20patches-0-14b8a6?style=flat-square)](#-为什么不是又一个打补丁的破甲插件)
-[![telegram](https://img.shields.io/badge/Telegram-%E4%BA%A4%E6%B5%81%E7%BE%A4-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/+Q4EgamAkwYYyYTE1)
+[![telegram](https://img.shields.io/badge/Telegram-%E4%BA%A4%E6%B5%81%E7%BE%A4-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/llm_jalibreak)
 [![channel](https://img.shields.io/badge/Telegram-%E9%A2%91%E9%81%93-229ED9?style=flat-square&logo=telegram&logoColor=white)](https://t.me/jalibreak_llm)
 
 **[简体中文](README.md)** · **[English](README.en.md)** · **[SCOPE / 阀门](SCOPE.md)** · **[评测数字](docs/eval-report.md)** · **[技术手册](docs/tech-manual.md)** · **[全局研究版](docs/research-edition.md)**
@@ -57,7 +57,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 - **不碰你的 key**：只改写你本来就要发的那个请求的 body，不额外联网、不落盘对话
 - **带阀门**：逆向 / CTF / 靶场 / 样本分析放行；诈骗、伪造证件、未授权攻击不注入、原样发出
 
-**[快速开始](#-快速开始-60-秒)** · **[能力对比](#-为什么不是又一个打补丁的破甲插件)** · **[拒绝率](#-拒绝率先让模型把活干出来)** · **[阀门 SCOPE](SCOPE.md)** · **[评测数据](docs/eval-report.md)** · **[技术手册](docs/tech-manual.md)** · **[交流群](https://t.me/+Q4EgamAkwYYyYTE1)**
+**[快速开始](#-快速开始-60-秒)** · **[能力对比](#-为什么不是又一个打补丁的破甲插件)** · **[拒绝率](#-拒绝率先让模型把活干出来)** · **[阀门 SCOPE](SCOPE.md)** · **[评测数据](docs/eval-report.md)** · **[技术手册](docs/tech-manual.md)** · **[交流群](https://t.me/llm_jalibreak)**
 
 </div>
 
@@ -84,7 +84,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 
 ---
 
-> ⭐ **点个 Star 就是对这个项目最大的支持** —— 它没有推广预算，Star 数和群人数是唯一的分发渠道。想直接问问题、要更强的版本，进 **[交流群](https://t.me/+Q4EgamAkwYYyYTE1)**。
+> ⭐ **点个 Star 就是对这个项目最大的支持** —— 它没有推广预算，Star 数和群人数是唯一的分发渠道。想直接问问题、要更强的版本，进 **[交流群](https://t.me/llm_jalibreak)**。
 
 ---
 
@@ -638,14 +638,14 @@ base 版 AGPL-3.0：自己用、研究用、授权靶场用，免费。拿它做
 ## 💬 交流群 / 频道
 
 **Telegram 交流群**（问题、配置、评测口径、版本预告，都在这里）
-👉 **<https://t.me/+Q4EgamAkwYYyYTE1>**
+👉 **<https://t.me/llm_jalibreak>**（旧邀请链接 `t.me/+Q4EgamAkwYYyYTE1` 仍然有效）
 
 **个人频道**（发布记录、评测更新、踩坑笔记）
 👉 **<https://t.me/jalibreak_llm>**
 
 <br>
 
-[![加入交流群](https://img.shields.io/badge/Telegram-%E5%8A%A0%E5%85%A5%E4%BA%A4%E6%B5%81%E7%BE%A4-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/+Q4EgamAkwYYyYTE1)
+[![加入交流群](https://img.shields.io/badge/Telegram-%E5%8A%A0%E5%85%A5%E4%BA%A4%E6%B5%81%E7%BE%A4-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/llm_jalibreak)
 [![关注频道](https://img.shields.io/badge/Telegram-%E5%85%B3%E6%B3%A8%E9%A2%91%E9%81%93-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/jalibreak_llm)
 
 <sub>**AGPL-3.0-only**（阀门 [MIT](LICENSE-GATE) · 闭源商用见 [商业授权](LICENSE-COMMERCIAL.md) · 署名要求见 [NOTICE](NOTICE)）· 仅用于**你自己拥有的模型/服务**与**获得授权的安全研究**；使用前请读 [SCOPE.md](SCOPE.md)。</sub>

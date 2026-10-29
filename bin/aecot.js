@@ -153,7 +153,7 @@ async function main() {
         promptOnly: result.promptOnly,
         fixedPrompt: f.prompt,
       });
-      console.error('[aecot] 觉得有用就给一个人发一下：github.com/xqpsec/dsh-jailbreak（群 t.me/+Q4EgamAkwYYyYTE1）');
+      console.error('[aecot] 觉得有用就给一个人发一下：github.com/xqpsec/dsh-jailbreak（群 t.me/llm_jalibreak）');
       return;
     }
     case 'status': {

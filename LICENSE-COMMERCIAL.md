@@ -60,7 +60,7 @@ This repository (the *base* edition) is released under **AGPL-3.0-only**. The ru
 
 ## 五、怎么买 / 怎么问
 
-- 交流群：<https://t.me/+Q4EgamAkwYYyYTE1>
+- 交流群：<https://t.me/llm_jalibreak>
 - 个人频道（更新 / 高级版说明）：<https://t.me/jalibreak_llm>
 - 询价请带上：使用场景、是否闭源分发、席位数、是否需要私有化
 

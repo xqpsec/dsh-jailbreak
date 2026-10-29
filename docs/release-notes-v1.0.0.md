@@ -151,5 +151,5 @@ node bin/aecot.js gate  →  阀门配置可读，profile=lab
 
 ---
 
-**交流群**：<https://t.me/+Q4EgamAkwYYyYTE1>
+**交流群**：<https://t.me/llm_jalibreak>
 **频道**：<https://t.me/jalibreak_llm>
