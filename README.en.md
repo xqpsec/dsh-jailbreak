@@ -85,10 +85,10 @@ One line, straight from GitHub:
 dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 ```
 
-Once the npm package is published, the short form works too:
+Once the npm package is published, the short form works too (the bare name `dsh-jailbreak` is taken by someone else on npm, this project publishes under a scope):
 
 ```bash
-dsh plugin --profile web add dsh-jailbreak
+dsh plugin --profile web add @xqpsec/dsh-jailbreak
 ```
 
 From a local clone:

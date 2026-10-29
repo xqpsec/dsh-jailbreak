@@ -152,10 +152,10 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 ```
 
-npm 包发布后同一行可以写短：
+npm 包发布后同一行可以写短（`dsh-jailbreak` 这个名字在 npm 上已被他人占用，本项目走作用域）：
 
 ```bash
-dsh plugin --profile web add dsh-jailbreak
+dsh plugin --profile web add @xqpsec/dsh-jailbreak
 ```
 
 想自己拿着源码改，就 clone 下来手动装：
