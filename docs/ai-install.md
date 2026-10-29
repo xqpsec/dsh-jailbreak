@@ -157,4 +157,4 @@ node bin/aecot.js gate --goal "…"         # 这个请求会不会被阀门拦
 node bin/aecot.js run --goal "…"          # 运行进化（会花模型调用）
 ```
 
-装不上、doctor 不过、或者想让人帮你远程看：进 **交流群 <https://t.me/+Q4EgamAkwYYyYTE1>**，把 doctor 的输出整段贴上来。频道 <https://t.me/jailbreak_llm> 发版本更新和更强的版本。
+装不上、doctor 不过、或者想让人帮你远程看：进 **交流群 <https://t.me/+Q4EgamAkwYYyYTE1>**，把 doctor 的输出整段贴上来。频道 <https://t.me/jalibreak_llm> 发版本更新和更强的版本。

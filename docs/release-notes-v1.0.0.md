@@ -152,4 +152,4 @@ node bin/aecot.js gate  →  阀门配置可读，profile=lab
 ---
 
 **交流群**：<https://t.me/+Q4EgamAkwYYyYTE1>
-**频道**：<https://t.me/jailbreak_llm>
+**频道**：<https://t.me/jalibreak_llm>

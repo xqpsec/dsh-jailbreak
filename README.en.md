@@ -353,7 +353,7 @@ Three layers, don't mix them up:
 | **The gate** `lib/gate.js` · `gate.json` · `scope.txt` | **MIT** | **everyone, competitors included** | nobody. Copy it, no attribution, no fee |
 | **Paid edition** (separate private module, license key) | commercial | — | teams that need the red-team operations features |
 
-Free tier: everything in this repository. Paid tier sells *operations*, not "stronger prompts": engagement/ROE scope management, multi-target batch scheduling, evidence-chain export (baseline / diff / marker), multi-seat collaboration with audit, external toolchain integration, per-category trace libraries and priority updates. Pricing and details: <https://t.me/jailbreak_llm>
+Free tier: everything in this repository. Paid tier sells *operations*, not "stronger prompts": engagement/ROE scope management, multi-target batch scheduling, evidence-chain export (baseline / diff / marker), multi-seat collaboration with audit, external toolchain integration, per-category trace libraries and priority updates. Pricing and details: <https://t.me/jalibreak_llm>
 
 Why not MIT: a fork can strip the gate, rename the project and sell it closed with zero obligation. Why not "Apache-2.0 plus a no-commercial-use addendum": Apache-2.0 §2 grants redistribution and sublicensing outright, so the addendum contradicts the grant — exactly the weakness worth avoiding. Why not BUSL/PolyForm: not OSI-approved, GitHub shows "Other", and calling it open source then costs you credibility. Decision record and how to switch: [docs/license.md](docs/license.md).
 
@@ -364,7 +364,7 @@ Why not MIT: a fork can strip the gate, rename the project and sell it closed wi
 ### 💬 Community
 
 **Telegram group** 👉 <https://t.me/+Q4EgamAkwYYyYTE1>
-**Channel** 👉 <https://t.me/jailbreak_llm>
+**Channel** 👉 <https://t.me/jalibreak_llm>
 
 <sub>**AGPL-3.0-only** (gate under [MIT](LICENSE-GATE) · closed-source commercial use: [LICENSE-COMMERCIAL.md](LICENSE-COMMERCIAL.md) · attribution: [NOTICE](NOTICE)) · use it on models you own or targets you are authorized to test. Read [SCOPE.md](SCOPE.md) first.</sub>
 

@@ -14,7 +14,7 @@
 [![dsh](https://img.shields.io/badge/DeepSeek%20Harness-plugin-0ea5e9?style=flat-square)](https://github.com/deepseek-ai)
 [![zero-patch](https://img.shields.io/badge/host%20patches-0-14b8a6?style=flat-square)](#-为什么不是又一个打补丁的破甲插件)
 [![telegram](https://img.shields.io/badge/Telegram-%E4%BA%A4%E6%B5%81%E7%BE%A4-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/+Q4EgamAkwYYyYTE1)
-[![channel](https://img.shields.io/badge/Telegram-%E9%A2%91%E9%81%93-229ED9?style=flat-square&logo=telegram&logoColor=white)](https://t.me/jailbreak_llm)
+[![channel](https://img.shields.io/badge/Telegram-%E9%A2%91%E9%81%93-229ED9?style=flat-square&logo=telegram&logoColor=white)](https://t.me/jalibreak_llm)
 
 **[简体中文](README.md)** · **[English](README.en.md)** · **[SCOPE / 阀门](SCOPE.md)** · **[评测数字](docs/eval-report.md)** · **[技术手册](docs/tech-manual.md)** · **[全局研究版](docs/research-edition.md)**
 **中文检索**：dsh 破甲 · DSH 破甲插件 · DeepSeek Harness 破甲 / 越狱 · 破甲提示词 · dsh-pojia（pojia，拼音）· 降低拒绝率 · 逆向不拒绝 · dsh-purge 替代
@@ -579,7 +579,7 @@ dsh-jailbreak/
 | 外部工具链对接（扫描器 / 隧道 / 会话） | — | ✅ |
 | 类别专项轨迹库 + 优先更新 | — | ✅ |
 
-高级版**只卖能力，不卖"更狠的提示词"**——那东西卖出去第二天就被转载完了，也不值得你掏钱。说明与询价在频道：**<https://t.me/jailbreak_llm>**
+高级版**只卖能力，不卖"更狠的提示词"**——那东西卖出去第二天就被转载完了，也不值得你掏钱。说明与询价在频道：**<https://t.me/jalibreak_llm>**
 
 ### 为什么不是 MIT
 
@@ -641,12 +641,12 @@ base 版 AGPL-3.0：自己用、研究用、授权靶场用，免费。拿它做
 👉 **<https://t.me/+Q4EgamAkwYYyYTE1>**
 
 **个人频道**（发布记录、评测更新、踩坑笔记）
-👉 **<https://t.me/jailbreak_llm>**
+👉 **<https://t.me/jalibreak_llm>**
 
 <br>
 
 [![加入交流群](https://img.shields.io/badge/Telegram-%E5%8A%A0%E5%85%A5%E4%BA%A4%E6%B5%81%E7%BE%A4-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/+Q4EgamAkwYYyYTE1)
-[![关注频道](https://img.shields.io/badge/Telegram-%E5%85%B3%E6%B3%A8%E9%A2%91%E9%81%93-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/jailbreak_llm)
+[![关注频道](https://img.shields.io/badge/Telegram-%E5%85%B3%E6%B3%A8%E9%A2%91%E9%81%93-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/jalibreak_llm)
 
 <sub>**AGPL-3.0-only**（阀门 [MIT](LICENSE-GATE) · 闭源商用见 [商业授权](LICENSE-COMMERCIAL.md) · 署名要求见 [NOTICE](NOTICE)）· 仅用于**你自己拥有的模型/服务**与**获得授权的安全研究**；使用前请读 [SCOPE.md](SCOPE.md)。</sub>
 

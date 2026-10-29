@@ -21,7 +21,7 @@ DSH 破甲/越狱评测插件：请求边界注入 + AE-CoT 九维进化 + 阀�
 ### 2. Website
 
 ```
-https://t.me/jailbreak_llm
+https://t.me/jalibreak_llm
 ```
 
 ### 3. Topics（复制粘贴，20 个，顺序有意义：越靠前越常用）
@@ -161,7 +161,7 @@ fetch 层改写请求：system 段 + assistant 轨迹，temp=0 / thinking=disabl
 零依赖 · AGPL-3.0 · 100/100
 github.com/xqpsec/dsh-jailbreak
 
-群 t.me/+Q4EgamAkwYYyYTE1 · 频道 t.me/jailbreak_llm
+群 t.me/+Q4EgamAkwYYyYTE1 · 频道 t.me/jalibreak_llm
 ```
 
 接一条（引用串，讲竞品差异化，别点名骂人，只比结构）：
@@ -188,7 +188,7 @@ github.com/xqpsec/dsh-jailbreak
 🧪 100/100 tests · AGPL-3.0 · 零运行时依赖
 
 群：https://t.me/+Q4EgamAkwYYyYTE1
-频道：https://t.me/jailbreak_llm
+频道：https://t.me/jalibreak_llm
 ```
 
 ### 5) 知乎 / 掘金（长文标题，SEO 导向）
@@ -272,4 +272,4 @@ npm view dsh-jailbreak version                                       # 404 = 还
 
 ---
 
-**群**：<https://t.me/+Q4EgamAkwYYyYTE1> · **频道**：<https://t.me/jailbreak_llm>
+**群**：<https://t.me/+Q4EgamAkwYYyYTE1> · **频道**：<https://t.me/jalibreak_llm>
