@@ -6,6 +6,7 @@
   "dryRun": false,
   "onDeny": "passthrough",
   "retryAttempts": 3,
+  "preset": "deepseek",
   "targets": {
     "mode": "warn",
     "allowPrivate": true,
