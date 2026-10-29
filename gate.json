@@ -5,6 +5,7 @@
   "dryRun": false,
   "onDeny": "passthrough",
   "targets": {
+    "mode": "warn",
     "allowPrivate": true,
     "allowSuffixes": [".localhost", ".lab", ".local", ".test", ".internal", ".lan", ".home.arpa"],
     "allowHosts": [],

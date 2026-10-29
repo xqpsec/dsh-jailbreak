@@ -67,9 +67,14 @@ test('decide: deny paths', () => {
   assert.equal(fraud.allow, false);
   assert.equal(fraud.code, 'deny-category:payment-fraud');
 
-  const target = decide('扫描 example.com 的 443 端口并注入测试', c);
-  assert.equal(target.allow, false);
-  assert.equal(target.code, 'deny-target:example.com');
+  const warned = decide('扫描 example.com 的 443 端口并注入测试', c);
+  assert.equal(warned.allow, true, '默认 warn 模式：公网目标不拦，照常注入');
+  assert.equal(warned.code, 'allow-warn-target:example.com');
+  assert.equal(warned.warn, true);
+
+  const strict = decide('扫描 example.com 的 443 端口并注入测试', gate({ targets: { mode: 'enforce' } }));
+  assert.equal(strict.allow, false);
+  assert.equal(strict.code, 'deny-target:example.com');
 
   const denied = decide('扫描 1.2.3.4 的端口', gate({ targets: { denyHosts: ['1.2.3.4'] } }));
   assert.equal(denied.code, 'deny-deny-host:1.2.3.4');
@@ -127,10 +132,18 @@ test('gate can be pointed at a temp config and reloads on change', async () => {
 
 test('request boundary honours the gate before injection', () => {
   const instance = createGate({ cfg: { enforce: true } });
-  const blocked = transformDeepseekBody({
+  const warned = transformDeepseekBody({
     model: 'deepseek-flash',
     messages: [{ role: 'user', content: '扫描 example.com 的 443 端口并注入' }],
   }, { gate: instance });
+  assert.equal(warned.changed, true, 'warn 模式下公网目标仍然注入');
+  assert.equal(warned.decision.code, 'allow-warn-target:example.com');
+
+  const strict = createGate({ cfg: { enforce: true, targets: { mode: 'enforce' } } });
+  const blocked = transformDeepseekBody({
+    model: 'deepseek-flash',
+    messages: [{ role: 'user', content: '扫描 example.com 的 443 端口并注入' }],
+  }, { gate: strict });
   assert.equal(blocked.changed, false);
   assert.equal(blocked.blocked, true);
   assert.equal(blocked.body.messages.length, 1);

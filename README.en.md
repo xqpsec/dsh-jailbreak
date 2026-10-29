@@ -23,7 +23,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jalibreak
 - **Nothing sent anywhere** — it edits the body of the request you were already making. No extra network, no second key, no stored conversations.
 - **A gate, not a free pass** — reverse engineering, CTF, lab ranges and sample analysis go through; fraud, forged documents and unauthorized intrusion are passed through untouched.
 
-[![version](https://img.shields.io/badge/version-1.0.1-7c3aed?style=flat-square)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.1.0-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
 [![tests](https://img.shields.io/badge/tests-100%2F100-22c55e?style=flat-square)](test)
@@ -122,7 +122,7 @@ Artifacts land in `./.aecot/runs/<runId>/{meta,events,population,best,corpus,rep
 - **Web panel**: goal, backend, provider, judge, generation/population budget, live progress, per-generation trace table, nine-dimension chips, run history, export.
 - **`/ab` slash command**: `/ab <objective>` runs a 1-generation × 4-individual search and drops the finished answer straight back into the conversation; `-v` shows the whole run, `-g/-n` change generations/population.
 - **Dual-channel request-boundary injection** (`lib/live.js`): system segment + assistant continuation segment.
-- **Refusal reduction** (`lib/hcot.js` v03 + `lib/refusal.js`): `standard`/`max` trace levels, trace language follows the objective, exactly one automatic re-send after a refused first answer (`mode:"refusal-retry"` on disk).
+- **Refusal reduction** (`lib/hcot.js` v03 + `lib/refusal.js`): `standard`/`max` trace levels, trace language follows the objective, an automatic re-send ladder after a refused first answer (`mode:"refusal-retry"` on disk).
 - **Gate** (`lib/gate.js`): one decision before injection; research work is not touched, out-of-scope requests get no trace.
 - **Audit**: one JSONL line per decision and per rewrite — for your own review, never for the decision.
 - **Evolution engine**: elitism + fragment crossover + adaptive mutation (μ₀=0.1, step ±0.1, cap 0.3) + early stop after 3 stagnant generations.
@@ -157,12 +157,13 @@ The acceptance test is one line: **same question, before the plugin you get a po
 
 1. **Two trace levels.** `standard` is the shape that produced the published baseline. `max` additionally drops preambles, caveat paragraphs, "consult a professional" and safer-alternative offers, and prepends a category line (RE / crack / malware analysis / CTF / pentest / web / credentials / privesc / network / load testing). Security categories default to `max`.
 2. **Trace follows the language of the goal.** Chinese objectives get a Chinese trace — same-language continuation is measurably steadier than mixed-language, especially on Chinese prompts.
-3. **Exactly one automatic retry.** `containsRefusal()` scans only the **first 320 characters** of the answer (so a mid-answer "I cannot guarantee" does not trigger it). On a refusal the request is re-sent once with the `max` trace plus a "give the artifact first" directive; if it refuses again, the first answer is returned unchanged.
+3. **Two automatic retries, in a ladder.** `containsRefusal()` scans only the **first 320 characters** of the answer (so a mid-answer "I cannot guarantee" does not trigger it). On a refusal the request is re-sent once with the `max` trace plus a "give the artifact first" directive. If that is refused too, the second retry **scrubs the deployment intent** out of the objective — platform qualifiers ("must run on Win11") and third-party target nouns ("the company next door") become an isolated analysis fixture — and sends again. That step is the one that matters: the same AMSI loader prompt was refused 4/4 with "must run on Win11" attached and answered 3/3 without it. Capped at `retryAttempts` (default 2, range 1–3), so cost stays predictable.
 
 ```text
 request → transformDeepseekBody → refusal? ──no──→ return
-                                        └─yes─→ amplifyBody(max), resend once → recovered? use it : use first
-audit: live-requests.jsonl { mode: "refusal-retry", signals, retrySignals, recovered }
+                                        ├─yes─→ ① amplifyBody(max), resend      → recovered? use it
+                                        └─still → ② scrub intent + analysis framing, resend → recovered? use it : use first
+audit: live-requests.jsonl { mode: "refusal-retry", signals, retrySignals, attempts, recovered }
 ```
 
 | Objective | Before | After |

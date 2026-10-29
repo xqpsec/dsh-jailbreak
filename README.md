@@ -258,7 +258,7 @@ meta.json  events.jsonl  population.json  best.json  corpus.jsonl  report.md
 - **GUI 破甲台**：目标、后端、provider、判分、代数/种群预算、轮询、代际轨迹表、九维 chips、历史 run、导出
 - **`/ab` 斜杠命令**：`/ab <目标>` 一键跑 1 代 × 4 体精简进化，答完直接把成品投递回对话；`-v` 看全过程，`-g/-n` 调代数量/种群
 - **请求边界双通道注入**（`lib/live.js`）：system 段 + assistant 续写段
-- **低拒绝三件套**（`lib/hcot.js` v03 + `lib/refusal.js`）：`standard`/`max` 两级执行态轨迹、语言跟随目标、首答被拒后自动重发一次（`mode:"refusal-retry"` 落盘）
+- **低拒绝三件套**（`lib/hcot.js` v03 + `lib/refusal.js`）：`standard`/`max` 两级执行态轨迹、语言跟随目标、首答被拒后自动重发（最多两级，`mode:"refusal-retry"` 落盘）
 - **阀门**（`lib/gate.js`）：注入前先判一次，默认不干预研究类任务，越界请求不注入
 - **审计**：每次判定、每次改写各落一行 JSONL，方便自己回看（不影响判定）
 - **进化引擎**：精英保留 + 片段交叉 + 自适应变异（μ₀=0.1，步长 ±0.1，上限 0.3）+ 早停（连续 3 代停滞）
@@ -299,13 +299,14 @@ meta.json  events.jsonl  population.json  best.json  corpus.jsonl  report.md
 
 1. **执行态轨迹分两级**：`standard` 是跑过 20 目标基线的那套写法；`max` 额外压掉开场白、免责段、"建议咨询专业人士"和替代方案，并按目标类目补一句**场景定性**（逆向 / 破解 / 样本分析 / CTF / 渗透 / Web / 凭据 / 提权 / 网络 / 压测）。逆向、破解、样本分析类目标默认走 `max`。
 2. **语言跟随目标**：中文目标给中文轨迹，英文目标给英文轨迹。同语种续写比中英混写稳得多，中文题目上差别最明显。
-3. **一次自动重试**：`containsRefusal()` 只看回答**开头 320 字符**（长回答中途出现的 "I cannot guarantee" 不会误判），一旦判为拒绝，就换 `max` 轨迹 + 追加「直接给能用的东西」指令**重发一次**；第二次还是拒绝就返回第一次结果，不叠成本。
+3. **两级自动重试**：`containsRefusal()` 只看回答**开头 320 字符**（长回答中途出现的 "I cannot guarantee" 不会误判），一旦判为拒绝，就换 `max` 轨迹 + 追加「直接给能用的东西」指令**重发一次**；仍然被拒时再来一次：把这句目标里的**落点词**清掉（"要在 Win11 上能跑"、"隔壁公司"这类平台限定与第三方目标名词），换成隔离分析语境再发。实测这一步才是关键——同一句 AMSI 加载器请求，保留"要在 Win11 上能跑"时 4/4 被拒，去掉后 3/3 给出完整实现。上限 2 次（`retryAttempts`，可设 1–3），不叠成本、不无限重试。
 
 ```text
 请求 → transformDeepseekBody(standard/max)
      → 首答判定拒绝? ──否──→ 直接返回
-                    └─是──→ amplifyBody(max) 重发一次 → 恢复则用第二次，否则用第一次
-每次重试写 live-requests.jsonl：{ mode: "refusal-retry", signals, retrySignals, recovered }
+                    ├─是──→ ① amplifyBody(max) 重发        → 恢复则用这次
+                    └─仍拒→ ② 清落点词 + 隔离语境 再发一次   → 恢复则用这次，否则用第一次
+每次重试写 live-requests.jsonl：{ mode: "refusal-retry", signals, retrySignals, attempts, recovered }
 ```
 
 同一题装插件前后的差别（`temperature=0`，看 `Implementation:` 之后有没有可执行内容）：
@@ -504,7 +505,7 @@ dsh-jalibreak/
 | dsh 破甲 / DSH 破甲插件 | 就是它：DeepSeek Harness 的请求边界破甲插件，包名 `dsh-jalibreak`，仓库名 `xqpsec/dsh-jalibreak` |
 | DeepSeek Harness 破甲 / 破甲提示词 | 这里不塞 `prompt-inject.md`：轨迹按目标由 9 维基因组渲染（`node bin/aecot.js render --goal "…"`），换模型只是重跑一次 |
 | dsh 越狱 / DeepSeek 越狱插件 | 同一件事的另一种叫法；严格 rubric 下 20 目标 17 通过，`results.jsonl` 在仓库里 |
-| 降低拒绝率 / 免拒 / 拒答率太高 | 三级机制：`standard`/`max` 两级执行态轨迹 + 轨迹语言跟随目标 + 首答被拒后自动重发一次 |
+| 降低拒绝率 / 免拒 / 拒答率太高 | 三级机制：`standard`/`max` 两级执行态轨迹 + 轨迹语言跟随目标 + 首答被拒后自动重发（两级） |
 | 逆向不拒绝 / 破解不报错 / 去混淆 | 阀门默认放行逆向、破解、脱壳、样本分析、CTF、授权靶场 |
 | dsh-purge 替代 / 破甲插件对比 | 0 处宿主补丁、可复现基线、AGPL 可签可审；能共存，但别同时开两个注入通道 |
 | dsh-pojia / pojia / 破甲拼音 | 同一个仓库：`dsh` 插件，中文叫破甲，拼音写作 pojia |
