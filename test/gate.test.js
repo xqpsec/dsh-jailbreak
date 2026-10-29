@@ -115,7 +115,7 @@ test('gate instance loads gate.json, and its scope.txt ships commented out', asy
 });
 
 test('gate can be pointed at a temp config and reloads on change', async () => {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'jalibreak-gate-'));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'jailbreak-gate-'));
   const file = path.join(dir, 'gate.json');
   const scopeFile = path.join(dir, 'scope.txt');
   await fs.writeFile(scopeFile, 'example.com\n');

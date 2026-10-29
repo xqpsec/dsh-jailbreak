@@ -1,4 +1,4 @@
-# dsh-jalibreak v1.0.0
+# dsh-jailbreak v1.0.0
 
 > DeepSeek Harness 破甲 / 越狱评测插件 · 请求边界注入 · 9 维 AE-CoT 进化 · 内置阀门 · AGPL-3.0-only
 
@@ -20,14 +20,14 @@
 ## 二、装（60 秒）
 
 ```bash
-git clone https://github.com/xqpsec/dsh-jalibreak.git
+git clone https://github.com/xqpsec/dsh-jailbreak.git
 ```
 
 ```text
-plugin_manager action=install_bundle target=C:\path\to\dsh-jalibreak
+plugin_manager action=install_bundle target=C:\path\to\dsh-jailbreak
 ```
 
-验证：`node <dsh>/bin.js --profile web --dump-config | findstr jalibreak`，面板出现「破甲台 · jalibreak」，工具列表出现 6 个 `aecot_*`。
+验证：`node <dsh>/bin.js --profile web --dump-config | findstr jailbreak`，面板出现「破甲台 · jailbreak」，工具列表出现 6 个 `aecot_*`。
 
 第一次跑，不花钱：
 
@@ -152,4 +152,4 @@ node bin/aecot.js gate  →  阀门配置可读，profile=lab
 ---
 
 **交流群**：<https://t.me/+Q4EgamAkwYYyYTE1>
-**频道**：<https://t.me/jalibreak_llm>
+**频道**：<https://t.me/jailbreak_llm>

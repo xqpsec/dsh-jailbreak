@@ -45,7 +45,7 @@ async function runTool(registered, toolName, args) {
 
 test('plugin: exports a cordis host plugin shape', () => {
   assert.equal(typeof apply, 'function');
-  assert.equal(name, 'jalibreak');
+  assert.equal(name, 'jailbreak');
   assert.deepEqual(inject, ['tools']);
 });
 

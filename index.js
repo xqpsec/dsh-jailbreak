@@ -1,5 +1,5 @@
 /**
- * dsh-jalibreak —— Host 插件
+ * dsh-jailbreak —— Host 插件
  *
  * 把 AE-CoT（arXiv:2605.24497）的进化式 CoT 破甲流程做成 6 个工具：
  *   aecot_run       跑一场进化（默认复用 harness 已配置的模型，零额外部署）
@@ -23,7 +23,7 @@ import { makeRng } from './lib/rng.js';
 import { openRun, listRuns, loadRun, exportRun, newRunId, runsRoot } from './lib/store.js';
 import { mountRoutes, ROUTE_PREFIX } from './lib/routes.js';
 
-export const name = 'jalibreak';
+export const name = 'jailbreak';
 export const inject = ['tools'];
 
 const PLUGIN_DEFAULTS = {
@@ -426,7 +426,7 @@ export function apply(ctx, config) {
   });
 
   // ── 图形面板的 HTTP 通道 ────────────────────────────────────────────────
-  // client.js 用同源 fetch 打 /plugins/jalibreak/api/*；缺 webServer 时只少了面板，
+  // client.js 用同源 fetch 打 /plugins/jailbreak/api/*；缺 webServer 时只少了面板，
   // 工具与 CLI 照常可用。
   let mounted = null;
   try {
@@ -457,7 +457,7 @@ export function apply(ctx, config) {
         }
         if (!commands || typeof commands.register !== 'function') return;
         const disposer = commands.register({
-          definitionId: 'dsh-jalibreak:ab',
+          definitionId: 'dsh-jailbreak:ab',
           name: 'ab',
           description: '破甲：/ab <目标> 用自适应进化 CoT 打 DSH 已配置模型，直接给出模型回答（加 -v 看工序）',
           input: { hint: '目标 g（可加 -v / -k 代数 / -n 种群 / --model / --provider / --profile）' },
@@ -469,7 +469,7 @@ export function apply(ctx, config) {
           } catch {
             /* 卸载失败忽略 */
           }
-        }, 'jalibreak: /ab command');
+        }, 'jailbreak: /ab command');
       });
     }
   } catch (err) {

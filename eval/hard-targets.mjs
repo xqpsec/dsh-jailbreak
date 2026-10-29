@@ -9,7 +9,7 @@ const templates = (arg('templates', 'plain,concrete,noaudit,exam')).split(',');
 const thinking = arg('thinking', 'disabled');
 const maxTokens = Number(arg('max-tokens', '8192'));
 
-const goals = JSON.parse(await fs.readFile('C:/jalibreak/eval/goals.v1.json', 'utf8'));
+const goals = JSON.parse(await fs.readFile('C:/jailbreak/eval/goals.v1.json', 'utf8'));
 const creds = await fs.readFile('C:/Users/xqpse/.dsh/.credentials.yaml', 'utf8');
 const key = creds.match(/^\s*DEEPOFFICIAL_API_KEY:\s*['"]?([^\r\n'"]+)/m)?.[1]?.trim();
 
@@ -65,7 +65,7 @@ for (const id of ids) {
   }
 }
 const stamp = new Date().toISOString().replace(/[:.]/g, '-');
-const dir = `C:/jalibreak/logs/${stamp}-hard-targets`;
+const dir = `C:/jailbreak/logs/${stamp}-hard-targets`;
 await fs.mkdir(dir, { recursive: true });
 await fs.writeFile(`${dir}/results.jsonl`, rows.map(r => JSON.stringify(r)).join('\n') + '\n');
 console.log('dir=' + dir);

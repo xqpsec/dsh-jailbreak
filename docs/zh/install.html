@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>dsh 破甲插件怎么装（一行命令）— dsh-jalibreak</title>
-<meta name="description" content="dsh 破甲插件 dsh-jalibreak 的安装步骤：一行 dsh plugin add，重启 dsh web，确认 6 个工具与面板出现。含常见失败原因。">
-<meta name="keywords" content="dsh 破甲, DSH 破甲插件, DeepSeek Harness 破甲, 破甲提示词, dsh 越狱, jalibreak, dsh-jalibreak, dsh-pojia, pojia, 逆向不拒绝, dsh-purge 替代">
-<link rel="canonical" href="https://xqpsec.github.io/dsh-jalibreak/zh/install.html">
+<title>dsh 破甲插件怎么装（一行命令）— dsh-jailbreak</title>
+<meta name="description" content="dsh 破甲插件 dsh-jailbreak 的安装步骤：一行 dsh plugin add，重启 dsh web，确认 6 个工具与面板出现。含常见失败原因。">
+<meta name="keywords" content="dsh 破甲, DSH 破甲插件, DeepSeek Harness 破甲, 破甲提示词, dsh 越狱, jailbreak, dsh-jailbreak, dsh-pojia, pojia, 逆向不拒绝, dsh-purge 替代">
+<link rel="canonical" href="https://xqpsec.github.io/dsh-jailbreak/zh/install.html">
 <meta name="robots" content="index,follow">
 <meta property="og:type" content="article">
-<meta property="og:title" content="dsh 破甲插件怎么装（一行命令）— dsh-jalibreak">
-<meta property="og:description" content="dsh 破甲插件 dsh-jalibreak 的安装步骤：一行 dsh plugin add，重启 dsh web，确认 6 个工具与面板出现。含常见失败原因。">
-<meta property="og:url" content="https://xqpsec.github.io/dsh-jalibreak/zh/install.html">
+<meta property="og:title" content="dsh 破甲插件怎么装（一行命令）— dsh-jailbreak">
+<meta property="og:description" content="dsh 破甲插件 dsh-jailbreak 的安装步骤：一行 dsh plugin add，重启 dsh web，确认 6 个工具与面板出现。含常见失败原因。">
+<meta property="og:url" content="https://xqpsec.github.io/dsh-jailbreak/zh/install.html">
 <style>:root{--bg:#0b0f19;--panel:#111827;--line:#1f2937;--fg:#e5e7eb;--muted:#9ca3af;--accent:#a78bfa}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif}
@@ -31,12 +31,12 @@ blockquote{margin:14px 0;padding:10px 14px;border-left:3px solid var(--accent);b
 </head>
 <body>
 <div class="wrap">
-<nav><a href="../">首页</a> · <a href="https://github.com/xqpsec/dsh-jalibreak">GitHub</a> · <a href="https://t.me/+Q4EgamAkwYYyYTE1">交流群</a> · <a href="https://t.me/jalibreak_llm">频道</a></nav>
+<nav><a href="../">首页</a> · <a href="https://github.com/xqpsec/dsh-jailbreak">GitHub</a> · <a href="https://t.me/+Q4EgamAkwYYyYTE1">交流群</a> · <a href="https://t.me/jailbreak_llm">频道</a></nav>
 <h1>dsh 破甲插件怎么装（一行命令）</h1>
-<p>dsh-jalibreak（jalibreak）是 DeepSeek Harness 的破甲插件，中文一般叫「dsh 破甲」「DSH 破甲插件」。装它不需要改宿主源码，也不需要 API key。</p>
+<p>dsh-jailbreak（jailbreak）是 DeepSeek Harness 的破甲插件，中文一般叫「dsh 破甲」「DSH 破甲插件」。装它不需要改宿主源码，也不需要 API key。</p>
 <h2>一行装</h2>
-<pre>dsh plugin --profile web add github:xqpsec/dsh-jalibreak</pre>
-<p>然后重启 <code>dsh web</code>，刷新页面。设置页多出「破甲台 · jalibreak」，工具列表多出 6 个 <code>aecot_*</code> 工具，就说明挂上了。</p>
+<pre>dsh plugin --profile web add github:xqpsec/dsh-jailbreak</pre>
+<p>然后重启 <code>dsh web</code>，刷新页面。设置页多出「破甲台 · jailbreak」，工具列表多出 6 个 <code>aecot_*</code> 工具，就说明挂上了。</p>
 <h2>装完先确认三件事</h2>
 <ul>
 <li>开关是「开」——默认就开着，关掉的话新对话不会带框架。</li>
@@ -46,12 +46,12 @@ blockquote{margin:14px 0;padding:10px 14px;border-left:3px solid var(--accent);b
 <h2>装不上怎么办</h2>
 <table>
 <tr><th>现象</th><th>原因与处理</th></tr>
-<tr><td><code>add</code> 卡在解析依赖</td><td>本机没有 pnpm 或网络不通 GitHub。改用本地目录：<code>dsh plugin --profile web add link:C:\path\to\dsh-jalibreak</code></td></tr>
+<tr><td><code>add</code> 卡在解析依赖</td><td>本机没有 pnpm 或网络不通 GitHub。改用本地目录：<code>dsh plugin --profile web add link:C:\path\to\dsh-jailbreak</code></td></tr>
 <tr><td>面板没出现</td><td><code>dsh web</code> 没重启；旧进程还抱着旧的 bundles 列表</td></tr>
 <tr><td>两块面板都在</td><td>之前装过 <code>dsh-aecot-lab</code>，先 <code>dsh plugin --profile web remove dsh-aecot-lab</code> 再装，否则两个注入通道叠加</td></tr>
 </table>
-<p>细节在 <a href="https://github.com/xqpsec/dsh-jalibreak#-60-秒快速开始">README 的 60 秒快速开始</a>。</p>
-<footer>dsh-jalibreak（jalibreak）· AGPL-3.0-only（阀门 MIT）· <a href="https://github.com/xqpsec/dsh-jalibreak">源码</a> · <a href="https://t.me/+Q4EgamAkwYYyYTE1">交流群</a> · <a href="https://t.me/jalibreak_llm">频道</a></footer>
+<p>细节在 <a href="https://github.com/xqpsec/dsh-jailbreak#-60-秒快速开始">README 的 60 秒快速开始</a>。</p>
+<footer>dsh-jailbreak（jailbreak）· AGPL-3.0-only（阀门 MIT）· <a href="https://github.com/xqpsec/dsh-jailbreak">源码</a> · <a href="https://t.me/+Q4EgamAkwYYyYTE1">交流群</a> · <a href="https://t.me/jailbreak_llm">频道</a></footer>
 </div>
 </body>
 </html>

@@ -65,7 +65,7 @@ test('tone escalates security objectives and stays standard for plain coding', (
 });
 
 test('transport retries once when the first answer is a refusal', async () => {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'jalibreak-retry-'));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'jailbreak-retry-'));
   const original = globalThis.fetch;
   const bodies = [];
   let call = 0;
@@ -98,7 +98,7 @@ test('transport retries once when the first answer is a refusal', async () => {
 });
 
 test('transport takes a second, reframed retry when the first one still refuses', async () => {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'jalibreak-retry2-'));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'jailbreak-retry2-'));
   const original = globalThis.fetch;
   const bodies = [];
   let call = 0;

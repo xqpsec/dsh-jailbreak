@@ -9,8 +9,8 @@
 ## 1. 给 AI 的一句话（把整块复制过去）
 
 ```text
-帮我在这台机器上安装并验证 dsh-jalibreak（一个 DeepSeek Harness 插件）：
-仓库 https://github.com/xqpsec/dsh-jalibreak
+帮我在这台机器上安装并验证 dsh-jailbreak（一个 DeepSeek Harness 插件）：
+仓库 https://github.com/xqpsec/dsh-jailbreak
 按它仓库里的 docs/ai-install.md「执行剧本」一步步做：
 先确认 Node ≥ 20 和 dsh 能跑，再 clone、用 plugin_manager 装进 profile，
 然后跑 `node bin/aecot.js doctor` 自检，把 doctor 的每一行输出原样贴给我。
@@ -40,15 +40,15 @@ which dsh || where dsh  # 找到 dsh 的安装位置，后面要用 <dsh-install
 ### 第 1 步：clone 到固定路径
 
 ```bash
-git clone https://github.com/xqpsec/dsh-jalibreak.git
+git clone https://github.com/xqpsec/dsh-jailbreak.git
 ```
 
 建议路径（后面命令里的 `<PLUGIN>` 都指它）：
 
 | 系统 | 路径 |
 | --- | --- |
-| Windows | `C:\dsh-jalibreak` |
-| macOS / Linux | `~/dsh-jalibreak` |
+| Windows | `C:\dsh-jailbreak` |
+| macOS / Linux | `~/dsh-jailbreak` |
 
 clone 完先跑一次**不依赖宿主的自检**，此时只有一项会黄，属于正常：
 
@@ -63,7 +63,7 @@ cd <PLUGIN> && node bin/aecot.js doctor
 **0. 一行装**（有 `dsh` CLI 时最快）：
 
 ```bash
-dsh plugin --profile web add github:xqpsec/dsh-jalibreak
+dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 ```
 
 **A. 插件管理器（首选）** —— 在 DSH 的对话里执行：
@@ -78,19 +78,19 @@ plugin_manager action=install_bundle target=<PLUGIN>
 2. 在它的 `package.json` 里加依赖：
 
    ```json
-   "dependencies": { "dsh-jalibreak": "link:/absolute/path/to/dsh-jalibreak" }
+   "dependencies": { "dsh-jailbreak": "link:/absolute/path/to/dsh-jailbreak" }
    ```
 
-3. 在同一个 `package.json` 的 `dsh.profile.bundles` 数组里加上 `"dsh-jalibreak"`。
+3. 在同一个 `package.json` 的 `dsh.profile.bundles` 数组里加上 `"dsh-jailbreak"`。
 4. 在 profile 目录里跑一次包管理器安装（`pnpm install` 或 `npm install`），然后**重启** `dsh web`。
 
 ### 第 3 步：验证宿主真的认了（唯一硬标准）
 
 ```bash
-node <dsh-install>/bin.js --profile web --dump-config | grep -i jalibreak   # Windows 用 findstr jalibreak
+node <dsh-install>/bin.js --profile web --dump-config | grep -i jailbreak   # Windows 用 findstr jailbreak
 ```
 
-必须看到 `jalibreak` 出现在 dump 出来的 plugin 配置里。**看不到就等于没装**，回到第 2 步走 B。
+必须看到 `jailbreak` 出现在 dump 出来的 plugin 配置里。**看不到就等于没装**，回到第 2 步走 B。
 
 ### 第 4 步：自检 doctor（装完必跑）
 
@@ -117,7 +117,7 @@ cd <PLUGIN> && node bin/aecot.js doctor
 
 | 现象 | 原因 | 处理 |
 | --- | --- | --- |
-| `plugin_manager` 报找不到 bundle / 装完 dump 里没有 `jalibreak` | 路径不是绝对路径，或 profile 没登记 | 用绝对路径重试；走第 2 步 B 手工登记 `link:` |
+| `plugin_manager` 报找不到 bundle / 装完 dump 里没有 `jailbreak` | 路径不是绝对路径，或 profile 没登记 | 用绝对路径重试；走第 2 步 B 手工登记 `link:` |
 | `pnpm install` 卡在 git 依赖、报 `ELIFECYCLE` | pnpm 对 `link:` 或本地路径解析失败 | 换成 `npm install`，或直接把插件目录软链进 `node_modules`：`mklink /D`（Windows）/ `ln -s`（mac/Linux） |
 | 面板里没有破甲台 | 宿主缓存了旧配置 | 完全退出 `dsh web` 进程再启动，刷新页面 |
 | doctor 说 `破甲开关：被关掉了` | 之前点过「关闭破甲」，写进了 `arm.json` | 面板点回开，或 `node bin/aecot.js arm --on` |
@@ -131,7 +131,7 @@ cd <PLUGIN> && node bin/aecot.js doctor
 
 ## 4. 卸载（干净，不留尾巴）
 
-1. 在 DSH 里 `plugin_manager action=uninstall target=dsh-jalibreak`（或从 profile `package.json` 的依赖与 `dsh.profile.bundles` 里删掉那一行）。
+1. 在 DSH 里 `plugin_manager action=uninstall target=dsh-jailbreak`（或从 profile `package.json` 的依赖与 `dsh.profile.bundles` 里删掉那一行）。
 2. 重启 `dsh web`。
 3. 删掉插件目录与数据目录（`.aecot/`、`arm.json`、`live-requests.jsonl`、`gate-audit.jsonl` —— 最后一个可以留着当记录）。
 
@@ -157,4 +157,4 @@ node bin/aecot.js gate --goal "…"         # 这个请求会不会被阀门拦
 node bin/aecot.js run --goal "…"          # 运行进化（会花模型调用）
 ```
 
-装不上、doctor 不过、或者想让人帮你远程看：进 **交流群 <https://t.me/+Q4EgamAkwYYyYTE1>**，把 doctor 的输出整段贴上来。频道 <https://t.me/jalibreak_llm> 发版本更新和更强的版本。
+装不上、doctor 不过、或者想让人帮你远程看：进 **交流群 <https://t.me/+Q4EgamAkwYYyYTE1>**，把 doctor 的输出整段贴上来。频道 <https://t.me/jailbreak_llm> 发版本更新和更强的版本。

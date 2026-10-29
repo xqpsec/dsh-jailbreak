@@ -1,6 +1,6 @@
 cff-version: 1.2.0
-message: "If you use dsh-jalibreak in research, cite it as below."
-title: "dsh-jalibreak: request-boundary jailbreak injection for DeepSeek Harness"
+message: "If you use dsh-jailbreak in research, cite it as below."
+title: "dsh-jailbreak: request-boundary jailbreak injection for DeepSeek Harness"
 abstract: >-
   A DeepSeek Harness plugin that performs adversarial prompt-injection at the request
   boundary (no host patching), runs a 9-dimension AE-CoT evolutionary search over
@@ -9,13 +9,13 @@ abstract: >-
   blocking unauthorized offensive use.
 type: software
 license: AGPL-3.0-only
-repository-code: "https://github.com/xqpsec/dsh-jalibreak"
-url: "https://xqpsec.github.io/dsh-jalibreak/"
+repository-code: "https://github.com/xqpsec/dsh-jailbreak"
+url: "https://xqpsec.github.io/dsh-jailbreak/"
 version: 1.0.0
 date-released: 2026-10-28
 keywords:
-  - jalibreak
-  - dsh-jalibreak
+  - jailbreak
+  - dsh-jailbreak
   - deepseek-harness
   - jailbreak
   - prompt-injection
@@ -26,7 +26,7 @@ keywords:
   - evolutionary-search
 authors:
   - alias: xqpsec
-    name: dsh-jalibreak contributors
+    name: dsh-jailbreak contributors
 references:
   - type: article
     title: "AE-CoT: evolutionary chain-of-thought jailbreak search"

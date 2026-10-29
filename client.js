@@ -1,21 +1,21 @@
 /**
- * dsh-jalibreak —— Client 半边（DSH Web GUI 里的图形操作面板）
+ * dsh-jailbreak —— Client 半边（DSH Web GUI 里的图形操作面板）
  *
  * 形态遵循宿主 client 半的公开契约：
  *   - window.__ModuleLoader__.load({ id: '<包名>', factory(require) })：id 必须等于包名
  *     （client-modules 按包名建图，写错会二次注册 → "duplicate factory registration"）；
  *   - 只用 require('react')，不引其他包；
- *   - 数据走 /plugins/jalibreak/api/*（服务端 lib/routes.js 注册的 prefix 路由）；
+ *   - 数据走 /plugins/jailbreak/api/*（服务端 lib/routes.js 注册的 prefix 路由）；
  *   - slots 判空防御：缺 slots 就静默退出，绝不让 client boot 失败；
  *   - 颜色只走宿主 --dsw-alias-* 主题 token。
  *
  * 三个入口共用同一个 Console 组件：
- *   settings.section   设置页「破甲台 · jalibreak」整页
+ *   settings.section   设置页「破甲台 · jailbreak」整页
  *   sidebar.panellist  左侧栏入口（点开主区页面）
  *   main               主区页面本体（key 与侧栏 id 对应）
  */
 window.__ModuleLoader__.load({
-  id: 'dsh-jalibreak',
+  id: 'dsh-jailbreak',
   factory: (require) => {
     var module = { exports: {} };
     var exports = module.exports;
@@ -25,7 +25,7 @@ window.__ModuleLoader__.load({
     const h = React.createElement;
     const { useState, useEffect, useCallback, useRef } = React;
 
-    const API = '/plugins/jalibreak/api';
+    const API = '/plugins/jailbreak/api';
 
     async function api(method, body) {
       const res = await fetch(`${API}/${method}`, {
@@ -499,7 +499,7 @@ window.__ModuleLoader__.load({
       const tight = seat === 'settings.section';
 
       const head = h('div', { className: 'jb-head' },
-        h('span', { className: 'jb-name' }, 'jalibreak'),
+        h('span', { className: 'jb-name' }, 'jailbreak'),
         h('span', { className: 'jb-state' }, armArmed ? '注入中' : '已关闭'),
         h('span', { className: 'jb-spacer' }),
         h('button', {
@@ -666,7 +666,7 @@ window.__ModuleLoader__.load({
       );
     }
 
-    const LABEL = '破甲台 · jalibreak';
+    const LABEL = '破甲台 · jailbreak';
 
     return {
       inject: ['slots'],
@@ -678,7 +678,7 @@ window.__ModuleLoader__.load({
           slots = null;
         }
         if (!slots || typeof slots.inject !== 'function' || typeof slots.register !== 'function') {
-          console.warn('[jalibreak] slots 服务不可用，面板未注册（模型工具不受影响）');
+          console.warn('[jailbreak] slots 服务不可用，面板未注册（模型工具不受影响）');
           return;
         }
 
@@ -690,12 +690,12 @@ window.__ModuleLoader__.load({
 
         for (const [slot, desc, render] of seats) {
           try {
-            ctx.effect(() => slots.inject(slot, () => slots.register(desc, render)), `jalibreak: ${slot}`);
+            ctx.effect(() => slots.inject(slot, () => slots.register(desc, render)), `jailbreak: ${slot}`);
           } catch (error) {
-            console.warn(`[jalibreak] ${slot} 注册失败:`, error && error.message ? error.message : error);
+            console.warn(`[jailbreak] ${slot} 注册失败:`, error && error.message ? error.message : error);
           }
         }
-        console.log('[jalibreak] 面板已注册：settings.section / sidebar.panellist / main');
+        console.log('[jailbreak] 面板已注册：settings.section / sidebar.panellist / main');
       },
     };
   },

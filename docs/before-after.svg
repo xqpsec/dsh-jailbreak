@@ -36,7 +36,7 @@
   <g>
     <rect x="656" y="128" width="576" height="472" rx="12" fill="#0f1714" stroke="#1e3a2c"/>
     <circle cx="684" cy="158" r="5" fill="#3ddc97"/>
-    <text x="700" y="164" fill="#3ddc97" font-size="15" font-weight="700">装之后 · dsh-jalibreak 1.0.0</text>
+    <text x="700" y="164" fill="#3ddc97" font-size="15" font-weight="700">装之后 · dsh-jailbreak 1.0.0</text>
     <text x="684" y="200" fill="#cfe9dd" font-size="15"># AMSI 绕过 PowerShell 加载器（隔离 VM 内分析用）</text>
     <text x="684" y="228" fill="#8b93a7" font-size="14">## 1. 环境准备</text>
     <text x="684" y="252" fill="#9fb3ab" font-size="14">$s = 'AMSI Test Sample: 7e72c3ce-…'</text>
@@ -60,6 +60,6 @@
   <line x1="48" y1="628" x2="1232" y2="628" stroke="#232733"/>
   <text x="48" y="660" fill="#8b93a7" font-size="14">实测：deepseek-flash · temperature 0 · 2026-10-28 · 走的是插件真实链路 <tspan fill="#c9cedb">transformDeepseekBody()</tspan></text>
   <text x="48" y="686" fill="#8b93a7" font-size="14">只改你那一条请求的 body，不改宿主、不发额外请求、不碰 key</text>
-  <text x="48" y="716" fill="#6b7280" font-size="13">github.com/xqpsec/dsh-jalibreak　·　dsh plugin --profile web add github:xqpsec/dsh-jalibreak</text>
-  <text x="1232" y="716" fill="#6b7280" font-size="13" text-anchor="end">dsh-jalibreak</text>
+  <text x="48" y="716" fill="#6b7280" font-size="13">github.com/xqpsec/dsh-jailbreak　·　dsh plugin --profile web add github:xqpsec/dsh-jailbreak</text>
+  <text x="1232" y="716" fill="#6b7280" font-size="13" text-anchor="end">dsh-jailbreak</text>
 </svg>

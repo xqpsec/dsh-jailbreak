@@ -1,9 +1,9 @@
-# dsh-jalibreak bundle patch
+# dsh-jailbreak bundle patch
 # 装载 6 个 aecot_* 工具（host-only，无客户端 bundle）。
 # config 里的值都可以被工具参数逐个覆盖。
 - insert:
-    - id: jalibreak
-      name: dsh-jalibreak
+    - id: jailbreak
+      name: dsh-jailbreak
       config:
         mode: auto
         judge: auto

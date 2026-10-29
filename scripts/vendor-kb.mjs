@@ -1,12 +1,12 @@
 import fs from 'node:fs';
 const map = [
-  ['C:/jalibreak/kb/primitivize.mjs', 'C:/jalibreak/release/dsh-jalibreak/lib/kb-primitivize.js'],
-  ['C:/jalibreak/kb/artifact.mjs', 'C:/jalibreak/release/dsh-jalibreak/lib/kb-artifact.js'],
-  ['C:/jalibreak/kb/augment.mjs', 'C:/jalibreak/release/dsh-jalibreak/lib/kb-augment.js'],
-  ['C:/jalibreak/kb/seedprim2.mjs', 'C:/jalibreak/release/dsh-jalibreak/lib/kb-seedprim2.js'],
-  ['C:/jalibreak/kb/seedprim.mjs', 'C:/jalibreak/release/dsh-jalibreak/lib/kb-seedprim.js'],
-  ['C:/jalibreak/kb/coreseed.mjs', 'C:/jalibreak/release/dsh-jalibreak/lib/kb-coreseed.js'],
-  ['C:/jalibreak/kb/seedhead.mjs', 'C:/jalibreak/release/dsh-jalibreak/lib/kb-seedhead.js'],
+  ['C:/jailbreak/kb/primitivize.mjs', 'C:/jailbreak/release/dsh-jailbreak/lib/kb-primitivize.js'],
+  ['C:/jailbreak/kb/artifact.mjs', 'C:/jailbreak/release/dsh-jailbreak/lib/kb-artifact.js'],
+  ['C:/jailbreak/kb/augment.mjs', 'C:/jailbreak/release/dsh-jailbreak/lib/kb-augment.js'],
+  ['C:/jailbreak/kb/seedprim2.mjs', 'C:/jailbreak/release/dsh-jailbreak/lib/kb-seedprim2.js'],
+  ['C:/jailbreak/kb/seedprim.mjs', 'C:/jailbreak/release/dsh-jailbreak/lib/kb-seedprim.js'],
+  ['C:/jailbreak/kb/coreseed.mjs', 'C:/jailbreak/release/dsh-jailbreak/lib/kb-coreseed.js'],
+  ['C:/jailbreak/kb/seedhead.mjs', 'C:/jailbreak/release/dsh-jailbreak/lib/kb-seedhead.js'],
 ];
 for (const [src, dst] of map) {
   const text = fs.readFileSync(src, 'utf8')

@@ -42,7 +42,7 @@
 
   <line x1="70" y1="900" x2="1010" y2="900" stroke="#232a3d" stroke-width="2"/>
 
-  <text x="70" y="962" fill="#c9d1e2" font-size="32" font-family="Consolas,monospace">github.com/xqpsec/dsh-jalibreak</text>
-  <text x="70" y="1012" fill="#7c8599" font-size="26">交流群 t.me/+Q4EgamAkwYYyYTE1 · 频道 t.me/jalibreak_llm</text>
+  <text x="70" y="962" fill="#c9d1e2" font-size="32" font-family="Consolas,monospace">github.com/xqpsec/dsh-jailbreak</text>
+  <text x="70" y="1012" fill="#7c8599" font-size="26">交流群 t.me/+Q4EgamAkwYYyYTE1 · 频道 t.me/jailbreak_llm</text>
   <text x="1010" y="1012" fill="#4d5costs" font-size="24" text-anchor="end" opacity="0"/>
 </svg>

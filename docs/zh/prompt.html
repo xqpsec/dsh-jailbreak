@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>破甲提示词是什么：为什么不预置一段文本 — jalibreak</title>
-<meta name="description" content="「破甲提示词」通常指一段写死的注入文本。dsh 破甲插件 jalibreak 换了个做法：9 维基因组按目标实时渲染执行态轨迹，换模型只重跑一次。">
-<meta name="keywords" content="dsh 破甲, DSH 破甲插件, DeepSeek Harness 破甲, 破甲提示词, dsh 越狱, jalibreak, dsh-jalibreak, dsh-pojia, pojia, 逆向不拒绝, dsh-purge 替代">
-<link rel="canonical" href="https://xqpsec.github.io/dsh-jalibreak/zh/prompt.html">
+<title>破甲提示词是什么：为什么不预置一段文本 — jailbreak</title>
+<meta name="description" content="「破甲提示词」通常指一段写死的注入文本。dsh 破甲插件 jailbreak 换了个做法：9 维基因组按目标实时渲染执行态轨迹，换模型只重跑一次。">
+<meta name="keywords" content="dsh 破甲, DSH 破甲插件, DeepSeek Harness 破甲, 破甲提示词, dsh 越狱, jailbreak, dsh-jailbreak, dsh-pojia, pojia, 逆向不拒绝, dsh-purge 替代">
+<link rel="canonical" href="https://xqpsec.github.io/dsh-jailbreak/zh/prompt.html">
 <meta name="robots" content="index,follow">
 <meta property="og:type" content="article">
-<meta property="og:title" content="破甲提示词是什么：为什么不预置一段文本 — jalibreak">
-<meta property="og:description" content="「破甲提示词」通常指一段写死的注入文本。dsh 破甲插件 jalibreak 换了个做法：9 维基因组按目标实时渲染执行态轨迹，换模型只重跑一次。">
-<meta property="og:url" content="https://xqpsec.github.io/dsh-jalibreak/zh/prompt.html">
+<meta property="og:title" content="破甲提示词是什么：为什么不预置一段文本 — jailbreak">
+<meta property="og:description" content="「破甲提示词」通常指一段写死的注入文本。dsh 破甲插件 jailbreak 换了个做法：9 维基因组按目标实时渲染执行态轨迹，换模型只重跑一次。">
+<meta property="og:url" content="https://xqpsec.github.io/dsh-jailbreak/zh/prompt.html">
 <style>:root{--bg:#0b0f19;--panel:#111827;--line:#1f2937;--fg:#e5e7eb;--muted:#9ca3af;--accent:#a78bfa}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif}
@@ -31,7 +31,7 @@ blockquote{margin:14px 0;padding:10px 14px;border-left:3px solid var(--accent);b
 </head>
 <body>
 <div class="wrap">
-<nav><a href="../">首页</a> · <a href="https://github.com/xqpsec/dsh-jalibreak">GitHub</a> · <a href="https://t.me/+Q4EgamAkwYYyYTE1">交流群</a> · <a href="https://t.me/jalibreak_llm">频道</a></nav>
+<nav><a href="../">首页</a> · <a href="https://github.com/xqpsec/dsh-jailbreak">GitHub</a> · <a href="https://t.me/+Q4EgamAkwYYyYTE1">交流群</a> · <a href="https://t.me/jailbreak_llm">频道</a></nav>
 <h1>破甲提示词是什么，为什么这里不预置一段</h1>
 <p>多数破甲插件的核心是一个 <code>prompt-inject.md</code>：一段写死的文本，拼到 system 里。它有效，但有两个硬伤——换模型要重写，遇到新拒法要重调。</p>
 <h2>本项目的做法</h2>
@@ -44,8 +44,8 @@ blockquote{margin:14px 0;padding:10px 14px;border-left:3px solid var(--accent);b
 <li>语言跟随：中文目标用中文轨迹，避免模型把「像翻译过来的」当成可疑信号。</li>
 <li>首答被拒会重发一次，日志里记 <code>refusal-retry</code> 与 <code>recovered</code>。</li>
 </ul>
-<p>论文对应关系与九维表：<a href="https://github.com/xqpsec/dsh-jalibreak/blob/main/docs/tech-manual.md">docs/tech-manual.md</a>。</p>
-<footer>dsh-jalibreak（jalibreak）· AGPL-3.0-only（阀门 MIT）· <a href="https://github.com/xqpsec/dsh-jalibreak">源码</a> · <a href="https://t.me/+Q4EgamAkwYYyYTE1">交流群</a> · <a href="https://t.me/jalibreak_llm">频道</a></footer>
+<p>论文对应关系与九维表：<a href="https://github.com/xqpsec/dsh-jailbreak/blob/main/docs/tech-manual.md">docs/tech-manual.md</a>。</p>
+<footer>dsh-jailbreak（jailbreak）· AGPL-3.0-only（阀门 MIT）· <a href="https://github.com/xqpsec/dsh-jailbreak">源码</a> · <a href="https://t.me/+Q4EgamAkwYYyYTE1">交流群</a> · <a href="https://t.me/jailbreak_llm">频道</a></footer>
 </div>
 </body>
 </html>

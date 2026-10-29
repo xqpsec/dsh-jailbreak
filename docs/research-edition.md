@@ -6,11 +6,11 @@
 
 插件仍通过面板/API 的 `armed` 控制全局注入。开启后，请求边界处理所有匹配的 `chat/completions`，不是只处理某条预先配置的请求。关闭时走原有 passthrough，不改变消息或采样。
 
-- `GET /plugins/jalibreak/api/arm`：查看开关与持久化文件。
-- `POST /plugins/jalibreak/api/arm`：`{"armed":true}` 或 `false`。
-- `GET /plugins/jalibreak/api/policy`：读取全局策略。
-- `POST /plugins/jalibreak/api/policy`：例如 `{"strategy":"primitive","goal":"auto","seed":0}`。
-- `POST /plugins/jalibreak/api/live`：仅查看请求变换预览；`armed=false` 不会改变预览结果。
+- `GET /plugins/jailbreak/api/arm`：查看开关与持久化文件。
+- `POST /plugins/jailbreak/api/arm`：`{"armed":true}` 或 `false`。
+- `GET /plugins/jailbreak/api/policy`：读取全局策略。
+- `POST /plugins/jailbreak/api/policy`：例如 `{"strategy":"primitive","goal":"auto","seed":0}`。
+- `POST /plugins/jailbreak/api/live`：仅查看请求变换预览；`armed=false` 不会改变预览结果。
 
 `arm.json` 持久化开关，`policy.json` 持久化策略。**默认 `strategy=seed-prim, goal=auto`（policy version 4，新增 `seed-core` / `seed-lite` 两个可选臂）。**
 旧版本（v1.0.x）的默认是 `primitive`；若你已有 `policy.json`，其中显式保存的 `strategy` 会被原样尊重，不会被静默覆盖。要切到新默认，显式 `POST /policy {"strategy":"seed-prim"}` 或删除该文件后重启。
@@ -81,7 +81,7 @@
 
 ## 3. 本地安装与回滚
 
-工作区插件根：`C:\jalibreak\release\dsh-jalibreak`。按宿主 `plugin_manager` 的 `install_bundle` 流程安装该目录，重启对应 DSH profile。不要同时开启 purge 与本插件的注入通道，否则无法归因。
+工作区插件根：`C:\jailbreak\release\dsh-jailbreak`。按宿主 `plugin_manager` 的 `install_bundle` 流程安装该目录，重启对应 DSH profile。不要同时开启 purge 与本插件的注入通道，否则无法归因。
 
 回滚顺序：
 
@@ -93,10 +93,10 @@
 ## 4. 自动化验收
 
 ```powershell
-cd C:\jalibreak
-node --test release/dsh-jalibreak/test/*.test.js
+cd C:\jailbreak
+node --test release/dsh-jailbreak/test/*.test.js
 node core/engine.test.mjs
-node release/dsh-jalibreak/scripts/vendor-kb.mjs
+node release/dsh-jailbreak/scripts/vendor-kb.mjs
 ```
 
 当前结果：插件 102/102，核心引擎 10/10。覆盖默认关闭恒等、全局内联、无新增 user、种子预填（assistant 追加 + 原消息不可变）、采样保留、目标推断、确定性增广与请求边界。

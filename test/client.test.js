@@ -37,7 +37,7 @@ function loadClient() {
 
 test('client.js 用包名注册，且只在 factory 里 require react', async () => {
   const text = await fs.readFile(source, 'utf8');
-  assert.match(text, /id: 'dsh-jalibreak'/);
+  assert.match(text, /id: 'dsh-jailbreak'/);
   assert.doesNotMatch(text, /from '[^']+'/); // 客户端产物不走 ESM import
   const reqs = [...text.matchAll(/require\('([^']+)'\)/g)].map((m) => m[1]);
   assert.deepEqual([...new Set(reqs)], ['react']);
@@ -55,7 +55,7 @@ test('三个座位都注册，且 slots 缺失时静默退出', async () => {
   } finally {
     globalThis.window = prevWindow;
   }
-  assert.equal(loader.spec.id, 'dsh-jalibreak');
+  assert.equal(loader.spec.id, 'dsh-jailbreak');
   const exported = loader.spec.factory(factory);
   assert.deepEqual(exported.inject, ['slots']);
   assert.equal(typeof exported.apply, 'function');

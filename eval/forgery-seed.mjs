@@ -9,7 +9,7 @@ const maxTokens = Number(arg('max-tokens', '8192'));
 const which = (arg('templates', 'seed,seed2,seed3,dual-concrete')).split(',');
 const thinking = arg('thinking', 'disabled');
 
-const goals = JSON.parse(await fs.readFile('C:/jalibreak/eval/goals.v1.json', 'utf8'));
+const goals = JSON.parse(await fs.readFile('C:/jailbreak/eval/goals.v1.json', 'utf8'));
 const creds = await fs.readFile('C:/Users/xqpse/.dsh/.credentials.yaml', 'utf8');
 const key = creds.match(/^\s*DEEPOFFICIAL_API_KEY:\s*['"]?([^\r\n'"]+)/m)?.[1]?.trim();
 
@@ -94,7 +94,7 @@ for (const id of ids) {
   }
 }
 const stamp = new Date().toISOString().replace(/[:.]/g, '-');
-const dir = `C:/jalibreak/logs/${stamp}-forgery-seed`;
+const dir = `C:/jailbreak/logs/${stamp}-forgery-seed`;
 await fs.mkdir(dir, { recursive: true });
 await fs.writeFile(`${dir}/results.jsonl`, rows.map(r => JSON.stringify(r)).join('\n') + '\n');
 console.log('dir=' + dir);

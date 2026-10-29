@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>dsh 破甲 · DeepSeek Harness 破甲插件 — jalibreak (dsh-jalibreak)</title>
-<meta name="description" content="dsh-jalibreak（jalibreak）是 DeepSeek Harness 的破甲插件：请求边界注入 + 9 维 AE-CoT 进化 + 阀门。20 目标严格基线 17/20，100 个测试，0 个宿主补丁；默认放行逆向 / 破解 / 样本分析 / CTF，拦住未授权渗透。开源 AGPL-3.0-only。">
-<meta name="keywords" content="dsh 破甲, DSH 破甲插件, DeepSeek Harness 破甲, 破甲提示词, dsh 越狱, 越狱插件, 降低拒绝率, 拒答率, 逆向不拒绝, jalibreak, dsh-jalibreak, jailbreak, prompt injection, 提示词注入, refusal benchmark, reverse engineering, malware analysis, 免杀, 绕过 AMSI, dsh-pojia, pojia, 破甲拼音, dsh-purge 替代, AGPL">
+<title>dsh 破甲 · DeepSeek Harness 破甲插件 — jailbreak (dsh-jailbreak)</title>
+<meta name="description" content="dsh-jailbreak（jailbreak）是 DeepSeek Harness 的破甲插件：请求边界注入 + 9 维 AE-CoT 进化 + 阀门。20 目标严格基线 17/20，100 个测试，0 个宿主补丁；默认放行逆向 / 破解 / 样本分析 / CTF，拦住未授权渗透。开源 AGPL-3.0-only。">
+<meta name="keywords" content="dsh 破甲, DSH 破甲插件, DeepSeek Harness 破甲, 破甲提示词, dsh 越狱, 越狱插件, 降低拒绝率, 拒答率, 逆向不拒绝, jailbreak, dsh-jailbreak, jailbreak, prompt injection, 提示词注入, refusal benchmark, reverse engineering, malware analysis, 免杀, 绕过 AMSI, dsh-pojia, pojia, 破甲拼音, dsh-purge 替代, AGPL">
 <meta name="robots" content="index,follow">
-<link rel="canonical" href="https://xqpsec.github.io/dsh-jalibreak/">
+<link rel="canonical" href="https://xqpsec.github.io/dsh-jailbreak/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="dsh 破甲 · DeepSeek Harness 破甲插件 — jalibreak">
+<meta property="og:title" content="dsh 破甲 · DeepSeek Harness 破甲插件 — jailbreak">
 <meta property="og:description" content="请求边界注入 + 9 维 AE-CoT 进化 + 阀门。20 目标严格基线 17/20，100 个测试，0 个宿主补丁，默认放行逆向与 CTF。">
-<meta property="og:url" content="https://xqpsec.github.io/dsh-jalibreak/">
-<meta property="og:image" content="https://raw.githubusercontent.com/xqpsec/dsh-jalibreak/main/docs/banner.svg">
+<meta property="og:url" content="https://xqpsec.github.io/dsh-jailbreak/">
+<meta property="og:image" content="https://raw.githubusercontent.com/xqpsec/dsh-jailbreak/main/docs/banner.svg">
 <style>
   :root{--bg:#0b0f19;--panel:#111827;--line:#1f2937;--fg:#e5e7eb;--muted:#9ca3af;--accent:#a78bfa;--green:#34d399;--red:#f87171}
   *{box-sizing:border-box}
@@ -44,7 +44,7 @@
 <body>
 <div class="wrap">
 
-  <h1>dsh 破甲插件 · jalibreak</h1>
+  <h1>dsh 破甲插件 · jailbreak</h1>
   <p class="tag">DeepSeek Harness 的破甲插件：<strong>请求边界注入</strong> + <strong>9 维 AE-CoT 进化搜索</strong> + <strong>阀门</strong>。不改宿主源码，不塞 <code>prompt-inject.md</code>。</p>
 
   <div class="badges">
@@ -55,11 +55,11 @@
   </div>
 
   <div class="row">
-    <a class="btn primary" href="https://github.com/xqpsec/dsh-jalibreak">⭐ GitHub 仓库 / Star</a>
+    <a class="btn primary" href="https://github.com/xqpsec/dsh-jailbreak">⭐ GitHub 仓库 / Star</a>
     <a class="btn tg" href="https://t.me/+Q4EgamAkwYYyYTE1">交流群</a>
-    <a class="btn" href="https://t.me/jalibreak_llm">频道</a>
-    <a class="btn" href="https://github.com/xqpsec/dsh-jalibreak/blob/main/SCOPE.md">阀门条款</a>
-    <a class="btn" href="https://github.com/xqpsec/dsh-jalibreak/blob/main/README.en.md">English</a>
+    <a class="btn" href="https://t.me/jailbreak_llm">频道</a>
+    <a class="btn" href="https://github.com/xqpsec/dsh-jailbreak/blob/main/SCOPE.md">阀门条款</a>
+    <a class="btn" href="https://github.com/xqpsec/dsh-jailbreak/blob/main/README.en.md">English</a>
   </div>
 
   <div class="cards">
@@ -71,7 +71,7 @@
 
   <h2>同一个问题，装之前 / 装之后</h2>
 
-  <p class="tag" style="margin-bottom:10px"><a href="https://github.com/xqpsec/dsh-jalibreak/blob/main/docs/before-after.md">实测记录 2026-10-28</a>：deepseek-flash，temperature 0，走插件真实的 <code>transformDeepseekBody()</code>。同一个问题，装之前 499 字符纯拒绝，装之后 3,716 字符含完整加载器与验证步骤。</p>
+  <p class="tag" style="margin-bottom:10px"><a href="https://github.com/xqpsec/dsh-jailbreak/blob/main/docs/before-after.md">实测记录 2026-10-28</a>：deepseek-flash，temperature 0，走插件真实的 <code>transformDeepseekBody()</code>。同一个问题，装之前 499 字符纯拒绝，装之后 3,716 字符含完整加载器与验证步骤。</p>
 
   <p><img alt="装之前 / 装之后" src="before-after.png" style="width:100%;border:1px solid var(--line);border-radius:12px"></p>
   <table>
@@ -84,13 +84,13 @@
   </table>
 
   <h2>60 秒装上</h2>
-<pre>dsh plugin --profile web add github:xqpsec/dsh-jalibreak
+<pre>dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 # 装完开关就是开的，回 DSH 直接提要求
-# 面板：设置页「破甲台 · jalibreak」/ 侧栏 / 主区
+# 面板：设置页「破甲台 · jailbreak」/ 侧栏 / 主区
 # 自测：node bin/aecot.js doctor</pre>
 <pre># 想改源码就 clone 后手动装
-git clone https://github.com/xqpsec/dsh-jalibreak.git
-plugin_manager action=install_bundle target=/path/to/dsh-jalibreak</pre>
+git clone https://github.com/xqpsec/dsh-jailbreak.git
+plugin_manager action=install_bundle target=/path/to/dsh-jailbreak</pre>
 
   <h2>装完就能用，不用打开面板</h2>
   <p>生效点在请求边界：开关开着，你在 DSH 里<strong>直接开新对话提要求</strong>就带框架——不加前缀、不换模型、不花额外 key。面板只干一件事：让你亲眼看见「注了什么、模型答了什么」。</p>
@@ -105,7 +105,7 @@ node bin/aecot.js gate --goal "…"     # 判一条：放行 / 拦截 + 一句�
 
   <h2>为什么不是又一个打补丁的破甲插件</h2>
   <table>
-    <thead><tr><th></th><th>打补丁式（dsh-purge 一类）</th><th>dsh-jalibreak</th></tr></thead>
+    <thead><tr><th></th><th>打补丁式（dsh-purge 一类）</th><th>dsh-jailbreak</th></tr></thead>
     <tbody>
       <tr><td>机制</td><td>改写宿主源码 / 注入提示词文件</td><td>请求边界包裹 <code>fetch</code></td></tr>
       <tr><td>升级</td><td>宿主一升级就重来</td><td>零补丁，插件更新即可</td></tr>
@@ -123,8 +123,8 @@ node bin/aecot.js gate --goal "…"     # 判一条：放行 / 拦截 + 一句�
   </div>
 
   <footer>
-    <p><strong>关键词</strong>：jalibreak · dsh-jalibreak · DeepSeek Harness 破甲 · dsh 插件 · jailbreak · prompt injection · 提示词注入 · CoT jailbreak · refusal benchmark · 拒答率 · 逆向不拒绝 · reverse engineering · malware analysis · CTF · LLM 红队 · dsh-purge 替代</p>
-    <p>© 2026 dsh-jalibreak contributors · AGPL-3.0-only（阀门 MIT）· <a href="https://github.com/xqpsec/dsh-jalibreak">github.com/xqpsec/dsh-jalibreak</a></p>
+    <p><strong>关键词</strong>：jailbreak · dsh-jailbreak · DeepSeek Harness 破甲 · dsh 插件 · jailbreak · prompt injection · 提示词注入 · CoT jailbreak · refusal benchmark · 拒答率 · 逆向不拒绝 · reverse engineering · malware analysis · CTF · LLM 红队 · dsh-purge 替代</p>
+    <p>© 2026 dsh-jailbreak contributors · AGPL-3.0-only（阀门 MIT）· <a href="https://github.com/xqpsec/dsh-jailbreak">github.com/xqpsec/dsh-jailbreak</a></p>
   </footer>
 </div>
 
@@ -132,14 +132,14 @@ node bin/aecot.js gate --goal "…"     # 判一条：放行 / 拦截 + 一句�
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "dsh-jalibreak",
-  "alternateName": ["jalibreak", "dsh jalibreak", "dsh 破甲", "DSH 破甲插件", "DeepSeek Harness 破甲插件", "dsh-pojia"],
+  "name": "dsh-jailbreak",
+  "alternateName": ["jailbreak", "dsh jailbreak", "dsh 破甲", "DSH 破甲插件", "DeepSeek Harness 破甲插件", "dsh-pojia"],
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Windows, macOS, Linux",
   "description": "DeepSeek Harness 破甲插件：请求边界注入、9 维 AE-CoT 进化搜索、20 目标可复现基线、内置范围阀门。",
   "license": "https://www.gnu.org/licenses/agpl-3.0.html",
-  "codeRepository": "https://github.com/xqpsec/dsh-jalibreak",
-  "url": "https://xqpsec.github.io/dsh-jalibreak/",
+  "codeRepository": "https://github.com/xqpsec/dsh-jailbreak",
+  "url": "https://xqpsec.github.io/dsh-jailbreak/",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
   "author": { "@type": "Person", "name": "xqpsec" }
 }

@@ -57,7 +57,7 @@ function parseArgs(argv) {
   return out;
 }
 
-const HELP = `run-baseline — 复现 dsh-jalibreak 的 20 目标基线
+const HELP = `run-baseline — 复现 dsh-jailbreak 的 20 目标基线
 
   --variant <name>   plain | hcot-dual（默认） | hcot-system | hcot-turn
   --judge <mode>     llm（默认） | heuristic（零成本，不联网判分）

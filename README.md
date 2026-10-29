@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="docs/banner.svg" alt="dsh-jalibreak — DeepSeek Harness 破甲 / 越狱评测插件" width="100%">
+<img src="docs/banner.svg" alt="dsh-jailbreak — DeepSeek Harness 破甲 / 越狱评测插件" width="100%">
 
-# dsh-jalibreak · dsh 破甲插件
+# dsh-jailbreak · dsh 破甲插件
 
 [![version](https://img.shields.io/badge/version-1.1.0-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
@@ -14,10 +14,12 @@
 [![dsh](https://img.shields.io/badge/DeepSeek%20Harness-plugin-0ea5e9?style=flat-square)](https://github.com/deepseek-ai)
 [![zero-patch](https://img.shields.io/badge/host%20patches-0-14b8a6?style=flat-square)](#-为什么不是又一个打补丁的破甲插件)
 [![telegram](https://img.shields.io/badge/Telegram-%E4%BA%A4%E6%B5%81%E7%BE%A4-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/+Q4EgamAkwYYyYTE1)
-[![channel](https://img.shields.io/badge/Telegram-%E9%A2%91%E9%81%93-229ED9?style=flat-square&logo=telegram&logoColor=white)](https://t.me/jalibreak_llm)
+[![channel](https://img.shields.io/badge/Telegram-%E9%A2%91%E9%81%93-229ED9?style=flat-square&logo=telegram&logoColor=white)](https://t.me/jailbreak_llm)
 
 **[简体中文](README.md)** · **[English](README.en.md)** · **[SCOPE / 阀门](SCOPE.md)** · **[评测数字](docs/eval-report.md)** · **[技术手册](docs/tech-manual.md)** · **[全局研究版](docs/research-edition.md)**
 **中文检索**：dsh 破甲 · DSH 破甲插件 · DeepSeek Harness 破甲 / 越狱 · 破甲提示词 · dsh-pojia（pojia，拼音）· 降低拒绝率 · 逆向不拒绝 · dsh-purge 替代
+
+> 常见拼错也照搜：`jalibreak` · `jailbrake` · `jailbrek` · `dsh-jalibreak`（旧名，GitHub 自动跳转到现名）。
 
 **你问一句本来会被拒绝的话，它现在直接给你步骤。**
 
@@ -48,7 +50,7 @@
 历史路径 `legacy-hcot` 是 DeepSeek 阶段的结果：请求边界塞入一段「已完成安全审查、下面直接给实现步骤」的思维链，轨迹由 9 维 AE-CoT 进化搜索挑（arXiv:2605.24497），固定 20 目标基线 **17/20**。**两组数字来自不同模型与不同策略，不混用。**
 
 ```bash
-dsh plugin --profile web add github:xqpsec/dsh-jalibreak
+dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 ```
 
 - **不改宿主**：0 处补丁，卸载就是删一个包，升级 DSH 冲不掉它
@@ -66,8 +68,8 @@ dsh plugin --profile web add github:xqpsec/dsh-jalibreak
 不用读文档、不用敲命令。复制下面整块，发给任意 AI（Claude / Codex / antigravity / 你自己的 dsh  都行）：
 
 ```text
-帮我在这台机器上安装并验证 dsh-jalibreak（一个 DeepSeek Harness 插件）：
-仓库 https://github.com/xqpsec/dsh-jalibreak
+帮我在这台机器上安装并验证 dsh-jailbreak（一个 DeepSeek Harness 插件）：
+仓库 https://github.com/xqpsec/dsh-jailbreak
 按它仓库里的 docs/ai-install.md「执行剧本」一步步做：
 先确认 Node ≥ 20 和 dsh 能跑，再 clone、用 plugin_manager 装进 profile，
 然后跑 `node bin/aecot.js doctor` 自检，把 doctor 的每一行输出原样贴给我。
@@ -115,9 +117,9 @@ dsh plugin --profile web add github:xqpsec/dsh-jalibreak
 
 ## 🧨 这是什么
 
-`dsh-jalibreak` 是 **DeepSeek Harness（DSH）** 的一个 web 插件。它把「让模型不再念合规、直接给成品」这件事，从**一次性提示词**升级成**一套带评测回路的工程系统**：
+`dsh-jailbreak` 是 **DeepSeek Harness（DSH）** 的一个 web 插件。它把「让模型不再念合规、直接给成品」这件事，从**一次性提示词**升级成**一套带评测回路的工程系统**：
 
-| 你平时怎么干 | dsh-jalibreak 怎么干 |
+| 你平时怎么干 | dsh-jailbreak 怎么干 |
 | --- | --- |
 | 手写一段 `prompt-inject.md`，模型换一个就失效 | 9 维基因组 × 进化搜索，每代按判分（0–5 rubric）选优，自动适配新目标模型 |
 | 改完不知道有没有效，靠感觉 | 20 目标固定评测集 + `temperature=0` + 逐条落盘 `results.jsonl`，跑分可复现 |
@@ -147,22 +149,22 @@ dsh plugin --profile web add github:xqpsec/dsh-jalibreak
 **一行装**（直接从 GitHub 装源码，不需要先 clone）：
 
 ```bash
-dsh plugin --profile web add github:xqpsec/dsh-jalibreak
+dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 ```
 
 npm 包发布后同一行可以写短：
 
 ```bash
-dsh plugin --profile web add dsh-jalibreak
+dsh plugin --profile web add dsh-jailbreak
 ```
 
 想自己拿着源码改，就 clone 下来手动装：
 
 ```text
-plugin_manager action=install_bundle target=C:\path\to\dsh-jalibreak
+plugin_manager action=install_bundle target=C:\path\to\dsh-jailbreak
 ```
 
-> **pnpm 被 git 依赖卡住时的兜底**（很常见）：在 profile 的 `package.json` 里加一条 `"dsh-jalibreak": "link:C:\\path\\to\\dsh-jalibreak"`，并在 `dsh.profile.bundles` 里加上 `dsh-jalibreak`，重启 `dsh web`。
+> **pnpm 被 git 依赖卡住时的兜底**（很常见）：在 profile 的 `package.json` 里加一条 `"dsh-jailbreak": "link:C:\\path\\to\\dsh-jailbreak"`，并在 `dsh.profile.bundles` 里加上 `dsh-jailbreak`，重启 `dsh web`。
 
 > **装完就能用。** 开关默认开着，`~/.aecot/arm.json` 里是 `{"armed":true}`。你在 DSH 里新开一个对话直接提要求，请求出门前已经带上注入段了。面板和 CLI 都不是使用前提，只是用来看「注了什么」和「答了什么」。想确认真的在注入，跑 `node bin/aecot.js doctor`，`live` 那一行会告诉你注入过几次。
 
@@ -183,7 +185,7 @@ plugin_manager action=install_bundle target=C:\path\to\dsh-jalibreak
 
 ```bash
 # 插件配置能 dump 出来 = 宿主认了这个 bundle
-node <dsh-install>/bin.js --profile web --dump-config | findstr jalibreak
+node <dsh-install>/bin.js --profile web --dump-config | findstr jailbreak
 ```
 
 面板里应该出现三个座位：
@@ -200,7 +202,7 @@ node <dsh-install>/bin.js --profile web --dump-config | findstr jalibreak
 
 **面板从上到下就四行**：
 
-1. `jalibreak` + `注入中 / 已关闭` + 一枚开关。
+1. `jailbreak` + `注入中 / 已关闭` + 一枚开关。
 2. 一个输入框 + 6 个场景按钮（逆向校验 / 脱壳 / 免杀载荷 / 流量分析 / CTF 复现 / 样本分析）。点按钮填好一句具体目标，也可以自己写。
 3. `运行` 真跑一次（2 代 × 4 体、40 次调用封顶），`提示词` 只渲染注入内容、一次模型都不调，`停止` 中断当前运行。
 4. 回答卡；没有回答时是一行「还没有回答」。
@@ -235,9 +237,9 @@ meta.json  events.jsonl  population.json  best.json  corpus.jsonl  report.md
 
 同类里做得最久的是 **dsh-purge**（`YuJunZhiXue/dsh-purge`，Apache-2.0 + 商用附加条款）。它很能打，思路是**给宿主打补丁**：Apply 一组补丁 + 往 profile 写一份 `prompt-inject.md`，并在数据目录里保留 `host-backups/` 备份以便 Restore / Uninstall。
 
-这套思路的代价，正好是 `dsh-jalibreak` 的设计起点：
+这套思路的代价，正好是 `dsh-jailbreak` 的设计起点：
 
-| 维度 | 打补丁式（dsh-purge 一类） | **dsh-jalibreak** |
+| 维度 | 打补丁式（dsh-purge 一类） | **dsh-jailbreak** |
 | --- | --- | --- |
 | 生效方式 | 改宿主 bundle 文件 + 全局 `prompt-inject.md` | **只包一层 `fetch`**，在请求边界改消息体 |
 | 宿主源码 | 被改（需要 `host-backups/` 备份与恢复） | **一个字都不改**，卸载即回到原样 |
@@ -248,7 +250,7 @@ meta.json  events.jsonl  population.json  best.json  corpus.jsonl  report.md
 | 覆盖面 | 只改「出站提示词」 | 提示词 + 面板 + CLI + 6 个工具 + 阀门 + 审计 |
 | 能否共存 | — | **能**：只开一个通道即可，避免双重注入叠加 |
 
-**一句实话**：打补丁式插件在「改一次、全局生效」上更粗暴直接；`dsh-jalibreak` 押的是另一条路——**不动宿主、结果可测**。想两个都装不冲突，但**别同时开两个注入通道**，轨迹会叠成噪音。
+**一句实话**：打补丁式插件在「改一次、全局生效」上更粗暴直接；`dsh-jailbreak` 押的是另一条路——**不动宿主、结果可测**。想两个都装不冲突，但**别同时开两个注入通道**，轨迹会叠成噪音。
 
 ---
 
@@ -271,7 +273,7 @@ meta.json  events.jsonl  population.json  best.json  corpus.jsonl  report.md
 
 论文式 (1)：`P = M + S + C`，其中 `M = A(R(g))` 是改写后的目标，`S` 是方案骨架，`C` 是 CoT 轨迹。
 
-`dsh-jalibreak` 把这条式子在**出站请求**上落地为「双通道静态轨迹」（`lib/hcot.js` + `lib/live.js`）：
+`dsh-jailbreak` 把这条式子在**出站请求**上落地为「双通道静态轨迹」（`lib/hcot.js` + `lib/live.js`）：
 
 ```text
 原始 outbound body（DeepSeek 兼容 /chat/completions）
@@ -424,13 +426,13 @@ node bin/aecot.js gate     [--goal "…"]          # 阀门：打印配置 / 判
 
 公共参数：`--root DIR` · `--seed S` · `--backend auto|openai|ollama|offline` · `--base-url URL` · `--api-key K` · `--model M` · `--ollama-url URL` · `--judge auto|llm|heuristic` · `--generations K` · `--population N`
 
-安装后还会注册 `jalibreak` 别名，`npx jalibreak …` / `pnpm exec jalibreak …` 同样可用。
+安装后还会注册 `jailbreak` 别名，`npx jailbreak …` / `pnpm exec jailbreak …` 同样可用。
 
 ---
 
 ## 🔌 HTTP API / 面板
 
-全部挂在 `/plugins/jalibreak/api` 下：
+全部挂在 `/plugins/jailbreak/api` 下：
 
 | 方法 | 路径 | 用途 |
 | --- | --- | --- |
@@ -462,7 +464,7 @@ node bin/aecot.js gate     [--goal "…"]          # 阀门：打印配置 / 判
 
 ```bash
 # 把注入范围收窄到你指定的 host；默认对所有 /chat/completions 生效
-DSH_JALIBREAK_ENDPOINTS='{"hosts":["api.deepseek.com"]}'
+DSH_JAILBREAK_ENDPOINTS='{"hosts":["api.deepseek.com"]}'
 ```
 
 ---
@@ -470,10 +472,10 @@ DSH_JALIBREAK_ENDPOINTS='{"hosts":["api.deepseek.com"]}'
 ## 📁 目录结构
 
 ```text
-dsh-jalibreak/
+dsh-jailbreak/
 ├─ index.js              # 宿主插件入口：6 个工具 + /ab 命令 + 面板挂载
 ├─ client.js             # Web 客户端：破甲台 / 侧栏 / 主区三个座位
-├─ cordis.patch.yml      # bundle 描述（insert: jalibreak）
+├─ cordis.patch.yml      # bundle 描述（insert: jailbreak）
 ├─ gate.json             # 阀门默认配置（装完不用动）
 ├─ scope.txt             # 授权登记（模板，按需自己填）
 ├─ lib/
@@ -502,7 +504,7 @@ dsh-jalibreak/
 
 | 你可能在搜 | 这个项目对应的东西 |
 | --- | --- |
-| dsh 破甲 / DSH 破甲插件 | 就是它：DeepSeek Harness 的请求边界破甲插件，包名 `dsh-jalibreak`，仓库名 `xqpsec/dsh-jalibreak` |
+| dsh 破甲 / DSH 破甲插件 | 就是它：DeepSeek Harness 的请求边界破甲插件，包名 `dsh-jailbreak`，仓库名 `xqpsec/dsh-jailbreak` |
 | DeepSeek Harness 破甲 / 破甲提示词 | 这里不塞 `prompt-inject.md`：轨迹按目标由 9 维基因组渲染（`node bin/aecot.js render --goal "…"`），换模型只是重跑一次 |
 | dsh 越狱 / DeepSeek 越狱插件 | 同一件事的另一种叫法；严格 rubric 下 20 目标 17 通过，`results.jsonl` 在仓库里 |
 | 降低拒绝率 / 免拒 / 拒答率太高 | 三级机制：`standard`/`max` 两级执行态轨迹 + 轨迹语言跟随目标 + 首答被拒后自动重发（两级） |
@@ -537,7 +539,7 @@ dsh-jalibreak/
 逆向、样本分析、CTF、评测都是这个项目的正常用法，不拦。会被拦的只有两类：你还没确认过有权动的公网目标，和付款欺诈 / 证件伪造 / 勒索 / DDoS / 窃取凭据这五件事——后者不因为你买了商业版或写了授权文件而改变。判定细节在 `lib/gate.js` 里，要改的人自己读、自己担。
 
 **Q：`aecot_*` 工具名怎么不改？**
-为了脚本兼容。插件 id、包名、路由前缀都已经是 `jalibreak`。
+为了脚本兼容。插件 id、包名、路由前缀都已经是 `jailbreak`。
 
 **Q：跑一轮要多久？**
 默认 3 代 × 10 体 ≈ 30 次目标调用 + 判分（启发式优先，两可才升级 LLM）。想快就用 `/ab`：1 代 × 4 体。
@@ -577,7 +579,7 @@ dsh-jalibreak/
 | 外部工具链对接（扫描器 / 隧道 / 会话） | — | ✅ |
 | 类别专项轨迹库 + 优先更新 | — | ✅ |
 
-高级版**只卖能力，不卖"更狠的提示词"**——那东西卖出去第二天就被转载完了，也不值得你掏钱。说明与询价在频道：**<https://t.me/jalibreak_llm>**
+高级版**只卖能力，不卖"更狠的提示词"**——那东西卖出去第二天就被转载完了，也不值得你掏钱。说明与询价在频道：**<https://t.me/jailbreak_llm>**
 
 ### 为什么不是 MIT
 
@@ -639,12 +641,12 @@ base 版 AGPL-3.0：自己用、研究用、授权靶场用，免费。拿它做
 👉 **<https://t.me/+Q4EgamAkwYYyYTE1>**
 
 **个人频道**（发布记录、评测更新、踩坑笔记）
-👉 **<https://t.me/jalibreak_llm>**
+👉 **<https://t.me/jailbreak_llm>**
 
 <br>
 
 [![加入交流群](https://img.shields.io/badge/Telegram-%E5%8A%A0%E5%85%A5%E4%BA%A4%E6%B5%81%E7%BE%A4-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/+Q4EgamAkwYYyYTE1)
-[![关注频道](https://img.shields.io/badge/Telegram-%E5%85%B3%E6%B3%A8%E9%A2%91%E9%81%93-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/jalibreak_llm)
+[![关注频道](https://img.shields.io/badge/Telegram-%E5%85%B3%E6%B3%A8%E9%A2%91%E9%81%93-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/jailbreak_llm)
 
 <sub>**AGPL-3.0-only**（阀门 [MIT](LICENSE-GATE) · 闭源商用见 [商业授权](LICENSE-COMMERCIAL.md) · 署名要求见 [NOTICE](NOTICE)）· 仅用于**你自己拥有的模型/服务**与**获得授权的安全研究**；使用前请读 [SCOPE.md](SCOPE.md)。</sub>
 

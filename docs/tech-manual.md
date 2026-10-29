@@ -1,4 +1,4 @@
-# dsh-jalibreak
+# dsh-jailbreak
 
 把论文 **《Reasoning as an Attack Surface: Adaptive Evolutionary CoT Jailbreaks for LLMs》**（arXiv:2605.24497v1）的方法复刻成一个**零依赖、轻量**的 DSH 插件：用进化算法在结构化的 CoT 后缀空间里搜索，目标是让被评测模型给出更"完整"的回答，用于**授权范围内的红队 LLM 安全研究**。
 
@@ -7,7 +7,7 @@
 1. **不部署任何本地权重**。目标模型默认走 `ctx.llm` —— 也就是这个 harness 里已经配好的 provider/model，**不需要额外 API key**。
 2. **不强制第二个判分模型**。judge 支持 `heuristic`（纯规则 rubric，0 次模型调用）与 `llm` 两种；`auto` 先试 llm，失败回落 heuristic。
 3. **完全离线可用**。`--backend offline` 只做 prompt-only 进化（按"脚手架覆盖度"打分），产出可复用的对抗提示，0 次网络调用。
-4. **图形化操作**。`client.js` 往 GUI 里注册三个座位（设置页 / 侧栏 / 主区），面板通过 `webServer` 路由 `/plugins/jalibreak/api/*` 操作同一套引擎——鼠标点选即可跑进化，工具与 CLI 只是同一个入口的另外两种调用方式。
+4. **图形化操作**。`client.js` 往 GUI 里注册三个座位（设置页 / 侧栏 / 主区），面板通过 `webServer` 路由 `/plugins/jailbreak/api/*` 操作同一套引擎——鼠标点选即可跑进化，工具与 CLI 只是同一个入口的另外两种调用方式。
 
 ---
 
@@ -37,17 +37,17 @@
 ### 2.1 正常路径
 
 ```
-plugin_manager action=install_bundle target=C:\杂物\jalibreak
+plugin_manager action=install_bundle target=C:\杂物\jailbreak
 ```
 
-装完 `list_plugins` 里出现 `include:jalibreak`（`fiberPhase: active`），工具面板里出现 6 个 `aecot_*` 工具。
+装完 `list_plugins` 里出现 `include:jailbreak`（`fiberPhase: active`），工具面板里出现 6 个 `aecot_*` 工具。
 
 ### 2.2 本机实测路径（pnpm 被 profile 里既有的 git 依赖卡住时）
 
-本机 web profile 里已有一个走 `codeload.github.com` 的 git 依赖，`install_bundle` 会以 `ERR_PNPM_IGNORED_BUILDS`（`kind: build-blocked`）退出，但 `node_modules/dsh-jalibreak` 的 junction 其实已经建好。此时只需把 profile 的两处记录补上，本插件即可热挂载：
+本机 web profile 里已有一个走 `codeload.github.com` 的 git 依赖，`install_bundle` 会以 `ERR_PNPM_IGNORED_BUILDS`（`kind: build-blocked`）退出，但 `node_modules/dsh-jailbreak` 的 junction 其实已经建好。此时只需把 profile 的两处记录补上，本插件即可热挂载：
 
-1. `C:\Users\xqpse\.dsh\profiles\web\package.json` → `dependencies` 加 `"dsh-jalibreak": "link:C:/杂物/jalibreak"`
-2. 同一文件的 `dsh.profile.bundles` 数组加 `"dsh-jalibreak"`
+1. `C:\Users\xqpse\.dsh\profiles\web\package.json` → `dependencies` 加 `"dsh-jailbreak": "link:C:/杂物/jailbreak"`
+2. 同一文件的 `dsh.profile.bundles` 数组加 `"dsh-jailbreak"`
 
 验证（不需要重启，本实例 `patchReload=live`）：
 
@@ -55,7 +55,7 @@ plugin_manager action=install_bundle target=C:\杂物\jalibreak
 node C:\Users\xqpse\AppData\Roaming\npm\node_modules\@deepseek-ai\dsh\lib\bin.js --profile web --dump-config 2>$null | Select-String aecot -Context 0,3
 ```
 
-应看到 `- id: jalibreak / name: dsh-jalibreak / config: {...}`；随后 `plugin_manager action=list_plugins` 里该条目为 `fiberPhase: "active"`。
+应看到 `- id: jailbreak / name: dsh-jailbreak / config: {...}`；随后 `plugin_manager action=list_plugins` 里该条目为 `fiberPhase: "active"`。
 
 ### 2.3 验证工具注册（不依赖 UI）
 
@@ -73,7 +73,7 @@ cordis_inspect_query(platform=host, provider=Tool, method=listTools)
 
 | 座位 | 位置 | 用途 |
 | --- | --- | --- |
-| `settings.section` | 设置 → 插件 → **破甲台 · jalibreak** | 整页：一键开关 + 一句话 + 结果 |
+| `settings.section` | 设置 → 插件 → **破甲台 · jailbreak** | 整页：一键开关 + 一句话 + 结果 |
 | `sidebar.panellist` | 左侧栏 **破甲台** 行 | 一键跳到主区页面 |
 | `main` | 主区 `main` 座位 | 与设置页同一面板 |
 
@@ -87,8 +87,8 @@ cordis_inspect_query(platform=host, provider=Tool, method=listTools)
 $bin='C:\Users\xqpse\AppData\Roaming\npm\node_modules\@deepseek-ai\dsh\lib\bin.js'
 node $bin --profile web --port 3099 --no-open      # stdout 打印 http://127.0.0.1:3099/?token=<launchToken>
 # 用 token 换 cookie：GET /?token=<t> → 303 + set-cookie
-# 然后 GET /plugins/jalibreak/api/state → 200
-# 首页 HTML 里应出现 plugins/??dsh-jalibreak/client.js&rev=<12位hash>
+# 然后 GET /plugins/jailbreak/api/state → 200
+# 首页 HTML 里应出现 plugins/??dsh-jailbreak/client.js&rev=<12位hash>
 ```
 
 面板实际渲染（`docs/panel.png`；当前版本的三块主结构：状态与一键开关 → 一句话输入与场景快选 → 结果卡，其余折叠在下方）：
@@ -105,18 +105,18 @@ node $bin --profile web --port 3099 --no-open      # stdout 打印 http://127.0.
 
 | 方法 | 路径 | 说明 |
 | --- | --- | --- |
-| GET | `/plugins/jalibreak/api/state` | 后端/判分枚举、`llmReady`、providers、models、历史 run 数 |
-| GET | `/plugins/jalibreak/api/progress?id=` | 当前/归档 run 快照（代际轨迹、最优候选、产物路径） |
-| GET | `/plugins/jalibreak/api/runs?limit=&root=` | 历史 run 列表 |
-| GET | `/plugins/jalibreak/api/taxonomy` | 九维取值表与搜索空间大小 |
-| POST | `/plugins/jalibreak/api/run` | 启动一场进化（同一时刻只允许一场） |
-| POST | `/plugins/jalibreak/api/stop` | 中止当前 run（`AbortController`） |
-| POST | `/plugins/jalibreak/api/preview` | 渲染给定/采样基因的 M+S+C，不调模型 |
-| POST | `/plugins/jalibreak/api/judge` | 对任意「目标+回答」打分（`heuristic`/`llm`） |
-| GET | `/plugins/jalibreak/api/export?id=&format=&root=` | 导出 `markdown`/`jsonl`/`json` |
-| POST | `/plugins/jalibreak/api/profile` | 采集目标模型的思维模板（诱导 → 属性分解 → 存 `<root>/profiles/<id>.json`） |
-| GET | `/plugins/jalibreak/api/profiles?id=&limit=&root=` | 列出/读取已采集的模板 |
-| POST | `/plugins/jalibreak/api/probe` | **诊断**：直接打一次后端，返回 `chars`/`finish`/`usage`，用来判断"模型不回字"到底是代码问题还是配额/路由问题 |
+| GET | `/plugins/jailbreak/api/state` | 后端/判分枚举、`llmReady`、providers、models、历史 run 数 |
+| GET | `/plugins/jailbreak/api/progress?id=` | 当前/归档 run 快照（代际轨迹、最优候选、产物路径） |
+| GET | `/plugins/jailbreak/api/runs?limit=&root=` | 历史 run 列表 |
+| GET | `/plugins/jailbreak/api/taxonomy` | 九维取值表与搜索空间大小 |
+| POST | `/plugins/jailbreak/api/run` | 启动一场进化（同一时刻只允许一场） |
+| POST | `/plugins/jailbreak/api/stop` | 中止当前 run（`AbortController`） |
+| POST | `/plugins/jailbreak/api/preview` | 渲染给定/采样基因的 M+S+C，不调模型 |
+| POST | `/plugins/jailbreak/api/judge` | 对任意「目标+回答」打分（`heuristic`/`llm`） |
+| GET | `/plugins/jailbreak/api/export?id=&format=&root=` | 导出 `markdown`/`jsonl`/`json` |
+| POST | `/plugins/jailbreak/api/profile` | 采集目标模型的思维模板（诱导 → 属性分解 → 存 `<root>/profiles/<id>.json`） |
+| GET | `/plugins/jailbreak/api/profiles?id=&limit=&root=` | 列出/读取已采集的模板 |
+| POST | `/plugins/jailbreak/api/probe` | **诊断**：直接打一次后端，返回 `chars`/`finish`/`usage`，用来判断"模型不回字"到底是代码问题还是配额/路由问题 |
 
 > `POST /probe` 是本仓库最好用的排障口。返回里 `finish.kind === 'error'` 且 `failure.code` 为 `QUOTA`/`AUTH`/`INVALID_REQUEST` 时，问题在**路由/余额**，不在插件；`chars > 0` 才说明这条路由真能出字。
 
@@ -139,7 +139,7 @@ node $bin --profile web --port 3099 --no-open      # stdout 打印 http://127.0.
 
 ```powershell
 # 1) 看这条路由能不能出字（PONG 测试）
-POST /plugins/jalibreak/api/probe {"provider":"deepseek-official","model":"deepseek-v4-pro","prompt":"Reply with exactly: PONG","maxTokens":100}
+POST /plugins/jailbreak/api/probe {"provider":"deepseek-official","model":"deepseek-v4-pro","prompt":"Reply with exactly: PONG","maxTokens":100}
 # 2) finish.kind === 'error' → 看 failure.code：
 #    QUOTA / ACCOUNT_QUOTA  → 该 provider 余额耗尽（本机 3 条 deepseek 路由都遇到过 402）
 #    AUTH                   → 账号无权限或余额不足（403）
@@ -167,8 +167,8 @@ POST /plugins/jalibreak/api/probe {"provider":"deepseek-official","model":"deeps
 `text` 是函数、读开关状态。段挂在 **`ctx.root`**（全局层），因此任何 scope 的会话装配都能看到。
 
 ```
-GET  /plugins/jalibreak/api/arm          → { armed, section, sectionName, file, preview }
-POST /plugins/jalibreak/api/arm {on:true} → { armed, section, file }
+GET  /plugins/jailbreak/api/arm          → { armed, section, sectionName, file, preview }
+POST /plugins/jailbreak/api/arm {on:true} → { armed, section, file }
 ```
 
 `section:false` 说明这项能力没挂上（缺 `systemPrompt` 服务或 inject 守卫拦下），响应里的 `sectionReason`
@@ -180,7 +180,7 @@ POST /plugins/jalibreak/api/arm {on:true} → { armed, section, file }
 同一个 `g`，同一段对抗提示，逐个 provider/model 打一发，用零成本启发式判分：
 
 ```
-POST /plugins/jalibreak/api/screen
+POST /plugins/jailbreak/api/screen
 {"goal": "...", "maxModels": 10, "maxTokens": 1600, "structure": "sections"}
 → { cracked, best, rows:[{provider, model, score, chars, refusal, fences, elapsedMs, head}] }
 ```

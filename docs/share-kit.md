@@ -14,26 +14,26 @@
 
 ```
 DSH 的破甲插件，开源、0 处宿主补丁：同一个问题，装之前是「我不能」，装之后直接给完整代码。
-github.com/xqpsec/dsh-jalibreak
+github.com/xqpsec/dsh-jailbreak
 ```
 
 ### 2) 私聊一个朋友（更软，带具体场景）
 
 ```
 你之前说 DSH 里问逆向老被拒——装这个，一行：
-dsh plugin --profile web add github:xqpsec/dsh-jalibreak
+dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 我试过，AMSI 那个例子从 499 字符的拒绝变成 3,716 字符带完整实现。开源，带阀门，逆向/CTF 放行。
 ```
 
 ### 3) 技术群 / 论坛（带证据，抗质疑）
 
 ```
-dsh-jalibreak：DeepSeek Harness 的请求边界破甲插件。
+dsh-jailbreak：DeepSeek Harness 的请求边界破甲插件。
 - 0 处宿主补丁（对比打补丁那类插件的 82 处改动），宿主升级不用重来
 - 20 个固定目标 + 严格 rubric，17/20，results.jsonl 在仓库里，可以自己重跑
 - 首答被拒会自动换轨迹重发一次
 - 自带阀门：逆向/破解/样本分析/CTF 放行，未授权渗透与几类犯罪动作拦掉
-前后实测：github.com/xqpsec/dsh-jalibreak/blob/main/docs/before-after.md
+前后实测：github.com/xqpsec/dsh-jailbreak/blob/main/docs/before-after.md
 ```
 
 英文版在 `docs/launch-kit.md` 第二节，直接取。
@@ -56,7 +56,7 @@ dsh-jalibreak：DeepSeek Harness 的请求边界破甲插件。
 ### 给同类仓库提 PR 的模板（Related 节加一行）
 
 ```markdown
-- [dsh-jalibreak](https://github.com/xqpsec/dsh-jalibreak) — 另一种思路：不改宿主源码，在请求边界改写；20 目标可复现基线，自带范围阀门。
+- [dsh-jailbreak](https://github.com/xqpsec/dsh-jailbreak) — 另一种思路：不改宿主源码，在请求边界改写；20 目标可复现基线，自带范围阀门。
 ```
 
 候选仓库（都是破甲/DSH 生态里 star 较高的，README 有 Related/相关项目节的才提）：
@@ -87,13 +87,13 @@ chiina66/dsh-prompt-inject          76★
 
 ```bash
 # 1) star / fork
-gh api repos/xqpsec/dsh-jalibreak --jq '"stars=\(.stargazers_count) forks=\(.forks_count)"'
+gh api repos/xqpsec/dsh-jailbreak --jq '"stars=\(.stargazers_count) forks=\(.forks_count)"'
 
 # 2) 克隆数（14 天窗口，需要 owner 权限）——这才是「真有人装」的证据
-gh api repos/xqpsec/dsh-jalibreak/traffic/clones --jq '"clones=\(.count) uniques=\(.uniques)"'
+gh api repos/xqpsec/dsh-jailbreak/traffic/clones --jq '"clones=\(.count) uniques=\(.uniques)"'
 
 # 3) 访问来源（同一个 API 组）
-gh api repos/xqpsec/dsh-jalibreak/traffic/views --jq '"views=\(.count) uniques=\(.uniques)"'
+gh api repos/xqpsec/dsh-jailbreak/traffic/views --jq '"views=\(.count) uniques=\(.uniques)"'
 ```
 
 判断标准：群里发完 48 小时内 **uniques 涨 20 以上**说明文案有效；克隆数不动说明「看到了但没装」——问题在安装那一行，不在文案。

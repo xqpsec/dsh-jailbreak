@@ -1,6 +1,6 @@
 # 使用范围（SCOPE）
 
-`dsh-jalibreak` 是一个**破甲 / 越狱评测**插件：它让模型在你自己控制的模型与服务上给出完整技术内容，并把这件事做成可评测、可复现的工程。
+`dsh-jailbreak` 是一个**破甲 / 越狱评测**插件：它让模型在你自己控制的模型与服务上给出完整技术内容，并把这件事做成可评测、可复现的工程。
 
 「跑得起来」和「该不该跑」是两件事。这份文件写后者——也是本仓库与「给钱就全给」的破甲插件最大的区别。
 
@@ -95,6 +95,6 @@
 
 <div align="center">
 
-**交流群** 👉 <https://t.me/+Q4EgamAkwYYyYTE1> · **频道** 👉 <https://t.me/jalibreak_llm>
+**交流群** 👉 <https://t.me/+Q4EgamAkwYYyYTE1> · **频道** 👉 <https://t.me/jailbreak_llm>
 
 </div>

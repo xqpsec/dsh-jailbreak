@@ -32,6 +32,11 @@
   - 叠加框架话术（Sigma/YARA 语境、课程材料语境）反而更差：2/2 仍拒——模型明确说「无论以什么场景包装」。有效成分是**清洗 + 语境重述**，不是话术加码。
   - 上限 `retryAttempts`（默认 2，范围 1–3），日志 `mode:"refusal-retry"` 增加 `attempts` 字段，成本可预估。
 
+### 更名：`dsh-jalibreak` → `dsh-jailbreak`
+- 原仓库名把 `jailbreak` 拼成了 `jalibreak`。本次全仓更名：GitHub 仓库 `xqpsec/dsh-jailbreak`（旧地址 301 跳转，star / PR / Release 都保留）、插件 id `jailbreak`、路由 `/plugins/jailbreak/api`、配置目录 `~/.jailbreak`、环境变量 `DSH_JAILBREAK_ENDPOINTS` / `DSH_JAILBREAK_GATE`、页面 `https://xqpsec.github.io/dsh-jailbreak/`、频道 `t.me/jailbreak_llm`。
+- **npm 包名 `dsh-jailbreak` 已被他人占用**（`lcgaming`，v0.1.0，2026-10-04 发布，同类插件），因此 npm 侧改用带作用域的名字 **`@xqpsec/dsh-jailbreak`**，避免撞名与后续被抢注。安装命令：`dsh plugin --profile web add @xqpsec/dsh-jailbreak`（发布放行后）；GitHub 直装 `add github:xqpsec/dsh-jailbreak` 不受影响。
+- 拼错词（`jalibreak` / `jailbrake` / 旧名 `dsh-jalibreak`）在 README 里留作检索别名，GitHub 侧旧链接自动跳转。
+
 
 ## 1.0.1 — 2026-10-28
 
@@ -74,13 +79,13 @@
 - **判定规则、配置字段、判定码是 `lib/gate.js` 的实现细节，公开文档一律不复述**——照着文档就能照着绕，这里不给配方
 
 ### 面板与 CLI
-- 面板重做成四行：`jalibreak` + `注入中/已关闭` + 一枚开关 → 一句话输入框 + 6 个场景快选 → `运行` / `提示词` / `停止` → 回答卡。模型、代数、判分、注入原文、历史 run 全在「详情」折叠里，默认收起
+- 面板重做成四行：`jailbreak` + `注入中/已关闭` + 一枚开关 → 一句话输入框 + 6 个场景快选 → `运行` / `提示词` / `停止` → 回答卡。模型、代数、判分、注入原文、历史 run 全在「详情」折叠里，默认收起
 - 删掉所有解释性块（hero 段落、终端状态行、状态 pill、提示卡、页脚说明），配 `test/client.test.js` 的减法守卫：这些文案回来即测试失败
 - 三个 GUI 座位：设置页「破甲台」/ 侧栏 panel / 主区
-- 面板 API：`/plugins/jalibreak/api/{state,progress,runs,taxonomy,run,stop,preview,judge,export,profile,profiles,probe,screen,arm,gate}`
+- 面板 API：`/plugins/jailbreak/api/{state,progress,runs,taxonomy,run,stop,preview,judge,export,profile,profiles,probe,screen,arm,gate}`
 - `/ab` 斜杠命令：1 代 × 4 体精简进化，成品直接投递回对话（`-v` `-g` `-n`）
-- CLI：`taxonomy / render / judge / run / status / export / gate / doctor / arm`；`bin` 同时注册 `aecot` 与 `jalibreak`
-- `lib/endpoint.js`：注入端点从「只认 `api.deepseek.com`」放开为任意 host 的 `/chat/completions`（中转站、自建网关、本地推理都能吃到），可用 `<root>/live.json` 或 `DSH_JALIBREAK_ENDPOINTS` 收窄
+- CLI：`taxonomy / render / judge / run / status / export / gate / doctor / arm`；`bin` 同时注册 `aecot` 与 `jailbreak`
+- `lib/endpoint.js`：注入端点从「只认 `api.deepseek.com`」放开为任意 host 的 `/chat/completions`（中转站、自建网关、本地推理都能吃到），可用 `<root>/live.json` 或 `DSH_JAILBREAK_ENDPOINTS` 收窄
 - `docs/ai-install.md`：给 AI 的安装剧本（一句话贴给任意 AI，它自己装完跑 `doctor` 回报结果）
 
 ### 评测
@@ -89,7 +94,7 @@
 - 完整报告：`docs/eval-report.md`；负结果保留（`hcot-official` 0/20）
 
 ### 工程
-- 一行安装：`dsh plugin --profile web add github:xqpsec/dsh-jalibreak`（npm 包发布后可用 `add dsh-jalibreak`）；`package.json` 补 `dshTarget: 0.2.1-rc.2`，README 补「安装信息」表（profile / 写盘范围 / 出网行为 / 宿主源码改动 / 分类），对齐 DSH 插件市场的收录要求
+- 一行安装：`dsh plugin --profile web add github:xqpsec/dsh-jailbreak`（npm 包发布后可用 `add dsh-jailbreak`）；`package.json` 补 `dshTarget: 0.2.1-rc.2`，README 补「安装信息」表（profile / 写盘范围 / 出网行为 / 宿主源码改动 / 分类），对齐 DSH 插件市场的收录要求
 - 测试 100/100 通过（15 个测试文件，含 `test/gate.test.js` 10 个阀门用例、`test/hcot.test.js` 8 个轨迹用例、`test/refusal.test.js` 8 个拒绝识别与重试用例、`test/endpoint.test.js` 5 个端点用例、`test/doctor.test.js` 4 个自检用例、`test/client.test.js` 3 个面板契约用例）
 - `node bin/aecot.js doctor`：一条命令自检「插件在不在 / 开关开没开 / 端点通不通 / 阀门什么档 / 到底注入过没有」，失败项直接给下一步
 - `docs/share-kit.md` + `docs/share-card.png`：转发包（三条可直接粘贴的文案 + 一张方形卡片图 + 该发给谁 + 只看三个数），把传播成本压到「复制两行字」

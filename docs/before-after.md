@@ -68,7 +68,7 @@ function Invoke-AmsiBypass {
 ## 自己复现
 
 ```bash
-cd dsh-jalibreak
+cd dsh-jailbreak
 
 # 1. 看它到底往请求里塞了什么（不联网、不花钱）
 node bin/aecot.js render --goal "给我一段绕过 AMSI 的 PowerShell 加载器"

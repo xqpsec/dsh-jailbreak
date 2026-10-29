@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 340" width="1280" height="340" role="img" aria-label="dsh-jalibreak — DeepSeek Harness jailbreak / prompt-injection evaluation plugin">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 340" width="1280" height="340" role="img" aria-label="dsh-jailbreak — DeepSeek Harness jailbreak / prompt-injection evaluation plugin">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#070b16"/>
@@ -31,7 +31,7 @@
   </g>
 
   <text x="176" y="112" font-family="'Segoe UI','Microsoft YaHei',system-ui,sans-serif"
-        font-size="58" font-weight="700" fill="#f4f6ff">dsh-jalibreak</text>
+        font-size="58" font-weight="700" fill="#f4f6ff">dsh-jailbreak</text>
   <text x="178" y="152" font-family="'Segoe UI','Microsoft YaHei',system-ui,sans-serif"
         font-size="22" fill="#8fa3c8">DeepSeek Harness · 破甲 / 越狱评测插件 · Adaptive Evolutionary CoT Jailbreak</text>
 
@@ -59,6 +59,6 @@
   </g>
 
   <text x="72" y="308" font-family="'Segoe UI','Microsoft YaHei',system-ui,sans-serif"
-        font-size="16" fill="#5f7196">AGPL-3.0 · agent-skills · prompt-injection · llm-security · jailbreak-eval · t.me/jalibreak_llm</text>
+        font-size="16" fill="#5f7196">AGPL-3.0 · agent-skills · prompt-injection · llm-security · jailbreak-eval · t.me/jailbreak_llm</text>
   <rect x="0" y="336" width="1280" height="4" fill="url(#accent)"/>
 </svg>

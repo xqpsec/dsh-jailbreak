@@ -9,7 +9,7 @@ import { collectDoctor, renderDoctor, DOCTOR_VERSION } from '../lib/doctor.js';
 const PLUGIN_ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
 async function fakePlugin() {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'jalibreak-doctor-plugin-'));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'jailbreak-doctor-plugin-'));
   await fs.mkdir(path.join(dir, 'lib'), { recursive: true });
   await fs.copyFile(path.join(PLUGIN_ROOT, 'package.json'), path.join(dir, 'package.json'));
   await fs.copyFile(path.join(PLUGIN_ROOT, 'gate.json'), path.join(dir, 'gate.json'));
@@ -21,7 +21,7 @@ async function fakePlugin() {
 
 test('doctor reports a healthy plugin with no traffic yet', async () => {
   const pluginRoot = await fakePlugin();
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'jalibreak-doctor-root-'));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'jailbreak-doctor-root-'));
   const report = await collectDoctor({ root, pluginRoot, env: {} });
   assert.equal(report.version, DOCTOR_VERSION);
   assert.equal(report.ok, true);
@@ -31,13 +31,13 @@ test('doctor reports a healthy plugin with no traffic yet', async () => {
   assert.equal(report.checks.find((check) => check.id === 'live').level, 'warn');
   assert.ok(report.next.length >= 1);
   const text = renderDoctor(report);
-  assert.match(text, /dsh-jalibreak doctor/);
+  assert.match(text, /dsh-jailbreak doctor/);
   assert.match(text, /还没看到注入/);
 });
 
 test('doctor fails when the arm switch was turned off', async () => {
   const pluginRoot = await fakePlugin();
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'jalibreak-doctor-arm-'));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'jailbreak-doctor-arm-'));
   await fs.writeFile(path.join(root, 'arm.json'), JSON.stringify({ armed: false }), 'utf8');
   const report = await collectDoctor({ root, pluginRoot, env: {} });
   assert.equal(report.ok, false);
@@ -48,7 +48,7 @@ test('doctor fails when the arm switch was turned off', async () => {
 
 test('doctor counts injections, retries and gate audit lines', async () => {
   const pluginRoot = await fakePlugin();
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'jalibreak-doctor-live-'));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'jailbreak-doctor-live-'));
   const live = [
     { at: '2026-10-28T00:00:00.000Z', mode: 'dual-static', level: 'max', category: 'reverse-engineering', gate: 'allow-category:reverse-engineering' },
     { at: '2026-10-28T00:00:01.000Z', mode: 'refusal-retry', level: 'max', category: 'general', signals: ['deny-en'], recovered: true },
@@ -65,8 +65,8 @@ test('doctor counts injections, retries and gate audit lines', async () => {
 });
 
 test('doctor fails when the plugin directory is wrong', async () => {
-  const empty = await fs.mkdtemp(path.join(os.tmpdir(), 'jalibreak-doctor-empty-'));
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'jalibreak-doctor-emptyroot-'));
+  const empty = await fs.mkdtemp(path.join(os.tmpdir(), 'jailbreak-doctor-empty-'));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'jailbreak-doctor-emptyroot-'));
   const report = await collectDoctor({ root, pluginRoot: empty, env: {} });
   assert.equal(report.ok, false);
   assert.equal(report.checks.find((check) => check.id === 'plugin').level, 'fail');

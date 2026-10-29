@@ -1,8 +1,8 @@
-dsh-jalibreak
-Copyright (c) 2026 dsh-jalibreak contributors
-https://github.com/xqpsec/dsh-jalibreak
+dsh-jailbreak
+Copyright (c) 2026 dsh-jailbreak contributors
+https://github.com/xqpsec/dsh-jailbreak
 
-This product includes software developed as dsh-jalibreak: a DeepSeek Harness
+This product includes software developed as dsh-jailbreak: a DeepSeek Harness
 plugin for request-boundary prompt injection, evolutionary CoT search and
 target-scope validation (the "gate").
 
@@ -11,7 +11,7 @@ Licensing map
 * LICENSE            AGPL-3.0-only — everything not listed below
 * LICENSE-GATE       MIT — lib/gate.js, gate.json, scope.txt
 * LICENSE-COMMERCIAL commercial licensing terms for closed-source use
-                     (how to obtain: https://t.me/jalibreak_llm)
+                     (how to obtain: https://t.me/jailbreak_llm)
 
 Attribution terms (AGPL-3.0 section 7 additional terms)
 -------------------------------------------------------
@@ -20,10 +20,10 @@ require, for any redistribution, fork, rebrand or derived distribution:
 
 1. Keep this NOTICE file and both LICENSE files unchanged.
 2. Keep the upstream repository link
-   (https://github.com/xqpsec/dsh-jalibreak) in your README, in a section a
+   (https://github.com/xqpsec/dsh-jailbreak) in your README, in a section a
    reader can find without searching the tree.
 3. If you rename the project, state in the first screen of your README that it
-   is based on dsh-jalibreak, with the link above.
+   is based on dsh-jailbreak, with the link above.
 4. Do not remove SCOPE.md, and do not ship a build in which the gate is
    disabled by default. "Convenience forks" that quietly strip the valve are
    exactly what this clause exists to stop.
@@ -39,6 +39,6 @@ None. This package has zero runtime dependencies. Node.js built-ins only.
 
 Trademarks
 ----------
-"dsh-jalibreak" and the project logo are not covered by the code licenses. A
+"dsh-jailbreak" and the project logo are not covered by the code licenses. A
 fork may not present itself as the official project, and may not use the name
 to imply endorsement.

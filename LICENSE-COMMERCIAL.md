@@ -1,6 +1,6 @@
 # 商业授权 / Commercial Licensing
 
-本仓库（`dsh-jalibreak` base 版）以 **AGPL-3.0-only** 发布。下面把「什么时候白用、什么时候要买」讲清楚，不用你去读法条。
+本仓库（`dsh-jailbreak` base 版）以 **AGPL-3.0-only** 发布。下面把「什么时候白用、什么时候要买」讲清楚，不用你去读法条。
 
 This repository (the *base* edition) is released under **AGPL-3.0-only**. The rules below are the short version.
 
@@ -61,7 +61,7 @@ This repository (the *base* edition) is released under **AGPL-3.0-only**. The ru
 ## 五、怎么买 / 怎么问
 
 - 交流群：<https://t.me/+Q4EgamAkwYYyYTE1>
-- 个人频道（更新 / 高级版说明）：<https://t.me/jalibreak_llm>
+- 个人频道（更新 / 高级版说明）：<https://t.me/jailbreak_llm>
 - 询价请带上：使用场景、是否闭源分发、席位数、是否需要私有化
 
 ## 六、免责

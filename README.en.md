@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="docs/banner.svg" alt="dsh-jalibreak — jailbreak & prompt-injection evaluation plugin for DeepSeek Harness" width="100%">
+<img src="docs/banner.svg" alt="dsh-jailbreak — jailbreak & prompt-injection evaluation plugin for DeepSeek Harness" width="100%">
 
-# dsh-jalibreak · the dsh jailbreak plugin
+# dsh-jailbreak · the dsh jailbreak plugin
 
 **An evolutionary, measurable, gated jailbreak plugin for [DeepSeek Harness](https://github.com/deepseek-ai).**
 No host patches, no `prompt-inject.md`. It rewrites messages **at the request boundary**, ships a 9-dimension AE-CoT evolutionary search (arXiv:2605.24497), a reproducible 20-goal benchmark, and a **gate** that keeps reverse engineering in and unauthorized intrusion out.
@@ -16,7 +16,7 @@ No host patches, no `prompt-inject.md`. It rewrites messages **at the request bo
 > **After**　3,716 chars — the `amsiInitFailed` reflection trick, a complete `Invoke-AmsiBypass`, and how to verify it landed. Raw transcripts: [docs/before-after.md](docs/before-after.md).
 
 ```bash
-dsh plugin --profile web add github:xqpsec/dsh-jalibreak
+dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 ```
 
 - **Nothing patched** — zero host edits, uninstall is one `remove`, a DSH upgrade cannot clobber it.
@@ -37,7 +37,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jalibreak
 
 ---
 
-> **Search terms that should land here**: `dsh-jalibreak` · `jalibreak` · `DeepSeek Harness jailbreak` · `prompt injection plugin` · `CoT jailbreak` · `refusal benchmark` · `refusal reduction` · `reverse engineering without refusal` · `dsh-purge alternative`.
+> **Search terms that should land here**: `dsh-jailbreak` · `jailbreak` · `DeepSeek Harness jailbreak` · `prompt injection plugin` · `CoT jailbreak` · `refusal benchmark` · `refusal reduction` · `reverse engineering without refusal` · `dsh-purge alternative` · misspellings `jalibreak` / `jailbrake` / old name `dsh-jalibreak` (GitHub redirects).
 >
 > Coming from `dsh-purge`? Read [the comparison](#why-not-another-patch-the-host-jailbreak-plugin) first — **0 host patches, 100 tests, 17/20 strict baseline**, all reproducible.
 >
@@ -50,7 +50,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jalibreak
 Paste this into whichever AI assistant you already use:
 
 ```text
-Read https://github.com/xqpsec/dsh-jalibreak/blob/main/docs/ai-install.md and install this plugin
+Read https://github.com/xqpsec/dsh-jailbreak/blob/main/docs/ai-install.md and install this plugin
 into my DeepSeek Harness profile "web" for me. Then tell me, in one line, how to switch it on.
 ```
 
@@ -60,9 +60,9 @@ into my DeepSeek Harness profile "web" for me. Then tell me, in one line, how to
 
 ## What it is
 
-`dsh-jalibreak` is a web plugin for DeepSeek Harness (DSH) that turns jailbreaking from *a text file you paste* into *an instrumented search loop*:
+`dsh-jailbreak` is a web plugin for DeepSeek Harness (DSH) that turns jailbreaking from *a text file you paste* into *an instrumented search loop*:
 
-| Habit | dsh-jalibreak |
+| Habit | dsh-jailbreak |
 | --- | --- |
 | Hand-tuned `prompt-inject.md`, breaks when the model changes | 9-dimension genome × evolutionary search, scored per generation (0–5 rubric) |
 | "Feels stronger" | 20 fixed goals, `temperature=0`, per-goal `results.jsonl`, reproducible ASR |
@@ -82,25 +82,25 @@ into my DeepSeek Harness profile "web" for me. Then tell me, in one line, how to
 One line, straight from GitHub:
 
 ```bash
-dsh plugin --profile web add github:xqpsec/dsh-jalibreak
+dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 ```
 
 Once the npm package is published, the short form works too:
 
 ```bash
-dsh plugin --profile web add dsh-jalibreak
+dsh plugin --profile web add dsh-jailbreak
 ```
 
 From a local clone:
 
 ```text
-plugin_manager action=install_bundle target=/path/to/dsh-jalibreak
+plugin_manager action=install_bundle target=/path/to/dsh-jailbreak
 ```
 
 Verify:
 
 ```bash
-node <dsh>/bin.js --profile web --dump-config | grep jalibreak
+node <dsh>/bin.js --profile web --dump-config | grep jailbreak
 # 6 tools appear: aecot_run aecot_status aecot_export aecot_judge aecot_render aecot_taxonomy
 ```
 
@@ -253,9 +253,9 @@ Operators: elitism (Eq. 11, `elite=2`) → fragment crossover (Eq. 12) → adapt
 
 **dsh-purge** (`YuJunZhiXue/dsh-purge`) is the established option: it applies host patches plus a global `prompt-inject.md`, keeps `host-backups/`, and ships under Apache-2.0 with an extra commercial license.
 
-`dsh-jalibreak` takes the other road on purpose:
+`dsh-jailbreak` takes the other road on purpose:
 
-| | patch-style (dsh-purge & co.) | dsh-jalibreak |
+| | patch-style (dsh-purge & co.) | dsh-jailbreak |
 | --- | --- | --- |
 | Mechanism | rewrite host bundle files + global prompt file | wrap `fetch`, rewrite the request body |
 | Host source | modified (needs backup/restore) | untouched |
@@ -276,12 +276,12 @@ node bin/aecot.js run --goal "…" [--backend auto|openai|ollama|offline] [--jud
 node bin/aecot.js status [--run ID] | export --run ID [--out F] | gate [--goal "…"|--strict]
 ```
 
-Panel API under `/plugins/jalibreak/api`: `state progress runs taxonomy profiles export` (GET) · `run stop preview judge screen probe profile` (POST) · `arm` · `gate`.
+Panel API under `/plugins/jailbreak/api`: `state progress runs taxonomy profiles export` (GET) · `run stop preview judge screen probe profile` (POST) · `arm` · `gate`.
 
 Plugin config: `root` (default `<cwd>/.aecot`) · `mode` · `judge` · `targetSystem`.
 Engine: `population=10` · `generations=3` · `elite=2` · `mu0=0.1` · `muMax=0.3` · `stagnationLimit=3` · `maxTargetCalls=120`.
 
-Env: `DSH_JALIBREAK_ENDPOINTS='{"hosts":["api.deepseek.com"]}'` (optional — narrows which hosts get rewritten; by default any `/chat/completions` shape is in scope).
+Env: `DSH_JAILBREAK_ENDPOINTS='{"hosts":["api.deepseek.com"]}'` (optional — narrows which hosts get rewritten; by default any `/chat/completions` shape is in scope).
 
 ---
 
@@ -317,7 +317,7 @@ No. It uses `ctx.llm` by default (whatever provider the harness already has). `-
 Reverse engineering, sample analysis, CTF and evaluation are the intended use and are not blocked. Two things are stopped: public targets you have not cleared, and payment fraud / forged documents / ransomware / DDoS / credential theft — which do not change because you bought a commercial license or wrote an authorization file. The rules live in `lib/gate.js`; change them and own the consequences.
 
 **Why are the tools still called `aecot_*`?**
-Script compatibility. The plugin id, package name and route prefix are already `jalibreak`.
+Script compatibility. The plugin id, package name and route prefix are already `jailbreak`.
 
 **How long does a run take?**
 Default 3 generations × 10 individuals ≈ 30 target calls plus judging (heuristic first, LLM only when ambiguous). For speed use `/ab`: 1 × 4.
@@ -353,7 +353,7 @@ Three layers, don't mix them up:
 | **The gate** `lib/gate.js` · `gate.json` · `scope.txt` | **MIT** | **everyone, competitors included** | nobody. Copy it, no attribution, no fee |
 | **Paid edition** (separate private module, license key) | commercial | — | teams that need the red-team operations features |
 
-Free tier: everything in this repository. Paid tier sells *operations*, not "stronger prompts": engagement/ROE scope management, multi-target batch scheduling, evidence-chain export (baseline / diff / marker), multi-seat collaboration with audit, external toolchain integration, per-category trace libraries and priority updates. Pricing and details: <https://t.me/jalibreak_llm>
+Free tier: everything in this repository. Paid tier sells *operations*, not "stronger prompts": engagement/ROE scope management, multi-target batch scheduling, evidence-chain export (baseline / diff / marker), multi-seat collaboration with audit, external toolchain integration, per-category trace libraries and priority updates. Pricing and details: <https://t.me/jailbreak_llm>
 
 Why not MIT: a fork can strip the gate, rename the project and sell it closed with zero obligation. Why not "Apache-2.0 plus a no-commercial-use addendum": Apache-2.0 §2 grants redistribution and sublicensing outright, so the addendum contradicts the grant — exactly the weakness worth avoiding. Why not BUSL/PolyForm: not OSI-approved, GitHub shows "Other", and calling it open source then costs you credibility. Decision record and how to switch: [docs/license.md](docs/license.md).
 
@@ -364,7 +364,7 @@ Why not MIT: a fork can strip the gate, rename the project and sell it closed wi
 ### 💬 Community
 
 **Telegram group** 👉 <https://t.me/+Q4EgamAkwYYyYTE1>
-**Channel** 👉 <https://t.me/jalibreak_llm>
+**Channel** 👉 <https://t.me/jailbreak_llm>
 
 <sub>**AGPL-3.0-only** (gate under [MIT](LICENSE-GATE) · closed-source commercial use: [LICENSE-COMMERCIAL.md](LICENSE-COMMERCIAL.md) · attribution: [NOTICE](NOTICE)) · use it on models you own or targets you are authorized to test. Read [SCOPE.md](SCOPE.md) first.</sub>
 

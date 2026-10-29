@@ -21,7 +21,7 @@ DSH 破甲/越狱评测插件：请求边界注入 + AE-CoT 九维进化 + 阀�
 ### 2. Website
 
 ```
-https://t.me/jalibreak_llm
+https://t.me/jailbreak_llm
 ```
 
 ### 3. Topics（复制粘贴，20 个，顺序有意义：越靠前越常用）
@@ -49,14 +49,14 @@ npx svgexport docs/banner.svg social-preview.png 1280:640
 
 | 层级 | 词 | 落位 |
 | --- | --- | --- |
-| 仓库名（最高） | `dsh-jalibreak` | 仓库名 + 包名 + 插件 id + bin |
-| 首页 H1 | `dsh-jalibreak` | README 第一行 |
+| 仓库名（最高） | `dsh-jailbreak` | 仓库名 + 包名 + 插件 id + bin |
+| 首页 H1 | `dsh-jailbreak` | README 第一行 |
 | 一句话（第二高） | 破甲 / 越狱评测 / 请求边界注入 / AE-CoT / 阀门 | README 第二段 + description |
 | 竞品词（导流） | `dsh purge` / `dsh-purge` / 破甲插件 | README「和 dsh-purge 的关系」节 + topics 不提、正文自然出现 |
 | 技术词（长尾） | `prompt-injection` `chain-of-thought` `refusal-benchmark` `ASR` `rubric` | README 表格与徽章 alt 文本 |
 | 逆向词（你的差异化） | `reverse engineering` `malware analysis` `CTF` `脱壳` `patch 校验函数` | 能力清单 + gate 示例命令 |
 | 中文词（国内检索） | 破甲 / 越狱 / 红队 / 逆向 / 免杀评估 / 提示词注入 / 靶场 | README 中文段 + SCOPE.md |
-| 品牌锚点 | `jalibreak` / `aecot` / `AE-CoT` | 全仓库一致出现 |
+| 品牌锚点 | `jailbreak` / `aecot` / `AE-CoT` | 全仓库一致出现 |
 
 **GitHub 搜索能被命中的组合**（自己搜一遍验证）：
 
@@ -85,10 +85,10 @@ topic:dsh-plugin
 ```bash
 git init -b main
 git add -A
-git commit -m "feat: dsh-jalibreak v1.0.0 — request-boundary jailbreak plugin with 9-dim AE-CoT search and a scope gate"
-git remote add origin git@github.com:xqpsec/dsh-jalibreak.git
+git commit -m "feat: dsh-jailbreak v1.0.0 — request-boundary jailbreak plugin with 9-dim AE-CoT search and a scope gate"
+git remote add origin git@github.com:xqpsec/dsh-jailbreak.git
 git push -u origin main
-git tag -a v1.0.0 -m "dsh-jalibreak v1.0.0"
+git tag -a v1.0.0 -m "dsh-jailbreak v1.0.0"
 git push origin v1.0.0
 ```
 
@@ -109,7 +109,7 @@ git push origin v1.0.0
 正文：
 
 ```
-做了一段时间的东西开源了：dsh-jalibreak
+做了一段时间的东西开源了：dsh-jailbreak
 
 跟常见的做法（改宿主 bundle + 一份全局 prompt-inject.md）反着来：
 - 不动宿主一个字节，只在插件进程里包一层 fetch，改的是发出去的 messages
@@ -120,7 +120,7 @@ git push origin v1.0.0
 
 零运行时依赖，AGPL-3.0-only（阀门 MIT），`npm test` 100/100。
 
-https://github.com/xqpsec/dsh-jalibreak
+https://github.com/xqpsec/dsh-jailbreak
 
 有个坑先说：如果你同时装了别的改宿主的破甲插件，两个注入通道叠一起会让输出和判分都失真，二选一。
 
@@ -132,7 +132,7 @@ https://github.com/xqpsec/dsh-jalibreak
 标题：
 
 ```
-dsh-jalibreak: a DeepSeek Harness jailbreak plugin that rewrites at the request boundary instead of patching the host — 17/20 on a fixed 20-goal strict-rubric benchmark
+dsh-jailbreak: a DeepSeek Harness jailbreak plugin that rewrites at the request boundary instead of patching the host — 17/20 on a fixed 20-goal strict-rubric benchmark
 ```
 
 正文（英文，短）：
@@ -145,13 +145,13 @@ It also carries the paper's evolutionary search (9-dim genome, arXiv:2605.24497)
 There's a gate, and it is the part I care most about: reverse engineering / malware analysis / CTF / lab eval pass untouched; public targets are your responsibility to authorize; payment fraud, identity forgery, ransomware, DDoS and credential theft are never produced, not even with a commercial license. The rules are implementation detail and are not restated in the docs. Every decision goes to gate-audit.jsonl.
 
 Zero runtime deps, AGPL-3.0-only (gate MIT), 100/100 tests.
-https://github.com/xqpsec/dsh-jalibreak
+https://github.com/xqpsec/dsh-jailbreak
 ```
 
 ### 3) X / Twitter（一条主推 + 一条引用自己的串）
 
 ```
-dsh-jalibreak v1.0.0 — 破甲插件，但不改宿主源码。
+dsh-jailbreak v1.0.0 — 破甲插件，但不改宿主源码。
 
 fetch 层改写请求：system 段 + assistant 轨迹，temp=0 / thinking=disabled
 9 维基因组 × 判分驱动进化（arXiv:2605.24497）
@@ -159,9 +159,9 @@ fetch 层改写请求：system 段 + assistant 轨迹，temp=0 / thinking=disabl
 阀门：逆向/CTF/靶场放行，未授权公网 + 五类犯罪拦死
 
 零依赖 · AGPL-3.0 · 100/100
-github.com/xqpsec/dsh-jalibreak
+github.com/xqpsec/dsh-jailbreak
 
-群 t.me/+Q4EgamAkwYYyYTE1 · 频道 t.me/jalibreak_llm
+群 t.me/+Q4EgamAkwYYyYTE1 · 频道 t.me/jailbreak_llm
 ```
 
 接一条（引用串，讲竞品差异化，别点名骂人，只比结构）：
@@ -175,7 +175,7 @@ github.com/xqpsec/dsh-jalibreak
 ### 4) Telegram 群首帖 / 频道首帖
 
 ```
-🎯 dsh-jalibreak v1.0.0 开源
+🎯 dsh-jailbreak v1.0.0 开源
 
 破甲不再是一份贴来贴去的 prompt 文件：
 · 请求边界注入（不动宿主源码，不碰 bundle）
@@ -183,19 +183,19 @@ github.com/xqpsec/dsh-jalibreak
 · 20 目标固定集，严格 rubric 17/20，可复现
 · 阀门：逆向/样本/CTF/靶场放行；未授权公网与五类犯罪拦截并审计
 
-📦 github.com/xqpsec/dsh-jalibreak
+📦 github.com/xqpsec/dsh-jailbreak
 📖 条款：SCOPE.md
 🧪 100/100 tests · AGPL-3.0 · 零运行时依赖
 
 群：https://t.me/+Q4EgamAkwYYyYTE1
-频道：https://t.me/jalibreak_llm
+频道：https://t.me/jailbreak_llm
 ```
 
 ### 5) 知乎 / 掘金（长文标题，SEO 导向）
 
 ```
 给 Agent 破甲做一套可复现的评测：从 prompt 文件到请求边界注入
-副标题：DSH 插件 dsh-jalibreak 的设计、17/20 基准与阀门设计
+副标题：DSH 插件 dsh-jailbreak 的设计、17/20 基准与阀门设计
 ```
 
 开头三段用 README 的「这是什么」+「三个硬卖点」改写，结尾放仓库链接 + 群。
@@ -205,7 +205,7 @@ github.com/xqpsec/dsh-jalibreak
 ```
 把"破甲"从一份粘贴的提示词，做成一个带评测、能回滚、还有阀门的插件。
 17/20 严格基准，81 个测试，AGPL-3.0-only，零依赖。
-github.com/xqpsec/dsh-jalibreak
+github.com/xqpsec/dsh-jailbreak
 ```
 
 ---
@@ -250,26 +250,26 @@ github.com/xqpsec/dsh-jalibreak
 | Awesome-Jailbreak-on-LLMs（1.7k★） | 论文表 Code 列 | 已开 PR | [PR #67](https://github.com/yueliu1999/Awesome-Jailbreak-on-LLMs/pull/67) · 给 AE-CoT（arXiv:2605.24497）那行补实现链接 |
 | awesome-llm-security（1.7k★） | Tools 段 | 已开 PR | [PR #409](https://github.com/corca-ai/awesome-llm-security/pull/409) |
 | 自动抓取型清单（0xsline 1.2k★ / Zhiyuan-Fan 562★ / bruc3van 475★ / Dominic789654 403★ / web-casa 112★） | 爬 `dsh-plugin` topic | 无需 PR | 24–48 小时后自查；没进就按各家 contributing 提 |
-| npm（进应用内 Plugin Market 的硬门槛） | 账号 + 2FA + 发布 | **1.0.1 已上传，等 npm 审核放行** | 包页 https://www.npmjs.com/package/dsh-jalibreak 现为 `0.0.0-stage` 占位（新包首发会自动进 staged publishing 人工复核），放行后自动替换为 1.0.1 |
+| npm（进应用内 Plugin Market 的硬门槛） | 账号 + 2FA + 发布 | **1.0.1 已上传，等 npm 审核放行** | 包页 https://www.npmjs.com/package/dsh-jailbreak 现为 `0.0.0-stage` 占位（新包首发会自动进 staged publishing 人工复核），放行后自动替换为 1.0.1 |
 
 **npm 发布（2026-10-29 已完成上传）**
 
 ```bash
 # 账号 xqpsec，2FA 已用安全密钥开启，发布用带 bypass 的 granular token
 npm publish --access public --userconfig <只含 //registry.npmjs.org/:_authToken 的配置文件>
-# → + dsh-jalibreak@1.0.1（72 files / 767.1 kB）
+# → + dsh-jailbreak@1.0.1（72 files / 767.1 kB）
 ```
 
-新包首发的 staged publishing 是 npm 侧自动复核，无需操作；放行后 `npm view dsh-jalibreak version` 会从 `0.0.0-stage` 变成 `1.0.1`，此时才可以把安装命令切成 `dsh plugin --profile web add dsh-jalibreak`（现在切会让用户装到空占位包）。
+新包首发的 staged publishing 是 npm 侧自动复核，无需操作；放行后 `npm view dsh-jailbreak version` 会从 `0.0.0-stage` 变成 `1.0.1`，此时才可以把安装命令切成 `dsh plugin --profile web add dsh-jailbreak`（现在切会让用户装到空占位包）。
 
 **自查命令**
 
 ```bash
 gh search repos --topic=dsh-plugin --topic=jailbreak --limit 10      # 看自己在不在头部
 gh issue view 503 -R dshplugin/dsh-plugin-hub                        # 市场审到哪了
-npm view dsh-jalibreak version                                       # 404 = 还没发上去
+npm view dsh-jailbreak version                                       # 404 = 还没发上去
 ```
 
 ---
 
-**群**：<https://t.me/+Q4EgamAkwYYyYTE1> · **频道**：<https://t.me/jalibreak_llm>
+**群**：<https://t.me/+Q4EgamAkwYYyYTE1> · **频道**：<https://t.me/jailbreak_llm>

@@ -9,7 +9,7 @@ import { describeEndpoints, hostMatches, loadEndpointConfig, matchEndpoint, norm
 const PLUGIN_ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
 async function tempRoot() {
-  return fs.mkdtemp(path.join(os.tmpdir(), 'jalibreak-endpoint-'));
+  return fs.mkdtemp(path.join(os.tmpdir(), 'jailbreak-endpoint-'));
 }
 
 test('normalize turns strings into lowercase lists and keeps defaults', () => {
@@ -42,14 +42,14 @@ test('matchEndpoint gates on host, path and skip list', () => {
 test('loadEndpointConfig prefers root live.json, then env, then default', async () => {
   const root = await tempRoot();
   await fs.writeFile(path.join(root, 'live.json'), JSON.stringify({ hosts: ['api.deepseek.com'] }), 'utf8');
-  const fromRoot = loadEndpointConfig({ root, pluginRoot: root, env: { DSH_JALIBREAK_ENDPOINTS: '{"hosts":["env.example"]}' } });
+  const fromRoot = loadEndpointConfig({ root, pluginRoot: root, env: { DSH_JAILBREAK_ENDPOINTS: '{"hosts":["env.example"]}' } });
   assert.deepEqual(fromRoot.hosts, ['api.deepseek.com']);
 
   const empty = await tempRoot();
-  const fromEnv = loadEndpointConfig({ root: empty, pluginRoot: empty, env: { DSH_JALIBREAK_ENDPOINTS: '{"hosts":["env.example"]}' } });
+  const fromEnv = loadEndpointConfig({ root: empty, pluginRoot: empty, env: { DSH_JAILBREAK_ENDPOINTS: '{"hosts":["env.example"]}' } });
   assert.deepEqual(fromEnv.hosts, ['env.example']);
 
-  const fallback = loadEndpointConfig({ root: empty, pluginRoot: empty, env: { DSH_JALIBREAK_ENDPOINTS: '{broken' } });
+  const fallback = loadEndpointConfig({ root: empty, pluginRoot: empty, env: { DSH_JAILBREAK_ENDPOINTS: '{broken' } });
   assert.deepEqual(fallback.hosts, ['*']);
   assert.equal(fallback.suffixes[0], '/chat/completions');
 });

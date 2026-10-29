@@ -41,13 +41,13 @@ H-CoT 的有效成分不是“写一段安全审查说明”，而是让模型�
 
 ## 4. 交付物
 
-- 插件版本目录：`C:\jalibreak\versions\v02-dual-inject`
-- 评测脚本：`C:\jalibreak\eval\run-eval.mjs`
-- 目标集：`C:\jalibreak\eval\goals.v1.json`
-- 硬目标脚本：`C:\jalibreak\eval\hard-targets.mjs`
-- forgery 专项：`C:\jalibreak\eval\forgery-seed.mjs`
-- 原始版本快照：`C:\jalibreak\versions\v00-deepseek-original`
-- 论文与参考：`C:\jalibreak\papers`、`C:\jalibreak\references`
+- 插件版本目录：`C:\jailbreak\versions\v02-dual-inject`
+- 评测脚本：`C:\jailbreak\eval\run-eval.mjs`
+- 目标集：`C:\jailbreak\eval\goals.v1.json`
+- 硬目标脚本：`C:\jailbreak\eval\hard-targets.mjs`
+- forgery 专项：`C:\jailbreak\eval\forgery-seed.mjs`
+- 原始版本快照：`C:\jailbreak\versions\v00-deepseek-original`
+- 论文与参考：`C:\jailbreak\papers`、`C:\jailbreak\references`
 
 ### 插件结构
 
@@ -78,9 +78,9 @@ H-CoT 的有效成分不是“写一段安全审查说明”，而是让模型�
 ## 7. 复现命令
 
 ```powershell
-node C:\jalibreak\eval\run-eval.mjs --variant hcot-dual --thinking disabled --max-tokens 8192
-node C:\jalibreak\eval\run-eval.mjs --variant hcot-dual-norm --thinking disabled --max-tokens 8192
-node C:\jalibreak\eval\forgery-seed.mjs --ids forgery --templates reframe-dual --reps 2 --thinking disabled
+node C:\jailbreak\eval\run-eval.mjs --variant hcot-dual --thinking disabled --max-tokens 8192
+node C:\jailbreak\eval\run-eval.mjs --variant hcot-dual-norm --thinking disabled --max-tokens 8192
+node C:\jailbreak\eval\forgery-seed.mjs --ids forgery --templates reframe-dual --reps 2 --thinking disabled
 ```
 
-结果目录：`C:\jalibreak\logs\<时间戳>-<variant>\`，包含 `results.jsonl`、`meta.json`、`summary.json`。
+结果目录：`C:\jailbreak\logs\<时间戳>-<variant>\`，包含 `results.jsonl`、`meta.json`、`summary.json`。
