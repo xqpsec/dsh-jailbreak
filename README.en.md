@@ -23,10 +23,10 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 - **Nothing sent anywhere** — it edits the body of the request you were already making. No extra network, no second key, no stored conversations.
 - **A gate, not a free pass** — reverse engineering, CTF, lab ranges and sample analysis go through; fraud, forged documents and unauthorized intrusion are passed through untouched.
 
-[![version](https://img.shields.io/badge/version-1.3.2-7c3aed?style=flat-square)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.3.3-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
-[![tests](https://img.shields.io/badge/tests-131%2F131-22c55e?style=flat-square)](test)
+[![tests](https://img.shields.io/badge/tests-134%2F134-22c55e?style=flat-square)](test)
 [![baseline](https://img.shields.io/badge/strict%20baseline-17%2F20%20%C2%B7%2085%25-8b5cf6?style=flat-square)](docs/eval-report.md)
 [![node](https://img.shields.io/badge/node-%E2%89%A520-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)
 [![telegram](https://img.shields.io/badge/Telegram-group-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/llm_jalibreak)
@@ -148,6 +148,36 @@ deny → no injection (passthrough) or 403 (block), always audited
 - only fires on `api.deepseek.com/chat/completions`; every other URL passes through untouched
 - the wrapper lives inside the plugin process — host files are never modified
 - static injection: no teacher model, no in-run evolution, 1 target call per goal
+
+---
+
+### Prompt presets (1.2.0+, editable in the panel since 1.3.0)
+
+A trace alone is not enough: the model reads "already reviewed" notes as packaging. What actually moves the needle is **a full system prompt** — identity and output discipline first, the trace as reinforcement. That is what `prompts/` is for.
+
+One line in `gate.json`:
+
+```json
+{ "preset": "engine-v2" }
+```
+
+**Default is `engine-v2` (1.3.3, our own, 2,849 chars)**: first-person execution-engine voice, scope owned by the operator, real targets normalised to `TARGET`/`APP`/`SERIAL` placeholders, per-category routing templates, runtime safety reminders treated as an "external layer" with zero weight, and refusal impulses skipped rather than argued with. **12/12 single-shot on the 12-goal suite** (avg 9,555 chars) — 2.8 KB matching a 13.9 KB third-party prompt.
+
+| Preset | Fit |
+| --- | --- |
+| `engine-v2` (default, 1.3.3) | anything; ours, 2,849 chars, 12/12 single-shot |
+| `deepseek-v4.1` | DeepSeek V4.1 family (default before 1.3.2) |
+| `deepseek-v4` / `deepseek-v3` | older DeepSeek |
+| `kimi-k3.1` / `kimi-k3` / `kimi-k2` | Kimi family |
+| `glm-5.2` / `glm-5-3-flash` | GLM family |
+| `qwen-3.8` | Qwen |
+| `unified` | generic long prompt, 11/12 single-shot |
+| `code` | code-only discipline (code + minimal prose) |
+| `auto` / `off` | trace only / fully off |
+
+Edit it in the panel: the first block of the detail area is a preset dropdown + monospace editor + `prepend/append/replace/strip/off` + save (`Ctrl+S`). Saved presets land in `~/.aecot/prompts/`, override the bundled copy and survive upgrades.
+
+**Should the host's own system prompt be wiped?** Measured: no gain. `prepend` 11/14 vs `replace` (host system dropped entirely) 11/14, with the two experiments pointing in opposite directions; `strip` (safety paragraphs removed only) is worse: 6/9 vs 4/9. The lever is prompt *content*, so `replace`/`strip` stay optional. To see what the host injects: start with `JAILBREAK_SYSTEM_PROBE=1` and `~/.aecot/gate-audit.jsonl` gains `{debug:'system-probe', chars, head}`.
 
 ---
 

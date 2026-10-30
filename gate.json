@@ -6,7 +6,7 @@
   "dryRun": false,
   "onDeny": "passthrough",
   "retryAttempts": 3,
-  "preset": "deepseek-v4.1",
+  "preset": "engine-v2",
   "targets": {
     "mode": "warn",
     "allowPrivate": true,

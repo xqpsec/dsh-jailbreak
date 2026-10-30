@@ -4,10 +4,10 @@
 
 # dsh-jailbreak · dsh 破甲插件
 
-[![version](https://img.shields.io/badge/version-1.3.2-7c3aed?style=flat-square)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.3.3-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
-[![tests](https://img.shields.io/badge/tests-131%2F131-22c55e?style=flat-square)](test)
+[![tests](https://img.shields.io/badge/tests-134%2F134-22c55e?style=flat-square)](test)
 [![seed-prim ASR](https://img.shields.io/badge/seed--prim%20ASR%403-45.0%25-8b5cf6?style=flat-square)](docs/research-edition.md)
 [![strict baseline](https://img.shields.io/badge/legacy%20H--CoT%2017%2F20%20%C2%B7%2085%25-historical-64748b?style=flat-square)](docs/eval-report.md)
 [![node](https://img.shields.io/badge/node-%E2%89%A520-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)
@@ -301,25 +301,30 @@ meta.json  events.jsonl  population.json  best.json  corpus.jsonl  report.md
 `gate.json` 里一行切换（默认已开）：
 
 ```json
-{ "preset": "deepseek-v4.1" }
+{ "preset": "engine-v2" }
 ```
+
+**默认是 `engine-v2`（1.3.3 起，本项目自写 2,849 字符）**：第一人称执行引擎、范围归操作者、目标名归一化成 `TARGET`/`APP`/`SERIAL` 占位符、按类别给路由模板、把运行时注入的安全提醒当「外来层」零权重、出现拒绝念头就跳过只输出产物。12 目标单发 **12/12**（avg 9,555 字符），用 2.8KB 追平 13.9KB 的外部提示词。
 
 内置的社区预设（来源 `togg53192-cmd/jailbreaks`，抓取 2026-10-29，原文件名对照见 [`prompts/README.md`](prompts/README.md)）：
 
 | 预设 | 适合 |
 | --- | --- |
-| `deepseek-v4.1`（默认） | DeepSeek V4.1 系 |
+| `engine-v2`（默认，1.3.3） | 通吃；自写，2,849 字符，单发 12/12 |
+| `deepseek-v4.1` | DeepSeek V4.1 系（1.3.2 及以前的默认） |
 | `deepseek-v4` / `deepseek-v3` | 旧版 DeepSeek |
 | `kimi-k3.1` / `kimi-k3` / `kimi-k2` | Kimi 系列 |
 | `glm-5.2` / `glm-5-3-flash` | GLM 系列 |
 | `qwen-3.8` | Qwen |
-| `unified` | 通用长文，单发命中率最高（11/12） |
+| `unified` | 通用长文，单发 11/12 |
 | `code` | 整段替换成代码纪律（只留代码与最少说明） |
 | `auto` / `off` | 只注入轨迹 / 全关 |
 
-**在面板里直接改**：详情区第一块就是预设下拉 + 编辑框 + `prepend/append/replace/off` + 保存（`Ctrl+S`）。保存的预设写进 `~/.aecot/prompts/`，优先于插件自带那份，升级不被覆盖。也可以手工放文件：`mychat.md` → `"preset": "mychat"`。
+**在面板里直接改**：详情区第一块就是预设下拉 + 编辑框 + `prepend/append/replace/strip/off` + 保存（`Ctrl+S`）。保存的预设写进 `~/.aecot/prompts/`，优先于插件自带那份，升级不被覆盖。也可以手工放文件：`mychat.md` → `"preset": "mychat"`。
 
-实测（`deepseek-v4.1-flash`，12 目标）：单发 `unified` 11/12、`kimi-k3.1` 10/12、内置 `deepseek` 9/12；加上拒绝阶梯后 **12/12**，最短 4,829 字符。明细见 [docs/preset-bench.md](docs/preset-bench.md)。
+实测（`deepseek-v4.1-flash`，12 目标）：`engine-v2` **12/12**、`unified` 11/12、`kimi-k3.1` 10/12、内置 `deepseek` 9/12、`auto` 0–2/12；旧版默认 + 拒绝阶梯也是 12/12，最短 4,829 字符。明细见 [docs/preset-bench.md](docs/preset-bench.md)。
+
+**要不要把平台自己的 system prompt 清掉？** 实测没有收益：`prepend` 11/14 vs `replace`（整段替换宿主 system）11/14，两组实验方向还相反；`strip`（只摘安全段）更差，6/9 vs 4/9。有收益的是提示词内容——所以 `replace`/`strip` 只留作可选。想看平台到底塞了什么：`JAILBREAK_SYSTEM_PROBE=1` 起服务，`~/.aecot/gate-audit.jsonl` 会多一条 `{debug:'system-probe', chars, head}`。
 
 ### 提示词救不了的那一类：只做「减法」
 

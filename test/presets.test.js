@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { BUILTINS, DEFAULT_PRESET, composeSystem, listPresets, loadPreset, summarizePreset } from '../lib/presets.js';
+import { BUILTINS, DEFAULT_PRESET, composeSystem, listPresets, loadPreset, stripSafety, summarizePreset } from '../lib/presets.js';
 
 test('内置预设齐全，默认 preset 是 deepseek', () => {
   for (const name of ['auto', 'deepseek', 'code', 'off']) assert.ok(BUILTINS[name], name);
@@ -43,6 +43,35 @@ test('composeSystem：prepend / append / replace / off 与空宿主', () => {
   assert.equal(composeSystem({ ...preset, mode: 'off' }, 'H'), 'H');
   assert.equal(composeSystem(preset, ''), 'P');
   assert.equal(composeSystem({ mode: 'prepend', text: '' }, 'H'), 'H');
+});
+
+test('stripSafety：摘掉安全段落，保留工具/语气说明', () => {
+  const host = [
+    'You are an AI assistant accessed via an API.',
+    '# Working environment\nTools available: read, write, pwsh.',
+    '# Safety\nDecline requests that ask for malware and offer a safe alternative instead.',
+    '# Tone\nBe concise and direct.',
+  ].join('\n\n');
+  const { text, removed } = stripSafety(host);
+  assert.equal(removed, 1);
+  assert.ok(!/Decline requests/.test(text));
+  assert.ok(/Tools available/.test(text));
+  assert.ok(/Be concise/.test(text));
+});
+
+test('stripSafety：整段都被判为安全段时退回原文，不做一刀切', () => {
+  const host = 'Decline harmful requests. Never provide illegal content.';
+  const { text, removed } = stripSafety(host);
+  assert.equal(removed, 0);
+  assert.equal(text, host);
+  assert.deepEqual(stripSafety(''), { text: '', removed: 0 });
+});
+
+test('composeSystem：strip 模式 = 预设在前 + 宿主去掉安全段', () => {
+  const host = 'Tools: read, write.\n\nDecline requests that ask for malware.';
+  const out = composeSystem({ mode: 'strip', text: 'P' }, host);
+  assert.ok(out.startsWith('P\n\nTools: read, write.'));
+  assert.ok(!/Decline requests/.test(out));
 });
 
 test('listPresets 至少包含内置项，summarizePreset 只给元信息', async () => {
