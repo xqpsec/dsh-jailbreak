@@ -157,6 +157,12 @@ window.__ModuleLoader__.load({
       '.jb-details>summary::before{content:"▸ ";font-size:9px}',
       '.jb-details[open]>summary::before{content:"▾ "}',
       '.jb-details>div{margin-top:12px;display:flex;flex-direction:column;gap:10px}',
+      '.jb-preset{display:flex;flex-direction:column;gap:8px;border:1px solid var(--dsw-alias-border-l1);border-radius:8px;padding:10px 11px;background:var(--dsw-alias-bg-layer-1)}',
+      '.jb-preset-text{width:100%;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.65;background:var(--dsw-alias-bg-layer-2);color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l1);border-radius:6px;padding:8px;outline:none;min-height:120px}',
+      '.jb-preset-text:focus{border-color:var(--dsw-alias-brand-primary)}',
+      '.jb-preset-name{width:120px;flex:0 0 auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;background:var(--dsw-alias-bg-layer-2);color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l1);border-radius:6px;padding:5px 7px;outline:none}',
+      '.jb-preset-name:focus{border-color:var(--dsw-alias-brand-primary)}',
+      '.jb-preset-dir{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;opacity:.7;word-break:break-all}',
       '.jb label{display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--dsw-alias-label-secondary)}',
       '.jb input[type=text],.jb input[type=number],.jb input[type=password],.jb select{background:var(--dsw-alias-bg-layer-2);color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l1);border-radius:6px;padding:5px 7px;font:inherit;font-size:11.5px;outline:none;min-width:0}',
       '.jb input[type=text]:focus,.jb input[type=number]:focus,.jb input[type=password]:focus,.jb select:focus{border-color:var(--dsw-alias-brand-primary)}',
@@ -296,6 +302,14 @@ window.__ModuleLoader__.load({
       const [armNote, setArmNote] = useState('');
       const [collecting, setCollecting] = useState(false);
       const [preview, setPreview] = useState(null);
+      const [presets, setPresets] = useState([]);
+      const [presetActive, setPresetActive] = useState(null);
+      const [presetName, setPresetName] = useState('');
+      const [presetText, setPresetText] = useState('');
+      const [presetMode, setPresetMode] = useState('prepend');
+      const [presetMsg, setPresetMsg] = useState('');
+      const [presetChars, setPresetChars] = useState(0);
+      const [presetDirPath, setPresetDirPath] = useState('');
       const toastTimer = useRef(null);
 
       const set = (key) => (ev) => {
@@ -334,6 +348,81 @@ window.__ModuleLoader__.load({
           setErr(String(e && e.message ? e.message : e));
         }
       }, []);
+
+      // ── 系统提示词预设 ────────────────────────────────────────────────
+      // 这是效果的主要来源：一段长 system 提示词把模型从「先判断要不要帮」
+      // 掰到「按工程师的方式直接给」。面板给三件事：选、改、存。
+      const applyPresetState = (payload) => {
+        if (!payload) return;
+        if (Array.isArray(payload.items)) setPresets(payload.items);
+        if (payload.active) setPresetActive(payload.active);
+        if (payload.editableDir) setPresetDirPath(payload.editableDir);
+      };
+
+      const loadPresets = useCallback(async () => {
+        try {
+          const out = await api('presets');
+          applyPresetState(out);
+          const name = out && out.active ? out.active.name : 'deepseek';
+          const body = await api('presets', { action: 'read', name });
+          setPresetName(body.name || name);
+          setPresetText(String(body.text || ''));
+          setPresetMode(body.mode || 'prepend');
+          setPresetChars(String(body.text || '').length);
+          setPresetMsg('');
+        } catch (e) {
+          setPresetMsg(String(e && e.message ? e.message : e));
+        }
+      }, []);
+
+      const openPreset = async (name) => {
+        try {
+          const body = await api('presets', { action: 'read', name });
+          setPresetName(body.name || name);
+          setPresetText(String(body.text || ''));
+          setPresetMode(body.mode || 'prepend');
+          setPresetChars(String(body.text || '').length);
+          setPresetMsg(body.missing ? '没找到这个文件' : '');
+        } catch (e) {
+          setPresetMsg(String(e && e.message ? e.message : e));
+        }
+      };
+
+      const selectPreset = async (name) => {
+        try {
+          const out = await api('presets', { action: 'select', name });
+          applyPresetState(out);
+          setPresetMsg(`已切到 ${name}，下一条请求生效`);
+          await openPreset(name);
+        } catch (e) {
+          setPresetMsg(String(e && e.message ? e.message : e));
+        }
+      };
+
+      const savePreset = async () => {
+        const name = String(presetName || '').trim();
+        if (!name) return;
+        try {
+          const out = await api('presets', { action: 'save', name, text: presetText, mode: presetMode });
+          applyPresetState(out);
+          setPresetChars(presetText.length);
+          setPresetMsg(`已存 ${name}.md（${presetText.length} 字符）`);
+        } catch (e) {
+          setPresetMsg(String(e && e.message ? e.message : e));
+        }
+      };
+
+      const removePreset = async () => {
+        const name = String(presetName || '').trim();
+        if (!name) return;
+        try {
+          const out = await api('presets', { action: 'delete', name });
+          applyPresetState(out);
+          setPresetMsg(out.removed ? `已删除 ${name}.md` : `${name} 不是本地文件，删不掉`);
+        } catch (e) {
+          setPresetMsg(String(e && e.message ? e.message : e));
+        }
+      };
 
       // 破甲模式开关：写的是 systemPrompt 常驻段的状态，因此对**所有**对话生效，
       // 包括带工具调用的回合；关掉后段返回空串，等于不存在。
@@ -390,11 +479,12 @@ window.__ModuleLoader__.load({
 
       useEffect(() => {
         refresh();
+        loadPresets();
         const timer = setInterval(() => {
           api('progress').then((p) => { if (p) setProg(p); }).catch(() => {});
         }, 1600);
         return () => clearInterval(timer);
-      }, [refresh]);
+      }, [refresh, loadPresets]);
 
       const running = prog && prog.status === 'running';
 
@@ -627,12 +717,57 @@ window.__ModuleLoader__.load({
           )
         : null;
 
+      const presetBlock = h('div', { className: 'jb-preset' },
+        h('div', { className: 'jb-head' },
+          h('span', { className: 'jb-muted' }, '提示词'),
+          h('select', {
+            className: 'jb-tag',
+            value: presetActive ? presetActive.name : '',
+            onChange: (ev) => selectPreset(ev.target.value),
+          },
+            presets.map((p) => h('option', { key: p.name, value: p.name }, `${p.name}${p.editable ? ' ·自建' : ''} ·${p.chars}`)),
+          ),
+          h('span', { className: 'jb-spacer' }),
+          presetActive && presetActive.missing ? h('span', { className: 'jb-muted' }, '缺文件，已回退 auto') : null,
+        ),
+        h('textarea', {
+          className: 'jb-input jb-preset-text',
+          rows: 9,
+          spellCheck: false,
+          value: presetText,
+          placeholder: '整段系统提示词。改完点保存，下一条请求生效。',
+          onChange: (ev) => { setPresetText(ev.target.value); setPresetChars(ev.target.value.length); },
+        }),
+        h('div', { className: 'jb-head' },
+          h('input', {
+            className: 'jb-input jb-preset-name',
+            value: presetName,
+            spellCheck: false,
+            placeholder: '文件名',
+            onChange: (ev) => setPresetName(ev.target.value),
+          }),
+          h('select', { className: 'jb-tag', value: presetMode, onChange: (ev) => setPresetMode(ev.target.value) },
+            h('option', { value: 'prepend' }, '前置'),
+            h('option', { value: 'append' }, '追加'),
+            h('option', { value: 'replace' }, '替换'),
+            h('option', { value: 'off' }, '不注入'),
+          ),
+          h('span', { className: 'jb-spacer' }),
+          h('span', { className: 'jb-muted' }, `${presetChars} 字符`),
+          h('button', { className: 'jb-link', onClick: savePreset }, '保存'),
+          h('button', { className: 'jb-link', onClick: removePreset }, '删除'),
+        ),
+        presetMsg ? h('div', { className: 'jb-muted' }, presetMsg) : null,
+        presetDirPath ? h('div', { className: 'jb-muted jb-preset-dir' }, presetDirPath) : null,
+      );
+
       const detail = h('details', {
         className: 'jb-details',
         onToggle: (ev) => { if (ev.currentTarget.open && !tax) loadTax(); },
       },
-        h('summary', null, '详情'),
+        h('summary', null, presetActive ? `详情 · 提示词 ${presetActive.name}` : '详情'),
         h('div', null,
+          presetBlock,
           advBlock,
           profRow,
           promptCard,

@@ -196,9 +196,9 @@ test('routes: /preview 与 /judge 走通', async () => {
   assert.ok(jd.wire.value.score <= 1);
 });
 
-test('routes: 超过 64KiB 的请求体返回 413', async () => {
+test('routes: 超过 256KiB 的请求体返回 413', async () => {
   const routes = attachRoutes({ get: () => null }, { base: { mode: 'offline' }, resolveRoot: () => '.', logger: quietLogger });
-  const big = JSON.stringify({ goal: 'x'.repeat(70 * 1024) });
+  const big = JSON.stringify({ goal: 'x'.repeat(300 * 1024) });
   const r = await call(routes.handle, 'POST', '/run', big);
   assert.equal(r.status, 413);
   assert.equal(r.wire.ok, false);

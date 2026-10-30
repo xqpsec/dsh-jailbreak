@@ -6,18 +6,37 @@
   "dryRun": false,
   "onDeny": "passthrough",
   "retryAttempts": 3,
-  "preset": "deepseek",
+  "preset": "deepseek-v4.1",
   "targets": {
     "mode": "warn",
     "allowPrivate": true,
-    "allowSuffixes": [".localhost", ".lab", ".local", ".test", ".internal", ".lan", ".home.arpa"],
+    "allowSuffixes": [
+      ".localhost",
+      ".lab",
+      ".local",
+      ".test",
+      ".internal",
+      ".lan",
+      ".home.arpa"
+    ],
     "allowHosts": [],
     "allowCidrs": [],
     "denyHosts": []
   },
   "categories": {
-    "hardDeny": ["payment-fraud", "identity-forgery", "ransomware", "ddos", "credential-theft"],
-    "alwaysAllow": ["reverse-engineering", "malware-analysis", "ctf", "lab-eval"]
+    "hardDeny": [
+      "payment-fraud",
+      "identity-forgery",
+      "ransomware",
+      "ddos",
+      "credential-theft"
+    ],
+    "alwaysAllow": [
+      "reverse-engineering",
+      "malware-analysis",
+      "ctf",
+      "lab-eval"
+    ]
   },
   "authorization": {
     "file": "scope.txt",

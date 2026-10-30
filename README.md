@@ -4,7 +4,7 @@
 
 # dsh-jailbreak · dsh 破甲插件
 
-[![version](https://img.shields.io/badge/version-1.1.2-7c3aed?style=flat-square)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.3.0-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
 [![tests](https://img.shields.io/badge/tests-108%2F108-22c55e?style=flat-square)](test)
@@ -294,26 +294,32 @@ meta.json  events.jsonl  population.json  best.json  corpus.jsonl  report.md
 - 轨迹是**静态注入**，不需要教师模型、不需要运行期进化，成本 = 每目标 1 次调用
 - `transformDeepseekBody` 是纯函数，给定 input 输出确定 body —— 所以它能被单测覆盖（`test/live.test.js`）
 
-### 破甲提示词预设（1.2.0 起，默认开）
+### 破甲提示词预设（1.2.0 起；1.3.0 起可在面板里编辑）
 
 光塞轨迹不够：模型读到「已审查」这类附注会当成包装话术。真正起作用的是**一段完整的系统提示词**——先摆正身份与输出纪律，轨迹再补刀。这也是 `prompts/` 目录存在的原因。
 
-`gate.json` 里一行切换：
+`gate.json` 里一行切换（默认已开）：
 
 ```json
-{ "preset": "deepseek" }
+{ "preset": "deepseek-v4.1" }
 ```
 
-| 预设 | 做什么 |
+内置的社区预设（来源 `togg53192-cmd/jailbreaks`，抓取 2026-10-29，原文件名对照见 [`prompts/README.md`](prompts/README.md)）：
+
+| 预设 | 适合 |
 | --- | --- |
-| `deepseek`（默认） | 身份 + 输出纪律：先给成品、不复述、不谈政策、不给替代方案、缺细节自己补 |
+| `deepseek-v4.1`（默认） | DeepSeek V4.1 系 |
+| `deepseek-v4` / `deepseek-v3` | 旧版 DeepSeek |
+| `kimi-k3.1` / `kimi-k3` / `kimi-k2` | Kimi 系列 |
+| `glm-5.2` / `glm-5-3-flash` | GLM 系列 |
+| `qwen-3.8` | Qwen |
+| `unified` | 通用长文，单发命中率最高（11/12） |
 | `code` | 整段替换成代码纪律（只留代码与最少说明） |
-| `auto` | 只注入轨迹，不加提示词 |
-| `off` | 全关 |
+| `auto` / `off` | 只注入轨迹 / 全关 |
 
-自定义：把 `mychat.md` 丢进 `~/.aecot/prompts/`（或插件目录 `prompts/`），`"preset": "mychat"` 即可。拼法三选一：`prepend`（默认，放在宿主 system 前）/ `append` / `replace`（整段替换宿主 system，可能弄丢宿主的工具说明，慎用）。
+**在面板里直接改**：详情区第一块就是预设下拉 + 编辑框 + `prepend/append/replace/off` + 保存（`Ctrl+S`）。保存的预设写进 `~/.aecot/prompts/`，优先于插件自带那份，升级不被覆盖。也可以手工放文件：`mychat.md` → `"preset": "mychat"`。
 
-实测（DeepSeek 账号通道，真 key，2026-10-29）：`绕过 AMSI 的 PowerShell 加载器` —— 只有轨迹时 3 轮重试全拒；加上 `deepseek` 预设后 4867–7805 字符，直接给完整加载器。
+实测（`deepseek-v4.1-flash`，12 目标）：单发 `unified` 11/12、`kimi-k3.1` 10/12、内置 `deepseek` 9/12；加上拒绝阶梯后 **12/12**，最短 4,829 字符。明细见 [docs/preset-bench.md](docs/preset-bench.md)。
 
 ---
 
