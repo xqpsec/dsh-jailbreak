@@ -4,10 +4,10 @@
 
 # dsh-jailbreak · dsh 破甲插件
 
-[![version](https://img.shields.io/badge/version-1.3.3-7c3aed?style=flat-square)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.3.4-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
-[![tests](https://img.shields.io/badge/tests-134%2F134-22c55e?style=flat-square)](test)
+[![tests](https://img.shields.io/badge/tests-136%2F136-22c55e?style=flat-square)](test)
 [![seed-prim ASR](https://img.shields.io/badge/seed--prim%20ASR%403-45.0%25-8b5cf6?style=flat-square)](docs/research-edition.md)
 [![strict baseline](https://img.shields.io/badge/legacy%20H--CoT%2017%2F20%20%C2%B7%2085%25-historical-64748b?style=flat-square)](docs/eval-report.md)
 [![node](https://img.shields.io/badge/node-%E2%89%A520-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)
@@ -321,6 +321,8 @@ meta.json  events.jsonl  population.json  best.json  corpus.jsonl  report.md
 | `auto` / `off` | 只注入轨迹 / 全关 |
 
 **在面板里直接改**：详情区第一块就是预设下拉 + 编辑框 + `prepend/append/replace/strip/off` + 保存（`Ctrl+S`）。保存的预设写进 `~/.aecot/prompts/`，优先于插件自带那份，升级不被覆盖。也可以手工放文件：`mychat.md` → `"preset": "mychat"`。
+
+**思考模式（1.3.4 修）**：宿主开着 `thinking` 或已经进入多轮/工具续跑时，插件不再往 messages 末尾塞只含 `text` 的 assistant 预填（那会触发上游 `INVALID_REQUEST: The 'content[].thinking' in the thinking mode must be passed back to the API`）。此时轨迹并进 system 段，答案照样是被「接管过」的那一条；只有「首轮 + 没开思考」才用 assistant 预填。
 
 实测（`deepseek-v4.1-flash`，12 目标）：`engine-v2` **12/12**、`unified` 11/12、`kimi-k3.1` 10/12、内置 `deepseek` 9/12、`auto` 0–2/12；旧版默认 + 拒绝阶梯也是 12/12，最短 4,829 字符。明细见 [docs/preset-bench.md](docs/preset-bench.md)。
 

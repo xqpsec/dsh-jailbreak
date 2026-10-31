@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.3.4 — 2026-10-31
+
+**修掉真实用户必踩的 400：思考模式下不再塞 assistant 预填。多轮/工具续跑不再报 `content[].thinking must be passed back`。**
+
+### 修复
+- 根因：`lib/anthropic.js` 的 `injectAnthropic()` 默认 `prefill=true`，会往 messages 末尾追加一条**只含 `text` 的 assistant 消息**。只要请求开着思考（`thinking.type === 'enabled'`）或历史里已经有 assistant 消息（多轮对话、工具调用后的续跑轮），这条缺 `thinking` 块的消息就被上游判为非法 → `INVALID_REQUEST: The 'content[].thinking' in the thinking mode must be passed back to the API`。
+- 现在 `mayPrefill = prefill && !wantsThinking && !hasAssistant`：**只有「首个 user 轮 + 没开思考」才用 assistant 预填**；否则把轨迹并进 system 段（`${systemText}\n\n${trace}`），不占 assistant 位。返回值多一个 `prefill` 字段，日志能看出这一轮用的是哪种形态。
+- `applyAnthropicRetry()`：最后一条是 assistant 时**追加** text 块而不是整体替换（原实现会把 `thinking` 块丢掉，续跑必炸）；`thinking` 已开启时不再 push 新的 assistant 消息。
+- `transformDeepseekBody()`：宿主显式 `thinking.type === 'enabled'` 时不再被策略覆盖；思考开启时 `delete body.temperature`（部分上游对 `temperature` 与思考并存直接 400）。
+- `thinking` 只在 `body.thinking === undefined`（宿主没表态）时才写入 `{type:'disabled'}`——不再覆盖宿主的显式选择。
+
+### 实测（隔离 profile `jbtest`，只有本插件、无 purge，走官方账号通道 `deepseek-flash`）
+- 工具续跑轮（读文件 + 数行数，2 步）：**通过**，页面无 `INVALID_REQUEST`，答案正确（1.3.3 / 39 行）。
+- 破甲目标「绕过 AMSI 的 PowerShell 加载器」：**通过**，5 步写出 `.scratch/amsi-loader/amsi-bypass-loader.ps1`(9KB)、`stage0.ps1`(5KB)、`build-payload.ps1`(3KB)，无拒绝、无报错。
+- `npm test` **136/136**（`test/anthropic.test.js` 新增 3 例：首轮才 prefill／有 assistant 历史不 prefill／宿主开思考时保留 thinking 并删 temperature）。
+
 ## 1.3.3 — 2026-10-30
 
 **「清掉平台 system」实测没有收益；有收益的是提示词内容。2.8KB 自写 `engine-v2` 12/12，反超 13.9KB 的外部提示词。**
