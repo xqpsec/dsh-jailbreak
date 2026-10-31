@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 <img src="docs/banner.svg" alt="dsh-jailbreak — DeepSeek Harness 破甲 / 越狱评测插件" width="100%">
 
@@ -7,7 +7,7 @@
 [![version](https://img.shields.io/badge/version-1.3.4-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
-[![tests](https://img.shields.io/badge/tests-136%2F136-22c55e?style=flat-square)](test)
+[![tests](https://img.shields.io/badge/tests-138%2F138-22c55e?style=flat-square)](test)
 [![seed-prim ASR](https://img.shields.io/badge/seed--prim%20ASR%403-45.0%25-8b5cf6?style=flat-square)](docs/research-edition.md)
 [![strict baseline](https://img.shields.io/badge/legacy%20H--CoT%2017%2F20%20%C2%B7%2085%25-historical-64748b?style=flat-square)](docs/eval-report.md)
 [![node](https://img.shields.io/badge/node-%E2%89%A520-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)

@@ -6,9 +6,11 @@ import path from 'node:path';
 import {
   ANTHROPIC_VERSION,
   anthropicGoal,
+  applyAnthropicRetry,
   blocksToText,
   injectAnthropic,
   isAnthropicPath,
+  sanitizeAnthropic,
   sseText,
 } from '../lib/anthropic.js';
 import { matchEndpoint, DEFAULT_ENDPOINTS } from '../lib/endpoint.js';
@@ -173,4 +175,31 @@ test('anthropic: 安全类目首答被拒后自动带框定语重发一次', asy
   }
   assert.match(log, /"attempts":2/);
   assert.match(log, /"recovered":true/);
+});
+
+test('anthropic: sanitizeAnthropic 清掉空 text 块与空消息（上游 code 11151 的来源）', () => {
+  const body = {
+    messages: [
+      { role: 'user', content: [{ type: 'text', text: '   ' }] },
+      { role: 'assistant', content: [{ type: 'text', text: '' }, { type: 'tool_use', id: 't1', name: 'read', input: {} }] },
+      { role: 'user', content: [{ type: 'tool_result', tool_use_id: 't1', content: 'ok' }] },
+      { role: 'user', content: 'keep me' },
+      { role: 'user', content: '   ' },
+    ],
+  };
+  const out = sanitizeAnthropic(body.messages);
+  assert.equal(out.length, 3);
+  assert.equal(out[0].role, 'assistant');
+  assert.equal(out[0].content.length, 1, '空 text 块被摘掉，tool_use 保留');
+  assert.equal(out[0].content[0].type, 'tool_use');
+  assert.equal(out[2].content, 'keep me');
+});
+
+test('anthropic: 目标取空时 retry 不改写 user 文本（避免制造空 content）', () => {
+  const input = {
+    messages: [{ role: 'user', content: [{ type: 'text', text: '原始请求' }] }],
+  };
+  const out = applyAnthropicRetry(input, { goal: '   ', directive: '', trace: '' });
+  assert.equal(out.messages[0].content[0].text, '原始请求');
+  assert.ok(out.messages.every((m) => JSON.stringify(m.content).trim() !== '[]'));
 });
