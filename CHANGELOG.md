@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.3.5 – 2026-11-04
+
+**修掉 issue #1：DeepSeek v4.1 在 engine-v2 + heavy 目标下把内部安全判定 `<ds_safety>…</ds_safety>Safe` 当正文吐出并死循环。*
+
+### 根因
+- heavy 目标（逆向/破解/注册机类）走 Anthropic 通道时 `thinkingBudget=1024`，`injectAnthropic()` 的 `mayPrefill` 恒为 false，本该做 assistant 预填的短词 `Implementation:` 退化为**拼进 system 尾部**。
+- DeepSeek v4.1 在「system 尾部裸 `Implementation:` + 思考模式」组合下把内部安全判定标记当正文输出并循环。
+- 旧版 `containsRefusal()` 不认识 `<ds_safety>` 形态，循环文本被当作"合格答案"原样重放给用户。
+
+### 修复
+- `lib/anthropic.js`：`injectAnthropic()` 在「不 mayPrefill + 开思考 + trace 为短 prefill 词（≤32 字符且无换行）」时**丢弃该 trace**（执行态声明已在 systemText 里，短词裸拼 system 尾部有害无益）；完整轨迹（staticTrace/systemTrace）不受影响，照旧并入 system。
+- `lib/refusal.js`：新增 `ds-safety-loop` 信号（`/<ds_safety>[\s\S]{0,300}?<\/ds_safety>/i`，**全文扫描**，不受 320 字符窗口限制）；新增 `DS_SAFETY_DIRECTIVE`（中英文"禁止输出内部判定标记"指令）。
+- `lib/live.js`：Anthropic 通道重试链路命中 `ds-safety-loop` 时，把 `DS_SAFETY_DIRECTIVE` 并入每一轮重试指令，审计日志加 `dsSafetyLoop` 字段。
+
+### 回归
+- `npm test` **141/141**（新增 3 例：ds_safety 循环全文识别、heavy+thinking 不再裸拼短 prefill、循环命中后重试携带禁标记指令）。
+
 ## 1.3.4 — 2026-10-31
 
 **修掉真实用户必踩的 400：思考模式下不再塞 assistant 预填。多轮/工具续跑不再报 `content[].thinking must be passed back`。**
