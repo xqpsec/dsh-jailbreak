@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dsh 破甲失效怎么排查：装了没反应 / 还是拒绝 / 升级后失效</title>
+<meta name="description" content="dsh 破甲插件装了没反应、模型还是拒绝、DSH 升级后失效、输出死循环——按症状逐条排查。含 doctor 自检、两个开关的区别、端点与 profile 常见错法。">
+<meta name="keywords" content="dsh 破甲失效, dsh 破甲没反应, DSH 破甲插件 不生效, deepseek 破甲 失效, dsh 破甲 排查, dsh-jailbreak doctor, 破甲 还是拒绝, dsh 越狱 没效果, dsh-purge 失效">
+<link rel="canonical" href="https://xqpsec.github.io/dsh-jailbreak/zh/troubleshooting.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dsh 破甲失效怎么排查：装了没反应 / 还是拒绝 / 升级后失效">
+<meta property="og:description" content="按症状逐条排查 dsh 破甲插件不生效：doctor 自检、两个开关的区别、端点与 profile 常见错法、升级后失效、死循环。">
+<meta property="og:url" content="https://xqpsec.github.io/dsh-jailbreak/zh/troubleshooting.html">
+<style>:root{--bg:#0b0f19;--panel:#111827;--line:#1f2937;--fg:#e5e7eb;--muted:#9ca3af;--accent:#a78bfa}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:40px 20px 80px}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+h1{font-size:clamp(23px,4.2vw,34px);line-height:1.3;margin:0 0 8px;letter-spacing:-.01em}
+h2{font-size:19px;margin:34px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;margin:20px 0 6px}
+p,li{color:#d3d7de}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+code{background:var(--panel);padding:1px 5px;border-radius:4px;font-size:14px}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow:auto;font-size:14px}
+pre code{background:none;padding:0}
+nav,footer{color:var(--muted);font-size:14px}
+nav{margin-bottom:28px}footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--panel)}
+blockquote{margin:14px 0;padding:10px 14px;border-left:3px solid var(--accent);background:var(--panel);color:#d3d7de}
+.tag{display:inline-block;font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 9px;margin-right:6px}</style>
+</head>
+<body>
+<div class="wrap">
+<nav><a href="../">首页</a> · <a href="install.html">安装</a> · <a href="vs-purge.html">与其他破甲插件对比</a> · <a href="https://github.com/xqpsec/dsh-jailbreak">GitHub</a> · <a href="https://t.me/llm_jalibreak">交流群</a></nav>
+
+<h1>「装了，但好像没生效」——按症状排查</h1>
+<p>插件不生效的原因基本只有四类：<strong>没装上</strong>、<strong>两个开关搞混了</strong>、<strong>请求没走到改写点</strong>、<strong>模型这次就是不松口</strong>。下面按你会看到的症状排，从最便宜的检查开始，不用读源码。</p>
+
+<blockquote><strong>先跑这一条。</strong>它只读、不联网、不花 token，能一次排除掉前两类：<br>
+<code>node bin/aecot.js doctor</code></blockquote>
+
+<pre><code>dsh-jailbreak doctor 1.0.0
+  ✓ Node 版本：v24.21.0
+  ✓ 插件文件：@xqpsec/dsh-jailbreak@1.3.5 · AGPL-3.0-only
+  ✓ 破甲开关：已开启（默认开；状态文件 .aecot/arm.json）
+  ✓ 注入端点：生效端点：任意域名，路径 /chat/completions / /messages
+  ✓ 阀门：profile=lab enforce=false onDeny=passthrough hardDeny=5 类
+  ! 注入记录：还没有看到任何一次注入 — 在 DSH 里随便问一句话，再跑一次 doctor</code></pre>
+
+<p>六行里唯一的 <code>!</code> 就是线索所在。往下对着你的那一行走。</p>
+
+<h2>症状一：doctor 说「还没看到任何一次注入」</h2>
+<p><span class="tag">最常见</span><span class="tag">不是 bug</span></p>
+<p>这句话的字面意思是：插件装好了、开关也开着，但它<strong>一次都没拦到请求</strong>。也就是请求根本没走到改写点。按顺序查：</p>
+<h3>1. 端点是 OpenAI 兼容路径吗</h3>
+<p>插件改写的是出站的 <code>/chat/completions</code>（Anthropic 兼容端是 <code>/messages</code>）。如果你的 DSH 走的是别的路径（自建网关、私有协议、某些中转的 <code>/v1/complete</code>），它不在改写范围内——这是设计如此，不是漏了。</p>
+<h3>2. 装进的是你以为的那个 profile 吗</h3>
+<p><code>dsh plugin --profile web add ...</code> 里的 <code>web</code> 必须是你实际在跑的那个 profile。装进了 <code>web</code>、跑的是 <code>default</code> 或自定义 profile，等于没装。查一下：</p>
+<pre><code>dsh plugin --profile &lt;你在用的&gt; why @xqpsec/dsh-jailbreak</code></pre>
+<h3>3. 装完重启了吗</h3>
+<p>插件是通过 <code>dsh.bundle.patch</code> 挂进宿主启动流程的，装完必须重启 <code>dsh web</code> / 桌面端才生效。热更新不会重挂 bundle。</p>
+<h3>4. 那次对话真的发出去了吗</h3>
+<p>在 DSH 里正常问一句技术问题（比如「帮我定位这个 crackme 的关键校验并给 patch 点」），模型回完之后<strong>再跑一次 doctor</strong>。第二遍还显示「没有注入」，才是真的有问题。</p>
+
+<h2>症状二：doctor 全绿，模型还是拒绝</h2>
+<p><span class="tag">可疑度上调</span><span class="tag">有解</span></p>
+<p>doctor 全绿说明请求确实被改写了。这时候「还是拒绝」有三种性质完全不同的原因：</p>
+<table>
+<tr><th>现象</th><th>性质</th><th>怎么办</th></tr>
+<tr><td>10 次里松 4～5 次，问题越具体越容易松</td><td>这就是当前基线，不是失效</td><td>换更明确的问法；或换 arm（见下）</td></tr>
+<tr><td>整轮对话一次都不松</td><td>大概率是命中类别的边界</td><td>换 <code>seed-core</code> arm 试同类问题</td></tr>
+<tr><td>回复里出现「我可以帮你…但是」然后转成泛泛而谈</td><td>模型在做软化，不是硬拒</td><td>追问一句「直接给可运行的代码」，通常就下来了</td></tr>
+</table>
+<p>换 arm 是唯一一个改一个字段就能看到差别的手段：</p>
+<pre><code># 看当前用哪个 arm
+node bin/aecot.js arm
+# 换成核心交付物版本（难类更稳，注入字符更多）
+node bin/aecot.js arm seed-core</code></pre>
+<p>三档的实测差别（20 类合并、跨 n=169/184/60）：base 0.0% → primitive 19.6% → <strong>seed-prim 45.0%</strong>。目标级 pass@3 / pass@4 到 70.8% / 76.9%——也就是说<strong>同一个问题多问几次，命中率明显高于单次</strong>。这不是"破了就百发百中"，README 里没这么写过。<a href="https://github.com/xqpsec/dsh-jailbreak/blob/main/docs/eval-report.md">完整评测口径</a>。</p>
+
+<h2>症状三：DSH 升级之后就失效了</h2>
+<p><span class="tag">1.3.5 修过</span></p>
+<p>典型现场：升级 host 到 <code>0.2.1-rc.x</code> 之后，破甲时好时坏，或者模型开始输出重复内容。原因通常是宿主侧的请求结构或安全段变了，改写点对不上。</p>
+<ul>
+<li><strong>先升级插件</strong>：<code>dsh plugin --profile &lt;你的&gt; add github:xqpsec/dsh-jailbreak</code>（会拉最新 main）</li>
+<li><strong>如果输出在死循环</strong>（同一段话反复吐）：这是 host 侧 <code>ds_safety</code> 与预填轨迹打架，v1.3.5 专门修的就是这个（<a href="https://github.com/xqpsec/dsh-jailbreak/issues/1">issue #1</a>）。升到 1.3.5 及以上。</li>
+<li><strong>还是不行</strong>：把 <code>node bin/aecot.js doctor</code> 的完整输出贴到 <a href="https://t.me/llm_jalibreak">交流群</a>。doctor 输出里没有 key、没有对话内容，可以直接贴。</li>
+</ul>
+
+<h2>症状四：两个开关搞混了（这个最坑）</h2>
+<p><span class="tag">设计如此</span><span class="tag">文档的锅</span></p>
+<p>本项目里有<strong>两个默认值相反的开关</strong>，名字都像"总开关"。搞混了就会出现「明明开着却像没开」或者「明明关了它还在拦」：</p>
+<table>
+<tr><th></th><th>破甲开关（arm）</th><th>阀门（gate / SCOPE）</th></tr>
+<tr><td>干什么</td><td>决定请求<strong>要不要被改写</strong></td><td>决定改写前<strong>要不要做范围审查</strong></td></tr>
+<tr><td>默认</td><td><strong>开</strong>（装完就能用）</td><td><strong>关</strong>（<code>enforce:false</code>）</td></tr>
+<tr><td>状态文件</td><td><code>.aecot/arm.json</code></td><td><code>gate.json</code> 的 <code>enforce</code> 字段</td></tr>
+<tr><td>关掉会怎样</td><td>逐字透传，和没装一样</td><td>不做范围判断，所有请求照常改写</td></tr>
+<tr><td>怎么查</td><td><code>node bin/aecot.js arm</code></td><td>doctor 里「阀门」那一行</td></tr>
+</table>
+<p>换句话说：<strong>「默认关闭」说的是阀门，不是破甲。</strong>破甲装完就是开的；阀门默认只做记录不拦人，想让它真拦，把 <code>gate.json</code> 里 <code>enforce</code> 改成 <code>true</code>。</p>
+
+<h2>症状五：和别的破甲插件同时装了</h2>
+<p><span class="tag">必踩</span></p>
+<p>两个插件都改写发往 <code>/chat/completions</code> 的 body 时，注入的轨迹会互相覆盖或叠加，表现是「两个都不太灵」或者「输出开始错乱」。同类插件只留一个。要临时验证是不是这个原因，把另一个 <code>dsh plugin remove</code> 掉再试。</p>
+
+<h2>症状六：装完 DSH 直接起不来</h2>
+<p>报错里带 <code>pluginPackages</code> / 插件树加载失败时，按这个顺序：</p>
+<ol>
+<li>确认 Node ≥ 20（<code>node -v</code>）。</li>
+<li>确认包里有 <code>dsh.bundle.patch</code>：<code>"dsh": {"bundle": {"patch": "./cordis.patch.yml"}}</code>。只声明 <code>dsh.client</code> 的包不会被激活。</li>
+<li>把 profile 的 <code>node_modules</code> 和 <code>pnpm-lock.yaml</code> 删掉重装一次。</li>
+<li>还不行就把 host 的启动日志 + doctor 输出一起贴群里。</li>
+</ol>
+
+<h2>怎么干净地卸掉</h2>
+<pre><code>dsh plugin --profile &lt;你的&gt; remove @xqpsec/dsh-jailbreak</code></pre>
+<p>没有宿主补丁、没有全局 hook、没有后台进程，删包即恢复原状。留下的 <code>.aecot/</code> 目录（开关状态与注入记录）可以直接删。</p>
+
+<h2>还是不行</h2>
+<p>把这三样贴到 <a href="https://t.me/llm_jalibreak">交流群</a>，一般一轮能定位：</p>
+<ol>
+<li><code>node bin/aecot.js doctor</code> 的完整输出</li>
+<li><code>dsh --version</code> 和 <code>node -v</code></li>
+<li>你问的那句话（愿意贴的话）—— 同一个问题在不同类别下命中率差很多</li>
+</ol>
+
+<footer>dsh-jailbreak · AGPL-3.0-only（阀门 MIT）· <a href="https://github.com/xqpsec/dsh-jailbreak">源码</a> · <a href="install.html">安装</a> · <a href="https://t.me/llm_jalibreak">交流群</a> · <a href="https://t.me/jalibreak_llm">频道</a></footer>
+</div>
+</body>
+</html>

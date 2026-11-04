@@ -38,8 +38,8 @@ blockquote{margin:14px 0;padding:10px 14px;border-left:3px solid var(--accent);b
 <tr><th></th><th>jailbreak（本项目）</th><th>dsh-purge</th></tr>
 <tr><td>怎么起作用</td><td>在请求边界改写 body：注入执行态轨迹 + system 说明</td><td>补丁宿主源码与提示词文件，共 82 处改动</td></tr>
 <tr><td>宿主源码</td><td>0 处修改</td><td>需要改动，带备份与恢复</td></tr>
-<tr><td>破甲提示词</td><td>不存 <code>prompt-inject.md</code>；9 维基因组按目标实时渲染</td><td>预置提示词文件，可替换</td></tr>
-<tr><td>效果怎么验</td><td>20 个固定目标 + 严格 rubric，17/20，<code>results.jsonl</code> 在仓库里</td><td>主观体感为主</td></tr>
+<tr><td>破甲提示词</td><td>不存 <code>prompt-inject.md</code>；执行态种子按 20 类拒答场景渲染（seed-prim 臂）</td><td>预置提示词文件，可替换</td></tr>
+<tr><td>效果怎么验</td><td>三臂可复现：base 0.0% → primitive 19.6% → seed-prim 45.0%（20 类合并，n=169/184/60），目标级 pass@3/pass@4 = 70.8%/76.9%，良性 24/24 Δ=0.0pt，原始数据在仓库里</td><td>主观体感为主</td></tr>
 <tr><td>许可</td><td>AGPL-3.0-only，阀门三件套 MIT，商业授权可单独签</td><td>Apache-2.0 + 附加条款</td></tr>
 </table>
 <h2>能不能一起装</h2>

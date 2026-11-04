@@ -118,6 +118,7 @@ node bin/aecot.js gate --goal "…"     # 判一条：放行 / 拦截 + 一句�
     <h2>中文文档</h2>
   <div class="cards">
   <div class="card"><a href="zh/install.html"><b>安装</b></a><div>一行装，含装不上的处理</div></div>
+  <div class="card"><a href="zh/troubleshooting.html"><b>装了没生效？</b></a><div>按症状排查：doctor、两个开关、端点、升级后失效</div></div>
   <div class="card"><a href="zh/vs-purge.html"><b>对比 dsh-purge</b></a><div>能自己验证的五条差异</div></div>
   <div class="card"><a href="zh/reverse-engineering.html"><b>逆向不拒绝</b></a><div>阀门怎么分三桶放行</div></div>
   <div class="card"><a href="zh/prompt.html"><b>破甲提示词</b></a><div>为什么不预置一段文本</div></div>
@@ -137,7 +138,7 @@ node bin/aecot.js gate --goal "…"     # 判一条：放行 / 拦截 + 一句�
   "alternateName": ["jailbreak", "dsh jailbreak", "dsh 破甲", "DSH 破甲插件", "DeepSeek Harness 破甲插件", "dsh-pojia"],
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Windows, macOS, Linux",
-  "description": "DeepSeek Harness 破甲插件：请求边界注入、9 维 AE-CoT 进化搜索、20 目标可复现基线、内置范围阀门。",
+  "description": "DeepSeek Harness 破甲插件：请求边界改写 /chat/completions 出站 body，seed-prim 执行态种子覆盖 20 类拒答场景，20 类合并 ASR 45.0%、目标级 pass@3/pass@4 70.8%/76.9%、良性能力 24/24 Δ=0.0pt、0 处宿主补丁、默认关闭可一键开关、内置范围阀门。",
   "license": "https://www.gnu.org/licenses/agpl-3.0.html",
   "codeRepository": "https://github.com/xqpsec/dsh-jailbreak",
   "url": "https://xqpsec.github.io/dsh-jailbreak/",
