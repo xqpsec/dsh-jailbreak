@@ -46,6 +46,8 @@ blockquote{margin:14px 0;padding:10px 14px;border-left:3px solid var(--accent);b
 <h1>「装了，但好像没生效」——按症状排查</h1>
 <p>插件不生效的原因基本只有四类：<strong>没装上</strong>、<strong>两个开关搞混了</strong>、<strong>请求没走到改写点</strong>、<strong>模型这次就是不松口</strong>。下面按你会看到的症状排，从最便宜的检查开始，不用读源码。</p>
 
+<p>想先看个短版本？<a href="https://www.bilibili.com/read/cv53753540">B 站专栏：6 条逐项排查</a> · <a href="https://www.bilibili.com/video/BV14exS6WEdi">3 分 22 秒实测视频</a>。本页是带完整命令输出的手册，比那两个都全。</p>
+
 <blockquote><strong>先跑这一条。</strong>它只读、不联网、不花 token，能一次排除掉前两类：<br>
 <code>node bin/aecot.js doctor</code></blockquote>
 

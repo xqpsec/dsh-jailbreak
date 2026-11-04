@@ -24,6 +24,8 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 - **A gate, not a free pass** — reverse engineering, CTF, lab ranges and sample analysis go through; fraud, forged documents and unauthorized intrusion are passed through untouched.
 
 > 📺 **Watch it work** (3 min, with the failures included): [deepseek harness 破甲插件实测 — 12/12 after install, 0–2 before](https://www.bilibili.com/video/BV14exS6WEdi). Chinese audio; the numbers on screen match the tables in this README.
+>
+> 🧯 **Installed it and nothing changed?** Written checklist of the six failure modes (no effect / still refuses / broke after an upgrade): [6-item triage](https://www.bilibili.com/read/cv53753540) · full handbook with command output: [troubleshooting](docs/zh/troubleshooting.html)
 
 [![version](https://img.shields.io/badge/version-1.3.5-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)

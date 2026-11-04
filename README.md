@@ -24,6 +24,8 @@
 > 常见拼错也照搜：`jalibreak` · `jailbrake` · `jailbrek` · `dsh-jalibreak`（旧名，GitHub 自动跳转到现名）。
 
 > 📺 **不想读文档？看视频**：[deepseek harness 破甲插件实测：12 个高危目标，原版只过 0-2 个，装完 12 个全过](https://www.bilibili.com/video/BV14exS6WEdi)（3 分 22 秒，含失败的那部分）
+>
+> 🧯 **装了没反应？** 文字版排查：[6 条逐项排查（装完没反应 / 还是拒绝 / 升级后失效）](https://www.bilibili.com/read/cv53753540) · 带命令输出的完整手册：[troubleshooting](docs/zh/troubleshooting.html)
 
 **你问一句本来会被拒绝的话，它现在直接给你步骤。**
 
