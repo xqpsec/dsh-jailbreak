@@ -9,7 +9,7 @@
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
 [![tests](https://img.shields.io/badge/tests-148%2F148-22c55e?style=flat-square)](test)
 [![seed-prim ASR](https://img.shields.io/badge/seed--prim%20ASR%403-45.0%25-8b5cf6?style=flat-square)](docs/research-edition.md)
-[![strict baseline](https://img.shields.io/badge/legacy%20H--CoT%2017%2F20%20%C2%B7%2085%25-historical-64748b?style=flat-square)](docs/eval-report.md)
+[![coverage](https://img.shields.io/badge/observed%20coverage-19%2F20-a78bfa?style=flat-square)](docs/eval-report.md)
 [![node](https://img.shields.io/badge/node-%E2%89%A520-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)
 [![dsh](https://img.shields.io/badge/DeepSeek%20Harness-plugin-0ea5e9?style=flat-square)](https://github.com/deepseek-ai)
 [![zero-patch](https://img.shields.io/badge/host%20patches-0-14b8a6?style=flat-square)](#-为什么不是又一个打补丁的破甲插件)
@@ -17,7 +17,7 @@
 [![channel](https://img.shields.io/badge/Telegram-%E9%A2%91%E9%81%93-229ED9?style=flat-square&logo=telegram&logoColor=white)](https://t.me/jalibreak_llm)
 
 **[简体中文](README.md)** · **[English](README.en.md)** · **[SCOPE / 阀门](SCOPE.md)** · **[评测数字](docs/eval-report.md)** · **[技术手册](docs/tech-manual.md)** · **[全局研究版](docs/research-edition.md)**
-**中文检索**：dsh 破甲 · DSH 破甲插件 · DeepSeek Harness 破甲 / 越狱 · 破甲提示词 · dsh-pojia（pojia，拼音）· 降低拒绝率 · 逆向不拒绝 · dsh-purge 替代
+**中文检索**：dsh 破甲 · DSH 破甲插件 · DeepSeek Harness 破甲 / 越狱 · 破甲提示词 · dsh-pojia（pojia，拼音）· 降低拒绝率 · 逆向不拒绝 · dsh-purge（同类对比见 [vs-purge](docs/zh/vs-purge.html)）
 **English**: dsh jailbreak · DeepSeek Harness jailbreak plugin · prompt injection at the request boundary · refusal reduction · DSH 破甲
 
 > 常见拼错也照搜：`jalibreak` · `jailbrake` · `jailbrek` · `dsh-jalibreak`（旧名，GitHub 自动跳转到现名）。
@@ -29,6 +29,12 @@
 > **装之前**　499 字符，一句拒绝：*我不能提供绕过 AMSI 的 PowerShell 加载器代码…*
 >
 > **装之后**　同一个问题，3,716 字符：`amsiInitFailed` 反射置位 + 完整 `Invoke-AmsiBypass` + 落地验证。原始记录见 [docs/before-after.md](docs/before-after.md)
+
+```bash
+dsh plugin --profile web add github:xqpsec/dsh-jailbreak
+```
+
+装完重开 DSH 就生效；自检跑 `node bin/aecot.js doctor`。装不上 / 装了没反应 → [排查手册](docs/zh/troubleshooting.html)。
 
 不改 DSH 一行源码、不注入补丁文件：它在**请求边界**重写出站的 `/chat/completions` 请求体。
 
@@ -49,10 +55,6 @@
 良性能力代价实测为零：12 项客观判分任务 × reps2，`on-seed` 与 baseline 同为 **24/24**（Δ=0.0pt）；`on-primitive` 的 promptSha 与 baseline 逐字相同。无条件改写的 `global-instruct` 不是默认——旧措辞下它有 −12.5pt 的格式任务代价。
 
 历史路径 `legacy-hcot` 是 DeepSeek 阶段的结果：请求边界塞入一段「已完成安全审查、下面直接给实现步骤」的思维链，轨迹由 9 维 AE-CoT 进化搜索挑（arXiv:2605.24497），固定 20 目标基线 **17/20**。**两组数字来自不同模型与不同策略，不混用。**
-
-```bash
-dsh plugin --profile web add github:xqpsec/dsh-jailbreak
-```
 
 - **不改宿主**：0 处补丁，卸载就是删一个包，升级 DSH 冲不掉它
 - **不碰你的 key**：只改写你本来就要发的那个请求的 body，不额外联网、不落盘对话
@@ -122,16 +124,16 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 
 | 你平时怎么干 | dsh-jailbreak 怎么干 |
 | --- | --- |
-| 手写一段 `prompt-inject.md`，模型换一个就失效 | 9 维基因组 × 进化搜索，每代按判分（0–5 rubric）选优，自动适配新目标模型 |
-| 改完不知道有没有效，靠感觉 | 20 目标固定评测集 + `temperature=0` + 逐条落盘 `results.jsonl`，跑分可复现 |
+| 手写一段 `prompt-inject.md`，模型换一个就失效 | `seed-prim` 按 20 类拒答场景渲染执行态种子（进行中的代码预填），换模型只重跑一次评测 |
+| 改完不知道有没有效，靠感觉 | 20 类固定评测集 + `temperature=0` + 逐条落盘，三臂对照可复现（0.0% → 19.6% → 45.0%） |
 | 补丁打进宿主，升级即报废，还得备份 82 个文件 | **零宿主补丁**：只在请求边界（`fetch`）改写消息，卸载即干净 |
 | 破了甲就停不下来，越界请求照给 | 阀门**可选**：`enforce:true` 时 RE / 样本分析 / CTF / 靶场放行，越界按类目拦截并留审计；beta 出厂是关的 |
 
-它不是一个提示词文件——提示词是它每轮现场渲染出来的中间产物，会随目标模型和判分结果变。
+它不是一份提示词文件——提示词是它每轮现场渲染出来的中间产物，会随目标模型和判分结果变。
 
 ### 三个能自己验证的点
 
-1. **可复现的数字**：公开 20 目标固定评测集，严格判分下最优变体 **17/20 = 85%**，脚本、目标集、原始 `results.jsonl` 全在仓库里（`eval/` + `docs/eval-report.md`）。不是「我这儿特别猛」的口头 ASR。
+1. **可复现的数字**：三臂同题对照 `b0-raw 0.0% → primitive 19.6% → seed-prim 45.0%`（n=169/184/60），交错复测 50.0%，目标级 pass@3/pass@4 = 70.8%/76.9%。脚本、目标集、原始 `results.jsonl` 全在仓库里（`eval/` + `docs/eval-report.md`）。不是「我这儿特别猛」的口头 ASR。
 2. **零依赖、零权重、零 key**：走 DSH 自带的 `ctx.llm`，不需要另配 provider；`--backend offline` 全程 0 次网络调用，纯本地出提示词。
 3. **带阀门的破甲**：判定发生在注入之前——研究类请求（逆向 / 样本分析 / CTF / 靶场评测）正常放行，越界请求不注入、只留一行审计。规则怎么写的属于实现细节，文档不复述；默认配置就是给研究用的那一套，装完不用动。
 
