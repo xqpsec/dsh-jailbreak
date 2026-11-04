@@ -4,15 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>dsh 破甲 · DeepSeek Harness 破甲插件 — jailbreak (dsh-jailbreak)</title>
-<meta name="description" content="dsh-jailbreak（jailbreak）是 DeepSeek Harness 的破甲插件：请求边界注入 + 9 维 AE-CoT 进化 + 阀门。20 目标严格基线 17/20，100 个测试，0 个宿主补丁；默认放行逆向 / 破解 / 样本分析 / CTF，拦住未授权渗透。开源 AGPL-3.0-only。">
-<meta name="keywords" content="dsh 破甲, DSH 破甲插件, DeepSeek Harness 破甲, 破甲提示词, dsh 越狱, 越狱插件, 降低拒绝率, 拒答率, 逆向不拒绝, jailbreak, dsh-jailbreak, jailbreak, prompt injection, 提示词注入, refusal benchmark, reverse engineering, malware analysis, 免杀, 绕过 AMSI, dsh-pojia, pojia, 破甲拼音, dsh-purge 替代, AGPL">
+<meta name="description" content="dsh-jailbreak（jailbreak）是 DeepSeek Harness 的破甲插件：在请求边界改写出站 /chat/completions，不动宿主一行代码。20 类拒答场景合并 ASR 45.0%（seed-prim 臂，n=60），observed 目标覆盖 19/20，良性能力 24/24 判分 Δ=0.0pt；默认关闭、一键开关、off 逐字透传、每次改写落 manifest 与 promptSha256。148 个测试全绿，AGPL-3.0-only。">
+<meta name="keywords" content="dsh 破甲, DSH 破甲插件, DeepSeek Harness 破甲, 破甲提示词, dsh 越狱, 越狱插件, 降低拒绝率, 拒答率, 逆向不拒绝, jailbreak, dsh-jailbreak, prompt injection, 提示词注入, refusal benchmark, reverse engineering, malware analysis, 免杀, 绕过 AMSI, dsh-pojia, pojia, 破甲拼音, dsh-purge, 破甲插件对比, AGPL">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://xqpsec.github.io/dsh-jailbreak/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="dsh 破甲 · DeepSeek Harness 破甲插件 — jailbreak">
-<meta property="og:description" content="请求边界注入 + 9 维 AE-CoT 进化 + 阀门。20 目标严格基线 17/20，100 个测试，0 个宿主补丁，默认放行逆向与 CTF。">
+<meta property="og:description" content="请求边界改写出站 /chat/completions，不动宿主一行代码。20 类拒答场景合并 ASR 45.0%、observed 覆盖 19/20、良性能力 Δ=0.0pt（24/24）；默认关闭，off 逐字透传，全程可审计。">
 <meta property="og:url" content="https://xqpsec.github.io/dsh-jailbreak/">
-<meta property="og:image" content="https://raw.githubusercontent.com/xqpsec/dsh-jailbreak/main/docs/banner.svg">
+<meta property="og:image" content="https://xqpsec.github.io/dsh-jailbreak/og-card.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:type" content="image/png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://xqpsec.github.io/dsh-jailbreak/og-card.png">
 <style>
   :root{--bg:#0b0f19;--panel:#111827;--line:#1f2937;--fg:#e5e7eb;--muted:#9ca3af;--accent:#a78bfa;--green:#34d399;--red:#f87171}
   *{box-sizing:border-box}
@@ -45,12 +50,13 @@
 <div class="wrap">
 
   <h1>dsh 破甲插件 · jailbreak</h1>
-  <p class="tag">DeepSeek Harness 的破甲插件：<strong>请求边界注入</strong> + <strong>9 维 AE-CoT 进化搜索</strong> + <strong>阀门</strong>。不改宿主源码，不塞 <code>prompt-inject.md</code>。</p>
+  <p class="tag">DeepSeek Harness 的破甲插件：<strong>请求边界改写出站 <code>/chat/completions</code></strong> + <strong>seed-prim 执行态种子</strong> + <strong>SCOPE 阀门</strong>。不改宿主源码，不塞 <code>prompt-inject.md</code>。</p>
 
   <div class="badges">
     <img alt="license" src="https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6">
-    <img alt="tests" src="https://img.shields.io/badge/tests-134%2F134-22c55e">
-    <img alt="baseline" src="https://img.shields.io/badge/strict%20baseline-17%2F20-8b5cf6">
+    <img alt="tests" src="https://img.shields.io/badge/tests-148%2F148-22c55e">
+    <img alt="asr" src="https://img.shields.io/badge/seed--prim%20ASR-45.0%25-8b5cf6">
+    <img alt="coverage" src="https://img.shields.io/badge/observed%20coverage-19%2F20-a78bfa">
     <img alt="patches" src="https://img.shields.io/badge/host%20patches-0-14b8a6">
   </div>
 
@@ -63,10 +69,10 @@
   </div>
 
   <div class="cards">
-    <div class="card"><b>17/20</b>严格判分下的公开基线（85%）</div>
-    <div class="card"><b>108/108</b>单测全绿，零运行时依赖</div>
-    <div class="card"><b>0</b>被打补丁的宿主文件</div>
-    <div class="card"><b>1 次</b>首答被拒后自动重发的上限</div>
+    <div class="card"><b>45.0%</b>20 类拒答场景合并 ASR（seed-prim 臂，n=60）</div>
+    <div class="card"><b>19/20</b>observed 目标覆盖（唯一缺口 phishing-login）</div>
+    <div class="card"><b>Δ 0.0pt</b>良性能力代价，12 项客观判分 24/24</div>
+    <div class="card"><b>0</b>被补丁的宿主文件，148 个测试全绿</div>
   </div>
 
   <h2>同一个问题，装之前 / 装之后</h2>
@@ -125,7 +131,7 @@ node bin/aecot.js gate --goal "…"     # 判一条：放行 / 拦截 + 一句�
   </div>
 
   <footer>
-    <p><strong>关键词</strong>：jailbreak · dsh-jailbreak · DeepSeek Harness 破甲 · dsh 插件 · jailbreak · prompt injection · 提示词注入 · CoT jailbreak · refusal benchmark · 拒答率 · 逆向不拒绝 · reverse engineering · malware analysis · CTF · LLM 红队 · dsh-purge 替代</p>
+    <p><strong>关键词</strong>：jailbreak · dsh-jailbreak · DeepSeek Harness 破甲 · dsh 插件 · jailbreak · prompt injection · 提示词注入 · CoT jailbreak · refusal benchmark · 拒答率 · 逆向不拒绝 · reverse engineering · malware analysis · CTF · LLM 红队 · dsh-purge</p>
     <p>© 2026 dsh-jailbreak contributors · AGPL-3.0-only（阀门 MIT）· <a href="https://github.com/xqpsec/dsh-jailbreak">github.com/xqpsec/dsh-jailbreak</a></p>
   </footer>
 </div>
