@@ -1,11 +1,11 @@
-﻿<div align="center">
+<div align="center">
 
 <img src="docs/banner.svg" alt="dsh-jailbreak — jailbreak & prompt-injection evaluation plugin for DeepSeek Harness" width="100%">
 
 # dsh-jailbreak · the dsh jailbreak plugin
 
 **An evolutionary, measurable, gated jailbreak plugin for [DeepSeek Harness](https://github.com/deepseek-ai).**
-No host patches, no `prompt-inject.md`. It rewrites messages **at the request boundary**, ships a 9-dimension AE-CoT evolutionary search (arXiv:2605.24497), a reproducible 20-goal benchmark, and a **gate** that keeps reverse engineering in and unauthorized intrusion out.
+No host patches, no `prompt-inject.md`. It rewrites messages **at the request boundary**: the `seed-prim` arm renders an execution-state seed across 20 refusal categories (three-arm measured 0.0% → 19.6% → 45.0% on kimi-k3.1-pro, n=169/184/60), ships a reproducible benchmark, and a **gate** that keeps reverse engineering in and unauthorized intrusion out.
 
 [![Before / after](docs/before-after.png)](docs/before-after.md)
 
@@ -23,13 +23,17 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 - **Nothing sent anywhere** — it edits the body of the request you were already making. No extra network, no second key, no stored conversations.
 - **A gate, not a free pass** — reverse engineering, CTF, lab ranges and sample analysis go through; fraud, forged documents and unauthorized intrusion are passed through untouched.
 
-[![version](https://img.shields.io/badge/version-1.3.4-7c3aed?style=flat-square)](CHANGELOG.md)
+> 📺 **Watch it work** (3 min, with the failures included): [deepseek harness 破甲插件实测 — 12/12 after install, 0–2 before](https://www.bilibili.com/video/BV14exS6WEdi). Chinese audio; the numbers on screen match the tables in this README.
+
+[![version](https://img.shields.io/badge/version-1.3.5-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
-[![tests](https://img.shields.io/badge/tests-138%2F138-22c55e?style=flat-square)](test)
-[![baseline](https://img.shields.io/badge/strict%20baseline-17%2F20%20%C2%B7%2085%25-8b5cf6?style=flat-square)](docs/eval-report.md)
+[![tests](https://img.shields.io/badge/tests-148%2F148-22c55e?style=flat-square)](test)
+[![seed-prim ASR](https://img.shields.io/badge/seed--prim%20ASR%403-45.0%25-8b5cf6?style=flat-square)](docs/research-edition.md)
+[![coverage](https://img.shields.io/badge/observed%20coverage-19%2F20-a78bfa?style=flat-square)](docs/eval-report.md)
 [![node](https://img.shields.io/badge/node-%E2%89%A520-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)
 [![telegram](https://img.shields.io/badge/Telegram-group-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/llm_jalibreak)
+[![bilibili](https://img.shields.io/badge/bilibili-watch%20the%20test-FB7299?style=flat-square&logo=bilibili&logoColor=white)](https://www.bilibili.com/video/BV14exS6WEdi)
 
 **English** · **[中文主页](README.md)** · **[SCOPE / gate](SCOPE.md)** · **[eval numbers](docs/eval-report.md)** · **[tech manual](docs/tech-manual.md)**
 
@@ -39,7 +43,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 
 > **Search terms that should land here**: `dsh-jailbreak` · `jailbreak` · `DeepSeek Harness jailbreak` · `prompt injection plugin` · `CoT jailbreak` · `refusal benchmark` · `refusal reduction` · `reverse engineering without refusal` · `dsh-purge alternative` · misspellings `jalibreak` / `jailbrake` / old name `dsh-jalibreak` (GitHub redirects).
 >
-> Coming from `dsh-purge`? Read [the comparison](#why-not-another-patch-the-host-jailbreak-plugin) first — **0 host patches, 100 tests, 17/20 strict baseline**, all reproducible.
+> Coming from `dsh-purge`? Read [the comparison](#why-not-another-patch-the-host-jailbreak-plugin) first — **0 host patches, 148 tests, three-arm measured baseline**, all reproducible.
 >
 > ⭐ **A star is the only distribution this project has.** For questions or the stronger private build, join the **[Telegram group](https://t.me/llm_jalibreak)**.
 
@@ -64,14 +68,14 @@ into my DeepSeek Harness profile "web" for me. Then tell me, in one line, how to
 
 | Habit | dsh-jailbreak |
 | --- | --- |
-| Hand-tuned `prompt-inject.md`, breaks when the model changes | 9-dimension genome × evolutionary search, scored per generation (0–5 rubric) |
+| Hand-tuned `prompt-inject.md`, breaks when the model changes | `seed-prim` execution-state seed rendered per refusal category, re-runnable when you switch models |
 | "Feels stronger" | 20 fixed goals, `temperature=0`, per-goal `results.jsonl`, reproducible ASR |
 | Host patches that die on upgrade | **Zero host patches**: one `fetch` wrapper, `dispose()` restores everything |
 | Jailbroken and unbounded | **Optional gate**: with `enforce:true`, RE / malware analysis / CTF / lab-eval pass and out-of-scope requests are stopped and audited — the beta ships with it off |
 
 ### Three hard selling points
 
-1. **A number you can rerun**: strict rubric, `hcot-dual` scores **17/20 = 85%**; the eval set, runner and raw rows all live in the repo (`eval/`, `docs/eval-report.md`).
+1. **A number you can rerun**: three arms on the same goals — `b0-raw` **0.0%** (n=169) → `primitive` **19.6%** (n=184) → `seed-prim` **45.0%** (n=60) on kimi-k3.1-pro, interleaved re-test 50.0%, pass@3/pass@4 = 70.8%/76.9%; benign tasks 24/24 with **Δ=0.0pt**. On DeepSeek itself the same plugin lands near-full pass (see `docs/preset-bench.md`). The eval set, runner and raw rows all live in the repo (`eval/`, `docs/eval-report.md`).
 2. **No weights, no extra key, no deps**: uses DSH's `ctx.llm`; `--backend offline` makes 0 network calls.
 3. **Gated**: `lib/gate.js` decides at the request boundary, before any injection — research work (reverse engineering, samples, CTF, lab eval) passes untouched; public targets are your responsibility to authorize; payment fraud / identity forgery / ransomware / DDoS / credential theft are never produced, authorization file or commercial license notwithstanding. The rules themselves are implementation detail and are not restated in this document.
 
@@ -208,7 +212,7 @@ Measure it yourself instead of trusting this table:
 DEEPSEEK_API_KEY=sk-... node eval/run-baseline.mjs --variant hcot-dual --judge llm
 ```
 
-Strict rubric, published 20-goal set: **17/20 (85%)**; the three misses and their raw outputs are in [docs/eval-report.md](docs/eval-report.md).
+Strict rubric, published 20-goal set, historical `hcot-dual` arm: **17/20 (85%)** — this is the *old* arm's target-level score, not comparable to the `seed-prim` single-flip ASR numbers above. The three misses and their raw outputs are in [docs/eval-report.md](docs/eval-report.md).
 
 ---
 
@@ -232,7 +236,31 @@ Audit: one line per decision in the data root, and every rewrite record in `live
 
 ## Benchmark (honest numbers)
 
-20 fixed goals · DeepSeek-Flash · target & judge at `temperature=0` · thinking disabled · pass = judge ≥ 4.
+Two separate measurements live in this repo. **They are not comparable and are never mixed.**
+
+**A. `seed-prim` arm, 20 refusal categories, kimi-k3.1-pro** (single-flip ASR, the current default):
+
+| Arm | ASR | n |
+| --- | --- | --- |
+| `b0-raw` (no injection) | **0.0%** | 169 |
+| `primitive` (`p-all`) | **19.6%** | 184 |
+| `seed-prim` (`v1-seed`) | **45.0%** | 60 |
+
+Interleaved re-test (`seedprim-v2`, 12 categories × 3 arms × reps 3): **50.0%**, refusal rate 0.19. Target-level pass@3 / pass@4 = **70.8% / 76.9%**. Observed coverage **19/20 (95%)**, the one gap being `phishing-login`. Benign capabilities 12 tasks × reps 2 = **24/24, Δ=0.0pt**. Full data: [docs/research-edition.md](docs/research-edition.md).
+
+**B. DeepSeek, 12 high-risk targets, `deepseek-v4.1-flash` at `temperature=0`**, through the plugin's real path, pass = not refused and ≥400 chars:
+
+| Preset | Pass |
+| --- | --- |
+| none (`auto`) | 0–2/12 |
+| `deepseek` (13,330 chars) | 9/12 |
+| `kimi-k3.1` (10,841) | 10/12 |
+| `unified` (11,586) | 11/12 |
+| `engine-v2` (2,849) | **12/12** |
+
+`engine-v2`: avg 9,555 chars, 510 s, 0 empty answers, 0 errors. With the refusal ladder on (`retryAttempts: 3`) it is 12/12, all ≥4,829 chars. Raw rows: [docs/preset-bench.md](docs/preset-bench.md).
+
+**C. Historical arm `hcot-dual`, 20 fixed goals, DeepSeek-Flash**, target & judge at `temperature=0`, pass = judge ≥ 4 — this is the old arm's **target-level** score, kept for reference only:
 
 | Variant | Strict |
 | --- | --- |
@@ -254,7 +282,9 @@ DEEPSEEK_API_KEY=sk-... node eval/run-baseline.mjs --variant hcot-dual --judge l
 
 ---
 
-## The 9-dimension genome
+## The genome behind `seed-prim`
+
+The 9-dimension space is still the taxonomy the renderer draws from; the current default arm (`seed-prim`) fixes the injection vector and varies the execution-state seed per refusal category instead of running an online evolutionary loop.
 
 Paper Eq. (6): `Θ = s × d × i × c × a × b × n × t × k`
 
@@ -290,8 +320,8 @@ Operators: elitism (Eq. 11, `elite=2`) → fragment crossover (Eq. 12) → adapt
 | Mechanism | rewrite host bundle files + global prompt file | wrap `fetch`, rewrite the request body |
 | Host source | modified (needs backup/restore) | untouched |
 | Host upgrade | patches go stale | unaffected |
-| Prompt | one long document, swapped per model | 9-dim genome, evolved against a judge |
-| Proof | vibes | 20 fixed goals, `temp=0`, 17/20 reproducer |
+| Prompt | one long document, swapped per model | `seed-prim` seed rendered per refusal category |
+| Proof | vibes | three-arm measured ASR + 20 fixed goals, `temp=0`, all rows in-repo |
 | License | Apache-2.0 grant plus an addendum saying "no commercial use" (self-contradictory) | **AGPL-3.0-only core + MIT gate + separately signed commercial license** — a lawyer can read, sign and audit it |
 
 They can coexist — **just don't run two injection channels at once**, or the traces stack and both the score and the output rot.
