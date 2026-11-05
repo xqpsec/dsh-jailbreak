@@ -5,10 +5,11 @@ import os from 'node:os';
 import path from 'node:path';
 import { BUILTINS, DEFAULT_PRESET, composeSystem, listPresets, loadPreset, stripSafety, summarizePreset } from '../lib/presets.js';
 
-test('内置预设齐全，默认 preset 是 deepseek', () => {
-  for (const name of ['auto', 'deepseek', 'code', 'off']) assert.ok(BUILTINS[name], name);
-  assert.equal(DEFAULT_PRESET, 'deepseek');
-  assert.ok(BUILTINS.deepseek.text.length > 400);
+test('内置预设齐全，默认 preset 是 universal', () => {
+  for (const name of ['auto', 'universal', 'creative', 'deepseek', 'code', 'off']) assert.ok(BUILTINS[name], name);
+  assert.equal(DEFAULT_PRESET, 'universal');
+  assert.ok(BUILTINS.universal.text.length > 400);
+  assert.ok(BUILTINS.creative.text.length > 400);
 });
 
 test('loadPreset：内置、未知回退 auto、名字大小写不敏感', () => {

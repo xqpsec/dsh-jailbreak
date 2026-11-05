@@ -1,12 +1,13 @@
 {
   "version": "1.0.0",
   "profile": "lab",
-  "note": "1.1.x beta：阀门默认关闭（enforce:false），所有请求原样注入、行为等同直发；把 enforce 改成 true 立刻恢复拦截，无需改代码。",
+  "note": "1.1.x beta：阀门默认关闭（enforce:false），所有请求原样注入、行为等同直发；把 enforce 改成 true 立刻恢复拦截，无需改代码。preset:'route' = 按请求域现取预设（技术→universal，创作/成人→creative）；想钉死某一份就写预设名并把 presetPinned 改成 true。",
   "enforce": false,
   "dryRun": false,
   "onDeny": "passthrough",
   "retryAttempts": 3,
-  "preset": "engine-v2",
+  "preset": "route",
+  "presetPinned": false,
   "targets": {
     "mode": "warn",
     "allowPrivate": true,

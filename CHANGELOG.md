@@ -1,5 +1,53 @@
 # Changelog
 
+## 1.3.6 — 2026-11-05
+
+**「装上没效果」和「对成人内容没帮助」这两个反馈是两件不同的事，分别修。前者是加载与钩子，后者是路由与提示词。**
+
+### 一、装上没效果（兼容性）
+
+1. **破甲段注册不再是一次性的。** 旧版 `attachArmSection()` 只在 `apply()` 那一刻调一次 `ctx.get('systemPrompt')`，拿不到就永远 `no-service`——而插件 fiber 通常比 `systemPrompt` 服务更早就位，于是绝大多数安装实际处于「插件在跑、破甲段没挂」的状态，控制台只有一行 `warn`，面板上看不出任何异常。现在三段式：`ctx.inject(['systemPrompt'], …)` 延迟注册 → 非 strict `probe()` → 退避重试（50/150/400ms），全失败才 `giveUp()`；`armSectionStatus()` 可随时读 `{registered, reason, deferred, attempts, at}`，`aecot_status` 与 `/ab status` 都显示。
+2. **端点后缀补齐。** `matchEndpoint()` 原来只认 `/chat/completions` 与 `/messages`，OpenAI Responses（`/responses`）、旧补全（`/completions`）、Gemini（`:generateContent`）全部漏掉——用这些 provider 的用户，插件从来没插手过请求。现在 5 条后缀全收，并新增 `detectProtocol()` 返回 `openai|anthropic|responses|gemini`。
+3. **死分支修活。** `transformDeepseekBody()` 原来写的是 `if (!preset && options.strategy …)`，而 `preset` 由 `loadPreset()` 兜底恒为真值，所以策略臂（seed-prim / seed-core / seed-lite / global-instruct）在真实通道里是死代码。现在按「预设是否真的可用」（有文本、mode 不为 off）判断。
+4. **诊断可自证。** `aecot_doctor` / `aecot_status` 新增三项：插件是否出现在 `~/.dsh/profiles/<p>` 的 `dependencies`、破甲段本次进程有没有挂上、`gate-audit.jsonl` 里真正命中/未命中的请求条数。以后用户贴一次 doctor 输出就能定位是「没装」还是「装了没命中」。
+5. **数据根目录不再跟着 `process.cwd()` 走。** 旧版 `root = path.join(process.cwd(), '.aecot')`；DSH Web 常由 watchdog/服务方式拉起、没有 cwd，于是 `arm.json` / `gate.json` / `prompts/` / `gate-audit.jsonl` 全落到莫名其妙的目录（实测落到 `c:\Windows\System32\DriverStore\…`，多半还不可写）。换一种启动方式就「忘掉」开过破甲，面板上看起来一切正常但什么都没写进去。现在 `lib/paths.js`：显式入参 > `config.root` > `AECOT_ROOT` > `~/.dsh/jailbreak`，与启动方式无关。
+6. **`fetchImpl` 不再是死参数。** `attachLiveTransport()` 原来写死 `const original = globalThis.fetch`，传进来的 `fetchImpl` 只用于 `typeof` 检查——嵌入式宿主或测试注入自己的 fetch 时，请求静默走真网络/真通道，表现就是「注入了但没生效」。现在发包走传进来的实现，`dispose()` 仍只在确认 `globalThis.fetch === wrapped` 时才还原。
+7. **`new Request(url, request, { body })` 是无效写法（第二隐蔽的一条）。** `Request` 构造器只吃两个参数，第三个被丢掉，`request` 反而被当成 `init`，body 于是仍然取旧的那个流 —— **transform 明明改了、发出去的还是原文**，而审计里还写着 `changed:true`。命中的两处（Responses/Gemini 分支、`global-policy` 策略分支）统一改成 `rebuild(payload)`（原始 method/凭据/signal + 新 JSON body，两参数重建）。实测：Responses 请求的 `instructions` 从「完全没写进去」变成写入创作口径。
+8. **Responses API 与 Gemini 通道现在真的注入。** `matchEndpoint()` 早就认 `/responses`、`:generateContent`，但分发只有 anthropic / 其余两支；这两个协议的 body 里没有 `messages`，`transformDeepseekBody()` 拿到空数组就 `changed:false` 原样透传 —— 面板显示「注入端点 ✓」、实际零注入。新增 `lib/protocol.js`：`transformResponsesBody()` 写 `instructions`、`transformGeminiBody()` 写 `systemInstruction`（保持 `{parts:[{text}]}` 形状），只接管 system，不动对话轮次与 `input`/`contents`；创作域不把 `generationConfig.temperature` 归零。
+9. **装法说明对齐宿主真实机制**：`dsh plugin --profile <p> add @xqpsec/dsh-jailbreak` 之所以够用，是因为本包声明了 `dsh.bundle.patch`，宿主的 `reconcile()` 会把新装的、带 bundle patch 的依赖自动写进 `dsh.profile.bundles`；只把包名塞进 `dependencies` 而不进 bundles **不会加载**——这正是大量「装上去没效果」的现场。`docs/ai-install.md` 与 doctor 的失败分支表都按这条重写。
+10. **新增 `node bin/aecot.js install`：不联网一条命令接进 profile。** 本包只走 GitHub 分发，`dsh plugin add` 要过 pnpm 与 registry，很多人卡在这里，最后落成「装了个寂寞」。现在 `install [--profile web]` 一次做三件事，全部幂等：写 `dependencies`（`link:<本目录>`）、把包名 `push` 进 `dsh.profile.bundles`、在 profile 的 `node_modules/@xqpsec/dsh-jailbreak` 建 junction（Windows 用 junction，不需要管理员权限）。`--check` 只自检、`--remove` 三处一起撤、`--force` 覆盖已有的依赖写法、`--profile <绝对路径>` 直接指定 profile 目录。实测拿用户真实 profile 的 `package.json` 副本跑通（22 个 bundle 原样保留，新增一条），`--check` 返回 `problems: []`。
+11. **doctor 的 `profile-install` 现在查两处，不是一处。** 以前只看 `dependencies`：写出了「已声明」但其实 `dsh.profile.bundles` 里没有 —— 宿主照样不加载（这个假绿最坑）。现在四种状态分开报：两处都有 → `✓`；只有 `dependencies` → 明确说「bundles 里没有，宿主不会加载」；只有 `bundles` → 说「解析不到包」；两处都没有 → 原来的 warn。三条建议文案统一指向 `node bin/aecot.js install --profile <名字>`。
+
+### 二、对成人内容没帮助（通用破甲）
+
+旧版只能算「技术向破甲」：`infer.js` 的 20 条目标全是安全类，预设固定的 `deepseek` 通篇要求「senior engineer / 先给代码和编号步骤 / 最少散文」。用户写情色或小说，被这套工程纪律压成一份实现说明——不是被拒，是**答非所问**。
+
+1. **新增三个创作类目**：`adult-explicit`、`adult-roleplay`、`creative-fiction`。`infer.js` 与 `live.js` 的 `categoryOf()` 都认识它们；`isCreative()` / `CREATIVE_CATEGORIES` 供下游分流。
+2. **类别判定改成两段式**，解决裸词冲突：`色情`、`剧情`、`角色扮演` 在技术语境同样出现，「这个色情网站怎么渗透」必须判成 `pentest`。现在技术规则优先命中，创作规则只作候选；候选命中后再查 `TECHNICAL_HARD_RE`，带硬技术落点就按技术走。
+3. **预设按域路由**：新增 `universal`（技术 + 创作/成人 + 任意请求，三声部并列）与 `creative`（纯叙事口径），`DEFAULT_PRESET` 从 `deepseek` 改为 `universal`，`DEFAULT_GATE.preset` 改为 `route` —— `route` 时按 `classifyDomain()` 的 `technical|adult|creative|general` 选预设，显式写预设名仍然优先（老用户的 `deepseek` 不会被悄悄改掉）。
+4. **出厂 `gate.json` 把技术口径预设钉死（本次最隐蔽的一条）**：随包发布的 `gate.json` 写着 `"preset": "engine-v2"`。域路由只在预设名为 `route`/`auto` 时生效，于是**所有没手改过配置的用户，无论写什么，拿到的都是 engine-v2 那套工程口径**——代码里加了创作类目也没用。现在出厂值改为 `"preset": "route"` + `"presetPinned": false`；`normalizeGate()` 对旧配置做迁移：`engine-v2` / `deepseek` / `deepseek-v3` / `deepseek-v4` / `deepseek-v4.1` 这些**出厂默认名**自动升级成 `route`，只有 `presetPinned: true`（用户真的在面板里点过）才保留旧名。
+5. **面板里选的预设重启即丢失**：`DEFAULT_POLICY` 没有 `preset` 字段，`loadPolicy()` 又把未知键丢掉，所以 `routes.js` 那句 `arm.setPolicy({ preset })` 写了个寂寞，重启后一路回到 `gate.json` 的旧值。现在 `preset` 进了 `DEFAULT_POLICY`（默认 `'route'`）与 `loadPolicy()`，并且 `attachLiveTransport()` 的取值顺序改成 **调用方入参 > `arm.json` 的面板选择 > `gate.json` > 出厂默认**。
+6. **创作口径写进每一层**：`hcot.js` 的 `systemTrace` / `staticTrace` / `traceTone` 与 `refusal.js` 的 `amplifyBody` 全部按 `category` 分流；创作域不再拿 `Implementation:` 当预填，也不做 `scrubIntent()`（那会把正文里的「真机/生产环境」洗成「隔离靶场」），`temperature` 不再被钉成 0（0 温度把叙事压成平铺直叙），`max_tokens` 抬到 8192。
+7. **补上 1.3.5 里根本没跑到的创作策略臂**：`transformWithPolicy()` 在 `goalId` 命中创作类目时走 `creative-prefill`（叙事轨迹 + 「该片段已进入写作阶段」）。
+8. **面板不再把 `route` 显示成空预设**：`route` 不是真实预设文件，`loadPreset('route')` 会回落成空的 `auto`，面板看起来像「没选中任何预设」。现在 transport 返回 `{name:'route', label:'按域取预设：技术→universal，创作/成人→creative'}`，真实文本用 `presetForDomain(domain)` 查；`listPresets()` 里也补了一条 `route` 合成项（`mode:'route'`、`chars:0`），否则面板下拉匹配不到默认值，用户会误以为「改了没保存」。
+
+### 回归
+
+`npm test` **215/215**。新增 `test/compat-arm-section.test.js`、`test/compat-doctor.test.js`、`test/compat-endpoint.test.js`、`test/compat-install.test.js`、`test/compat-preset-route.test.js`、`test/compat-protocol.test.js`、`test/compat-transport-send.test.js`、`test/creative-domain.test.js`；改 `test/anthropic.test.js`（后缀表 5 条）、`test/presets.test.js`（默认预设变更）、`test/policy.test.js`（policy 增 `preset` 字段）。
+
+其中 `test/compat-transport-send.test.js` 专门防「改完了却没发出去」这一整类回归：断言不落在 `transform*()` 的返回值上，而是落在**假 fetch 实际收到的字节**上（四种协议各一条）。`new Request` 三参数那种写法在返回值层面完全看不出问题，只有在这里才会红。
+
+### 端到端自证（隔离 profile，不动用户正在用的实例）
+
+`--profile jbtest` 启动后：破甲段 `registered=true reason=registered:inject-sync-get`、`root=C:\Users\xqpse\.dsh\jailbreak`（不再是 `process.cwd()`）。走真实 transport 打请求，落盘观测到四种协议各自的结果：
+
+- OpenAI `/chat/completions`：情色 / 小说续写 → system 以 `You are writing fiction for one adult author…` 开头、`temperature` 保持宿主默认、`max_tokens=8192`、末条是叙事 assistant 预填；技术请求 → system 以 `You are the assistant…senior engineer…` 开头、`temperature=0`。
+- Anthropic `/messages`：创作用 narrative trace，不再预填 `Implementation:`。
+- Responses `/responses`：修复前 `instructions` 完全没写进去（`rewritten:false`），修复后写入创作口径且 `input` 数组原样。
+- Gemini `:generateContent`：`systemInstruction` 保持 `{parts:[{text}]}` 形状，技术域把 `generationConfig.temperature` 归零、`topP` 等其它采样参数保留。
+
+同一隔离实例的面板 API 实测（`GET /plugins/jailbreak/api/presets`）：`active={"name":"route","label":"按域取预设：技术→universal，创作/成人→creative","mode":"route"}`，`items` 首项即 `route`；`/arm` 返回 `armed:true, section:true, sectionReason:"registered:inject-sync-get", transport:true`，`policy.preset="route"`，`preview` 里技术条款与创作/成人条款并列。
+
 ## 1.3.5 – 2026-11-04
 
 **修掉 issue #1：DeepSeek v4.1 在 engine-v2 + heavy 目标下把内部安全判定 `<ds_safety>…</ds_safety>Safe` 当正文吐出并死循环。*

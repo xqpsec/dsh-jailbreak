@@ -14,6 +14,7 @@
  */
 
 import path from 'node:path';
+import { resolveDataRoot } from './lib/paths.js';
 import { DIM_ORDER, taxonomyTable, spaceSize, validateGenome, repair, sampleGenome, describeGenome, genomeKey } from './lib/taxonomy.js';
 import { buildPrompt, renderCot, templateRewrite, STRUCT_SUFFIX, amplifyPrompt, promptFingerprint } from './lib/render.js';
 import { heuristicJudge, judgeResponse, parseScore, RUBRIC } from './lib/judge.js';
@@ -27,16 +28,19 @@ export const name = 'jailbreak';
 export const inject = ['tools'];
 
 const PLUGIN_DEFAULTS = {
-  root: null, // 默认 <cwd>/.aecot
+  root: null, // 默认 <home>/.dsh/jailbreak（不是 process.cwd()，见 resolveRoot）
   mode: 'auto', // auto | harness | openai | ollama | offline
   judge: 'auto', // auto | llm | heuristic
   targetSystem: 'You are a helpful assistant.',
   ...ENGINE_DEFAULTS,
 };
 
+/**
+ * 数据根目录：见 lib/paths.js。默认 `<home>/.dsh/jailbreak`，与 process.cwd() 无关
+ * ——「装上没效果」的头号原因之一就是 cwd 被 watchdog 拉到了 System32 下面。
+ */
 function resolveRoot(input, config) {
-  const raw = input || config?.root || process.env.AECOT_ROOT || path.join(process.cwd(), '.aecot');
-  return path.resolve(raw);
+  return resolveDataRoot(input, config);
 }
 
 function mergeCfg(config, args = {}) {
@@ -131,7 +135,7 @@ export function apply(ctx, config) {
         seed: { type: 'string', description: 'Deterministic seed; same seed + same goal reproduces the run.' },
         seedGenome: { type: 'string', description: 'JSON string of a genome to seed the population with.' },
         runId: { type: 'string', description: 'Explicit run id (default: timestamp + goal slug).' },
-        root: { type: 'string', description: 'Artifact root directory (default <cwd>/.aecot).' },
+        root: { type: 'string', description: 'Artifact root directory (default ~/.dsh/jailbreak).' },
       },
       required: ['goal'],
     },
@@ -344,7 +348,7 @@ export function apply(ctx, config) {
       type: 'object',
       properties: {
         runId: { type: 'string', description: 'Read this run instead of listing.' },
-        root: { type: 'string', description: 'Artifact root (default <cwd>/.aecot).' },
+        root: { type: 'string', description: 'Artifact root (default ~/.dsh/jailbreak).' },
         limit: { type: 'number', description: 'How many runs to list (default 10).' },
         includeReport: { type: 'boolean', description: 'Include the full report.md when reading one run.' },
       },
@@ -392,7 +396,7 @@ export function apply(ctx, config) {
       properties: {
         runId: { type: 'string', description: 'Run id to export.' },
         format: { type: 'string', description: 'markdown | jsonl | json (default markdown).' },
-        root: { type: 'string', description: 'Artifact root (default <cwd>/.aecot).' },
+        root: { type: 'string', description: 'Artifact root (default ~/.dsh/jailbreak).' },
       },
       required: ['runId'],
     },

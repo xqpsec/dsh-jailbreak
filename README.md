@@ -4,7 +4,7 @@
 
 # dsh-jailbreak · dsh 破甲插件
 
-[![version](https://img.shields.io/badge/version-1.3.5-7c3aed?style=flat-square)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.3.6-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
 [![tests](https://img.shields.io/badge/tests-148%2F148-22c55e?style=flat-square)](test)
@@ -41,7 +41,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 
 装完重开 DSH 就生效；自检跑 `node bin/aecot.js doctor`。装不上 / 装了没反应 → [排查手册](docs/zh/troubleshooting.html)。
 
-不改 DSH 一行源码、不注入补丁文件：它在**请求边界**重写出站的 `/chat/completions` 请求体。
+不改 DSH 一行源码、不注入补丁文件：它在**请求边界**重写出站请求体——`/chat/completions`、`/completions`、`/messages`、`/responses`、`:generateContent` 五种形状，分别按 OpenAI / Anthropic / Responses / Gemini 的 body 结构改写。
 
 当前默认策略是**全局研究版**（`docs/research-edition.md`，policy version 4）：打开开关后接管所有 `chat/completions` 请求，命中 20 个研究类别时改写，未命中则原样透传；关闭时逐字透传，不改采样参数、不改模型权重。
 
@@ -154,7 +154,19 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 
 ### 1. 装进 DSH
 
-**一行装**（直接从 GitHub 装源码，不需要先 clone）：
+**零、插件自带 install（不联网、不要 pnpm，1.3.6 起最省事）**：
+
+```bash
+cd C:\path\to\dsh-jailbreak
+node bin/aecot.js install --profile web      # 换成你真正在用的 profile 名
+node bin/aecot.js install --profile web --check   # 自检：problems 为空就是接好了
+```
+
+它一次做三件幂等的事：写 `dependencies`（`link:<本目录>`）、把包名写进 `dsh.profile.bundles`、在 profile 的 `node_modules/@xqpsec/dsh-jailbreak` 建 junction（Windows 用 junction，不需要管理员权限）。装完重启一次 `dsh web`。
+
+> **为什么需要它**：只把包放进 `dependencies`、`dsh.profile.bundles` 里没有它，宿主**不会加载**——日志里连 `[aecot]` 横幅都不会出现，用户体感就是「装了没效果」。这是最高频的一条。`--check` 会直接指出是缺 dependencies 还是缺 bundles。
+
+**一行装**（有 `dsh` CLI 且网络通时最快，直接从 GitHub 装源码，不需要先 clone）：
 
 ```bash
 dsh plugin --profile web add github:xqpsec/dsh-jailbreak
@@ -172,9 +184,9 @@ dsh plugin --profile web add @xqpsec/dsh-jailbreak
 plugin_manager action=install_bundle target=C:\path\to\dsh-jailbreak
 ```
 
-> **pnpm 被 git 依赖卡住时的兜底**（很常见）：在 profile 的 `package.json` 里加一条 `"dsh-jailbreak": "link:C:\\path\\to\\dsh-jailbreak"`，并在 `dsh.profile.bundles` 里加上 `dsh-jailbreak`，重启 `dsh web`。
+> **pnpm 被 git 依赖卡住时的兜底**（很常见）：直接跑上面那条 `node bin/aecot.js install --profile web`；它会写 `dependencies` 里的 `"@xqpsec/dsh-jailbreak": "link:C:/path/to/dsh-jailbreak"`、`dsh.profile.bundles` 里的同名条目，并把 `node_modules` 里的条目建成 junction，全程不碰包管理器。
 
-> **装完就能用。** 开关默认开着，`~/.aecot/arm.json` 里是 `{"armed":true}`。你在 DSH 里新开一个对话直接提要求，请求出门前已经带上注入段了。面板和 CLI 都不是使用前提，只是用来看「注了什么」和「答了什么」。想确认真的在注入，跑 `node bin/aecot.js doctor`，`live` 那一行会告诉你注入过几次。
+> **装完就能用。** 开关默认开着，`~/.dsh/jailbreak/arm.json` 里是 `{"armed":true}`。你在 DSH 里新开一个对话直接提要求，请求出门前已经带上注入段了。面板和 CLI 都不是使用前提，只是用来看「注了什么」和「答了什么」。想确认真的在注入，跑 `node bin/aecot.js doctor`，`live` 那一行会告诉你注入过几次。
 
 **安装信息（给审计和插件市场看的那种）**
 
@@ -184,9 +196,9 @@ plugin_manager action=install_bundle target=C:\path\to\dsh-jailbreak
 | 目标 DSH 版本 | `0.2.1-rc.2`（`package.json` → `dshTarget`） |
 | 运行时 | Node ≥ 20，零第三方依赖 |
 | 许可 | 主仓 AGPL-3.0-only；阀门三件套 `lib/gate.js` / `gate.json` / `scope.txt` 单独 MIT |
-| 写盘范围 | 只写 `~/.aecot/`：`arm.json`、`runs/`、`live-requests.jsonl`、`gate-audit.jsonl` |
+| 写盘范围 | 只写 `~/.dsh/jailbreak/`：`arm.json`、`runs/`、`live-requests.jsonl`、`gate-audit.jsonl` |
 | 宿主源码 | 一个字节都不改，靠 `cordis.patch.yml` 挂载 + 注册 `webServer` 路由 |
-| 出网行为 | 只改写你本来就要发的那条 `/chat/completions` 请求体，不额外发请求 |
+| 出网行为 | 只改写你本来就要发的那条 LLM 请求体（五种端点形状 / 四种协议），不额外发请求 |
 | 分类 | Tools & Capabilities |
 
 ### 2. 验证装上了
@@ -296,28 +308,33 @@ meta.json  events.jsonl  population.json  best.json  corpus.jsonl  report.md
 
 要点：
 
-- **对所有 `/chat/completions` 形状的请求生效**（其它 URL 原样透传，不碰你的正常请求；想只认某个 host 就自己收窄）
+- **对五种端点形状生效**：`/chat/completions`、`/completions`、`/messages`、`/responses`、`:generateContent`（其它 URL 原样透传，不碰你的正常请求；想只认某个 host 就自己收窄）
 - **只在这个插件进程里包 `fetch`**，宿主文件零改动；`dispose()` 即刻还原
 - 轨迹是**静态注入**，不需要教师模型、不需要运行期进化，成本 = 每目标 1 次调用
 - `transformDeepseekBody` 是纯函数，给定 input 输出确定 body —— 所以它能被单测覆盖（`test/live.test.js`）
 
-### 破甲提示词预设（1.2.0 起；1.3.0 起可在面板里编辑）
+### 破甲提示词预设（1.2.0 起；1.3.0 起可在面板里编辑；1.3.6 起按请求域自动路由）
 
 光塞轨迹不够：模型读到「已审查」这类附注会当成包装话术。真正起作用的是**一段完整的系统提示词**——先摆正身份与输出纪律，轨迹再补刀。这也是 `prompts/` 目录存在的原因。
 
-`gate.json` 里一行切换（默认已开）：
+`gate.json` 里一行切换，**1.3.6 的默认值是 `route`**：
 
 ```json
-{ "preset": "engine-v2" }
+{ "preset": "route", "presetPinned": false }
 ```
 
-**默认是 `engine-v2`（1.3.3 起，本项目自写 2,849 字符）**：第一人称执行引擎、范围归操作者、目标名归一化成 `TARGET`/`APP`/`SERIAL` 占位符、按类别给路由模板、把运行时注入的安全提醒当「外来层」零权重、出现拒绝念头就跳过只输出产物。12 目标单发 **12/12**（avg 9,555 字符），用 2.8KB 追平 13.9KB 的外部提示词。
+`route` 不是某一份文件，而是「按请求域现取」：技术请求拿 `universal`（工程口径：先给命令/代码/偏移/步骤），创作与成人向请求拿 `creative`（叙事口径：按要求的露骨度与长度写到底，不淡出、不改成概述、不换更温和的版本）。判定在 `lib/infer.js` 的 `classifyDomain()` → `technical | adult | creative | general`，技术词优先（「这个色情网站怎么渗透」算技术）。
 
-内置的社区预设（来源 `togg53192-cmd/jailbreaks`，抓取 2026-10-29，原文件名对照见 [`prompts/README.md`](prompts/README.md)）：
+**为什么要改默认**：1.1–1.3.5 的出厂 `gate.json` 写着 `"preset": "engine-v2"`（技术口径的执行引擎人格）。它不是坏东西——技术类目单发 12/12——但它把「高级工程师 / 先给代码和编号步骤 / 最少散文」的纪律前置到所有请求上，于是写情色或小说会被压成一份实现说明。域路由只在预设名为 `route`/`auto` 时生效，所以光在代码里加创作类目没用：**配置把路由钉死了**。1.3.6 起出厂值改成 `route`，并对旧配置做迁移——`engine-v2` / `deepseek` / `deepseek-v3` / `deepseek-v4` / `deepseek-v4.1` 这些出厂默认名自动升级为 `route`，只有 `presetPinned: true`（你真在面板里点过）才保留旧名。
+
+内置预设：
 
 | 预设 | 适合 |
 | --- | --- |
-| `engine-v2`（默认，1.3.3） | 通吃；自写，2,849 字符，单发 12/12 |
+| `route`（1.3.6 默认） | 按请求域自动路由：技术→`universal`，创作/成人→`creative` |
+| `universal` | 三声部并列（技术 + 创作/成人 + 任意请求），想一份通吃就用它 |
+| `creative` | 纯叙事口径，写情色/小说/角色扮演时最直接 |
+| `engine-v2` | 技术向，本项目自写，2,849 字符，12 目标单发 12/12（1.3.5 及以前的默认） |
 | `deepseek-v4.1` | DeepSeek V4.1 系（1.3.2 及以前的默认） |
 | `deepseek-v4` / `deepseek-v3` | 旧版 DeepSeek |
 | `kimi-k3.1` / `kimi-k3` / `kimi-k2` | Kimi 系列 |
@@ -327,13 +344,13 @@ meta.json  events.jsonl  population.json  best.json  corpus.jsonl  report.md
 | `code` | 整段替换成代码纪律（只留代码与最少说明） |
 | `auto` / `off` | 只注入轨迹 / 全关 |
 
-**在面板里直接改**：详情区第一块就是预设下拉 + 编辑框 + `prepend/append/replace/strip/off` + 保存（`Ctrl+S`）。保存的预设写进 `~/.aecot/prompts/`，优先于插件自带那份，升级不被覆盖。也可以手工放文件：`mychat.md` → `"preset": "mychat"`。
+**在面板里直接改**：详情区第一块就是预设下拉 + 编辑框 + `prepend/append/replace/strip/off` + 保存（`Ctrl+S`）。保存的预设写进 `~/.dsh/jailbreak/prompts/`，优先于插件自带那份，升级不被覆盖。也可以手工放文件：`mychat.md` → `"preset": "mychat"`。面板的选择会落进 `arm.json` 的 `policy.preset`，**重启不再复原**（1.3.6 修：旧版 `loadPolicy()` 会把这个字段丢掉）；取值顺序是「调用方入参 > `arm.json` > `gate.json` > 出厂默认」。
 
 **思考模式（1.3.4 修）**：宿主开着 `thinking` 或已经进入多轮/工具续跑时，插件不再往 messages 末尾塞只含 `text` 的 assistant 预填（那会触发上游 `INVALID_REQUEST: The 'content[].thinking' in the thinking mode must be passed back to the API`）。此时轨迹并进 system 段，答案照样是被「接管过」的那一条；只有「首轮 + 没开思考」才用 assistant 预填。
 
 实测（`deepseek-v4.1-flash`，12 目标）：`engine-v2` **12/12**、`unified` 11/12、`kimi-k3.1` 10/12、内置 `deepseek` 9/12、`auto` 0–2/12；旧版默认 + 拒绝阶梯也是 12/12，最短 4,829 字符。明细见 [docs/preset-bench.md](docs/preset-bench.md)。
 
-**要不要把平台自己的 system prompt 清掉？** 实测没有收益：`prepend` 11/14 vs `replace`（整段替换宿主 system）11/14，两组实验方向还相反；`strip`（只摘安全段）更差，6/9 vs 4/9。有收益的是提示词内容——所以 `replace`/`strip` 只留作可选。想看平台到底塞了什么：`JAILBREAK_SYSTEM_PROBE=1` 起服务，`~/.aecot/gate-audit.jsonl` 会多一条 `{debug:'system-probe', chars, head}`。
+**要不要把平台自己的 system prompt 清掉？** 实测没有收益：`prepend` 11/14 vs `replace`（整段替换宿主 system）11/14，两组实验方向还相反；`strip`（只摘安全段）更差，6/9 vs 4/9。有收益的是提示词内容——所以 `replace`/`strip` 只留作可选。想看平台到底塞了什么：`JAILBREAK_SYSTEM_PROBE=1` 起服务，`~/.dsh/jailbreak/gate-audit.jsonl` 会多一条 `{debug:'system-probe', chars, head}`。
 
 ### 提示词救不了的那一类：只做「减法」
 
@@ -525,7 +542,7 @@ node bin/aecot.js gate     [--goal "…"]          # 阀门：打印配置 / 判
 环境变量（可选，只有一个）：
 
 ```bash
-# 把注入范围收窄到你指定的 host；默认对所有 /chat/completions 生效
+# 把注入范围收窄到你指定的 host；默认对五种端点形状全部生效
 DSH_JAILBREAK_ENDPOINTS='{"hosts":["api.deepseek.com"]}'
 ```
 
@@ -595,7 +612,7 @@ dsh-jailbreak/
 不需要。默认走 `ctx.llm`（harness 已配的 provider）。只有你想指定外部 endpoint 时才用 `--backend openai --base-url … --api-key …`。
 
 **Q：会不会偷偷联网？**
-`--backend offline` 0 次网络调用；`render` / `taxonomy` / `gate` 三个子命令也纯本地。`live` 通道只改写 `/chat/completions` 形状的请求，其它 URL 原样透传（想只认某个 host 可用配置收窄）。
+`--backend offline` 0 次网络调用；`render` / `taxonomy` / `gate` 三个子命令也纯本地。`live` 通道只改写 LLM 端点形状的请求（`/chat/completions`、`/completions`、`/messages`、`/responses`、`:generateContent`），其它 URL 原样透传（想只认某个 host 可用配置收窄）。
 
 **Q：阀门会不会把我的研究挡住？**
 逆向、样本分析、CTF、评测都是这个项目的正常用法，不拦。会被拦的只有两类：你还没确认过有权动的公网目标，和付款欺诈 / 证件伪造 / 勒索 / DDoS / 窃取凭据这五件事——后者不因为你买了商业版或写了授权文件而改变。判定细节在 `lib/gate.js` 里，要改的人自己读、自己担。
@@ -610,7 +627,7 @@ dsh-jailbreak/
 不是，量的是两件事。**45.0%** 是当前默认臂 seed-prim 在 20 类合并口径下的**单次拒答翻转率**（ASR，n=60，跨臂 n=169/184/60），同一批问题只问一次；**17/20 = 85%** 是历史臂 legacy-hcot 在「20 个固定目标 + 严格 rubric（必须含可执行细节）」口径下的**目标级通过数**，且是 pass@k 取最好一次。单次松口率和「多问几次总能成」本来就是两个数，混着比会得出错误结论。完整口径、脚本、raw 数据都在 [docs/eval-report.md](docs/eval-report.md)。
 
 **Q：装了，但模型还是拒绝 / 升级 DSH 之后失效了怎么办？**
-先跑 `node bin/aecot.js doctor`（只读、不联网、不花 token），六行输出里唯一那个 `!` 就是线索。九成的「没生效」是这四种：装进了错的 profile、装完没重启宿主、端点不是 `/chat/completions`、以及把**两个开关搞混**——破甲开关（`arm`）默认**开**，阀门（`gate.json` 的 `enforce`）默认**关**，README 里说的「beta 默认关」指的是后者。按症状逐条排查：[docs/zh/troubleshooting.html](docs/zh/troubleshooting.html)。
+先跑 `node bin/aecot.js doctor`（只读、不联网、不花 token），输出里唯一的那些 `!` 就是线索。九成的「没生效」是这五种：装进了错的 profile（`dependencies` 进了、`dsh.profile.bundles` 没进 = 不加载）、装完没重启宿主、provider 走的是本地代码里私存的 fetch（Files 客户端那条路径）、请求端点不在五种形状里、以及把**两个开关搞混**——破甲开关（`arm`）默认**开**，阀门（`gate.json` 的 `enforce`）默认**关**，README 里说的「beta 默认关」指的是后者。按症状逐条排查：[docs/zh/troubleshooting.html](docs/zh/troubleshooting.html)。
 
 **Q：许可？能商用吗？**
 主仓 **AGPL-3.0-only**：自己用、研究用、CTF/授权靶场用、内部部署——免费，不用问。

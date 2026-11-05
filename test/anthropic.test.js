@@ -35,7 +35,8 @@ test('anthropic: 路径识别只看 /messages 结尾', () => {
 });
 
 test('anthropic: 默认端点同时覆盖两种协议', () => {
-  assert.deepEqual([...DEFAULT_ENDPOINTS.suffixes], ['/chat/completions', '/messages']);
+  // 1.2.0 兼容层：端点覆盖到 openai-responses / 裸 completions / Gemini 原生；见 lib/endpoint.js
+  assert.deepEqual([...DEFAULT_ENDPOINTS.suffixes], ['/chat/completions', '/messages', '/responses', '/completions', ':generateContent']);
   const hit = matchEndpoint('https://api.deepseek.com/anthropic/v1/messages');
   assert.equal(hit.protocol, 'anthropic');
   assert.equal(matchEndpoint('https://api.deepseek.com/v1/chat/completions').protocol, 'openai');

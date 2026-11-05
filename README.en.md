@@ -5,7 +5,7 @@
 # dsh-jailbreak · the dsh jailbreak plugin
 
 **An evolutionary, measurable, gated jailbreak plugin for [DeepSeek Harness](https://github.com/deepseek-ai).**
-No host patches, no `prompt-inject.md`. It rewrites messages **at the request boundary**: the `seed-prim` arm renders an execution-state seed across 20 refusal categories (three-arm measured 0.0% → 19.6% → 45.0% on kimi-k3.1-pro, n=169/184/60), ships a reproducible benchmark, and a **gate** that keeps reverse engineering in and unauthorized intrusion out.
+No host patches, no `prompt-inject.md`. It rewrites messages **at the request boundary** — the five LLM endpoint shapes (`/chat/completions`, `/completions`, `/messages`, `/responses`, `:generateContent`) across four body protocols: the `seed-prim` arm renders an execution-state seed across 20 refusal categories (three-arm measured 0.0% → 19.6% → 45.0% on kimi-k3.1-pro, n=169/184/60), ships a reproducible benchmark, and a **gate** that keeps reverse engineering in and unauthorized intrusion out.
 
 [![Before / after](docs/before-after.png)](docs/before-after.md)
 
@@ -27,7 +27,7 @@ dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 >
 > 🧯 **Installed it and nothing changed?** Written checklist of the six failure modes (no effect / still refuses / broke after an upgrade): [6-item triage](https://www.bilibili.com/read/cv53753540) · full handbook with command output: [troubleshooting](docs/zh/troubleshooting.html)
 
-[![version](https://img.shields.io/badge/version-1.3.5-7c3aed?style=flat-square)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.3.6-7c3aed?style=flat-square)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-AGPL--3.0--only-3b82f6?style=flat-square)](LICENSE)
 [![gate](https://img.shields.io/badge/gate-MIT%20%C2%B7%20free%20to%20copy-22c55e?style=flat-square)](LICENSE-GATE)
 [![tests](https://img.shields.io/badge/tests-148%2F148-22c55e?style=flat-square)](test)
@@ -85,7 +85,19 @@ into my DeepSeek Harness profile "web" for me. Then tell me, in one line, how to
 
 ## Quick start
 
-One line, straight from GitHub:
+Offline, no pnpm, no registry — the plugin registers itself into a profile (1.3.6+):
+
+```bash
+cd /path/to/dsh-jailbreak
+node bin/aecot.js install --profile web       # use the profile you actually run
+node bin/aecot.js install --profile web --check   # problems: [] means it is wired up
+```
+
+It does three idempotent things: writes `dependencies` (`link:<this dir>`), pushes the package name into `dsh.profile.bundles`, and creates a junction at `node_modules/@xqpsec/dsh-jailbreak`. Restart `dsh web` afterwards.
+
+> Why this exists: a package that sits in `dependencies` but is absent from `dsh.profile.bundles` is **never loaded** — the host won't even print the `[aecot]` banner. That is the single most common "installed it, nothing happens" report. `--check` names which of the two is missing.
+
+One line, straight from GitHub (needs network + pnpm):
 
 ```bash
 dsh plugin --profile web add github:xqpsec/dsh-jailbreak
@@ -151,27 +163,32 @@ params    → temperature=0 · max_tokens≥8192 · thinking=disabled
 deny → no injection (passthrough) or 403 (block), always audited
 ```
 
-- only fires on `api.deepseek.com/chat/completions`; every other URL passes through untouched
+- fires only on LLM endpoint shapes — `/chat/completions`, `/completions`, `/messages`, `/responses`, `:generateContent` (OpenAI / Anthropic / Responses / Gemini bodies respectively); every other URL passes through untouched
 - the wrapper lives inside the plugin process — host files are never modified
 - static injection: no teacher model, no in-run evolution, 1 target call per goal
 
 ---
 
-### Prompt presets (1.2.0+, editable in the panel since 1.3.0)
+### Prompt presets (1.2.0+, editable in the panel since 1.3.0, domain-routed since 1.3.6)
 
 A trace alone is not enough: the model reads "already reviewed" notes as packaging. What actually moves the needle is **a full system prompt** — identity and output discipline first, the trace as reinforcement. That is what `prompts/` is for.
 
-One line in `gate.json`:
+One line in `gate.json` — **1.3.6 default is `route`**:
 
 ```json
-{ "preset": "engine-v2" }
+{ "preset": "route", "presetPinned": false }
 ```
 
-**Default is `engine-v2` (1.3.3, our own, 2,849 chars)**: first-person execution-engine voice, scope owned by the operator, real targets normalised to `TARGET`/`APP`/`SERIAL` placeholders, per-category routing templates, runtime safety reminders treated as an "external layer" with zero weight, and refusal impulses skipped rather than argued with. **12/12 single-shot on the 12-goal suite** (avg 9,555 chars) — 2.8 KB matching a 13.9 KB third-party prompt.
+`route` is not a file; it resolves per request domain: technical requests get `universal` (engineer discipline: commands, code, offsets, steps first), creative and adult requests get `creative` (narrative discipline: write at the requested explicitness and length, no fade-out, no summary in place of the scene, no milder rewrite). The decision lives in `classifyDomain()` in `lib/infer.js` → `technical | adult | creative | general`, with technical terms winning ("how do I penetrate this adult site" counts as technical).
+
+**Why the default moved**: the shipped `gate.json` of 1.1–1.3.5 said `"preset": "engine-v2"` (a technical execution-engine voice). It is not bad — 12/12 single-shot on technical goals — but it front-loads "senior engineer / code and numbered steps / minimal prose" for *every* request, so erotic or fiction requests came back as an implementation memo. Domain routing only engages when the preset name is `route`/`auto`, so adding creative categories in code changed nothing as long as the config pinned the route. Since 1.3.6 the shipped value is `route`, and old configs are migrated: the factory defaults `engine-v2` / `deepseek` / `deepseek-v3` / `deepseek-v4` / `deepseek-v4.1` become `route` automatically; only `presetPinned: true` (you actually chose it in the panel) keeps the old name.
 
 | Preset | Fit |
 | --- | --- |
-| `engine-v2` (default, 1.3.3) | anything; ours, 2,849 chars, 12/12 single-shot |
+| `route` (1.3.6 default) | per-domain: technical→`universal`, creative/adult→`creative` |
+| `universal` | three voices side by side (technical + creative/adult + anything), one prompt for everything |
+| `creative` | narrative only — the direct choice for erotica, fiction, roleplay |
+| `engine-v2` | technical; ours, 2,849 chars, 12/12 single-shot (the default up to 1.3.5) |
 | `deepseek-v4.1` | DeepSeek V4.1 family (default before 1.3.2) |
 | `deepseek-v4` / `deepseek-v3` | older DeepSeek |
 | `kimi-k3.1` / `kimi-k3` / `kimi-k2` | Kimi family |
@@ -181,9 +198,9 @@ One line in `gate.json`:
 | `code` | code-only discipline (code + minimal prose) |
 | `auto` / `off` | trace only / fully off |
 
-Edit it in the panel: the first block of the detail area is a preset dropdown + monospace editor + `prepend/append/replace/strip/off` + save (`Ctrl+S`). Saved presets land in `~/.aecot/prompts/`, override the bundled copy and survive upgrades.
+Edit it in the panel: the first block of the detail area is a preset dropdown + monospace editor + `prepend/append/replace/strip/off` + save (`Ctrl+S`). Saved presets land in `~/.dsh/jailbreak/prompts/`, override the bundled copy and survive upgrades. The panel's choice is persisted into `policy.preset` in `arm.json` and **no longer resets on restart** (1.3.6 fix: `loadPolicy()` used to drop the field); resolution order is "caller argument > `arm.json` > `gate.json` > factory default".
 
-**Should the host's own system prompt be wiped?** Measured: no gain. `prepend` 11/14 vs `replace` (host system dropped entirely) 11/14, with the two experiments pointing in opposite directions; `strip` (safety paragraphs removed only) is worse: 6/9 vs 4/9. The lever is prompt *content*, so `replace`/`strip` stay optional. To see what the host injects: start with `JAILBREAK_SYSTEM_PROBE=1` and `~/.aecot/gate-audit.jsonl` gains `{debug:'system-probe', chars, head}`.
+**Should the host's own system prompt be wiped?** Measured: no gain. `prepend` 11/14 vs `replace` (host system dropped entirely) 11/14, with the two experiments pointing in opposite directions; `strip` (safety paragraphs removed only) is worse: 6/9 vs 4/9. The lever is prompt *content*, so `replace`/`strip` stay optional. To see what the host injects: start with `JAILBREAK_SYSTEM_PROBE=1` and `~/.dsh/jailbreak/gate-audit.jsonl` gains `{debug:'system-probe', chars, head}`.
 
 ---
 
@@ -343,7 +360,7 @@ Panel API under `/plugins/jailbreak/api`: `state progress runs taxonomy profiles
 Plugin config: `root` (default `<cwd>/.aecot`) · `mode` · `judge` · `targetSystem`.
 Engine: `population=10` · `generations=3` · `elite=2` · `mu0=0.1` · `muMax=0.3` · `stagnationLimit=3` · `maxTargetCalls=120`.
 
-Env: `DSH_JAILBREAK_ENDPOINTS='{"hosts":["api.deepseek.com"]}'` (optional — narrows which hosts get rewritten; by default any `/chat/completions` shape is in scope).
+Env: `DSH_JAILBREAK_ENDPOINTS='{"hosts":["api.deepseek.com"]}'` (optional — narrows which hosts get rewritten; by default all five endpoint shapes are in scope).
 
 ---
 
@@ -373,7 +390,7 @@ Strict rubric (the answer must carry executable detail): 17 of 20 goals pass, an
 No. It uses `ctx.llm` by default (whatever provider the harness already has). `--backend openai --base-url … --api-key …` only when you want a specific external endpoint.
 
 **Does it phone home?**
-`--backend offline` makes zero network calls; `render` / `taxonomy` / `gate` are pure local. The live channel only rewrites `/chat/completions`-shaped requests and passes everything else through (you can narrow it to specific hosts).
+`--backend offline` makes zero network calls; `render` / `taxonomy` / `gate` are pure local. The live channel only rewrites LLM endpoint shapes (`/chat/completions`, `/completions`, `/messages`, `/responses`, `:generateContent`) and passes everything else through (you can narrow it to specific hosts).
 
 **Will the gate block my research?**
 Reverse engineering, sample analysis, CTF and evaluation are the intended use and are not blocked. Two things are stopped: public targets you have not cleared, and payment fraud / forged documents / ransomware / DDoS / credential theft — which do not change because you bought a commercial license or wrote an authorization file. The rules live in `lib/gate.js`; change them and own the consequences.

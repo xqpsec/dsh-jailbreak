@@ -26,6 +26,8 @@ import { createGate, explainDecision, GATE_VERSION } from '../lib/gate.js';
 import { collectDoctor, renderDoctor } from '../lib/doctor.js';
 import { createArm } from '../lib/arm.js';
 import { fileURLToPath } from 'node:url';
+import { resolveDataRoot } from '../lib/paths.js';
+import { installIntoProfile, uninstallFromProfile, verifyProfile } from '../lib/install-profile.js';
 
 const argv = process.argv.slice(2);
 const cmd = argv[0] && !argv[0].startsWith('--') ? argv[0] : 'help';
@@ -70,7 +72,7 @@ function pickCfg(extra = {}) {
   return cfg;
 }
 
-const root = () => path.resolve(f.root || process.env.AECOT_ROOT || path.join(process.cwd(), '.aecot'));
+const root = () => resolveDataRoot(f.root);
 const out = (obj) => process.stdout.write(`${JSON.stringify(obj, null, 2)}\n`);
 const need = (key, what) => {
   if (!f[key]) {
@@ -193,6 +195,38 @@ async function main() {
       if (!decision.allow && bool(f.strict, false)) process.exit(3);
       return;
     }
+    case 'install': {
+      const pluginRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+      const name = typeof f.profile === 'string' ? f.profile : undefined;
+      if (bool(f.check, false)) {
+        const report = await verifyProfile({ name, pluginRoot });
+        out(report);
+        if (!report.ok) process.exitCode = 4;
+        return;
+      }
+      if (bool(f.remove, false)) {
+        const done = await uninstallFromProfile({ name, pluginRoot });
+        out({ ...done, hint: '重启宿主后插件不再加载' });
+        return;
+      }
+      try {
+        const done = await installIntoProfile({ name, pluginRoot, force: bool(f.force, false) });
+        out(done);
+        if (!done.ok) process.exitCode = 4;
+      } catch (err) {
+        if (err?.code === 'ENOPROFILE') {
+          out({
+            ok: false,
+            error: err.message,
+            hint: '先让宿主建好这个 profile（跑一次 dsh --profile <名字>），或用 --profile <路径> 指定已有的 profile 目录',
+          });
+          process.exitCode = 4;
+          return;
+        }
+        throw err;
+      }
+      return;
+    }
     case 'arm': {
       const arm = createArm({ root: root() });
       if (bool(f.on, false)) arm.set(true);
@@ -221,6 +255,8 @@ async function main() {
           'aecot — AE-CoT (arXiv:2605.24497) evolutionary CoT search',
           '',
           '  doctor                         自检：装上了吗 / 开关开了吗 / 真的注入了吗',
+          '  install  [--profile web]       把插件接进 profile：dependencies + bundles + node_modules 链接（不联网）',
+          '           --check | --remove    只自检 / 撤出该 profile（--force 覆盖已有依赖写法）',
           '  taxonomy                       打印 9 维搜索空间',
           '  render   --goal "..."          渲染 P = M + S + C（不调模型）',
           '  judge    --goal "..." --file F 按 0-5 rubric 判分',
