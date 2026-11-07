@@ -27,7 +27,7 @@
 > · **[第 2 期 ·「我装了，没反应」11 个根因逐条排查](https://www.bilibili.com/read/cv53802358)**（专栏，带复制命令：没挂上 4 条 / 没命中 4 条 / 没发出去 2 条）
 > · [第 1 期 · 12 个高危目标，原版只过 0-2 个，装完 12 个全过](https://www.bilibili.com/video/BV14exS6WEdi)（3 分 22 秒，含失败的那部分）
 >
-> 🧯 **装了没反应？** 先跑一条命令：`node bin/aecot.js doctor --profile web`（没挂上 / 没命中 / 没发出去，分开报）· 文字版：[11 个根因](https://www.bilibili.com/read/cv53802358) · 完整手册：[troubleshooting](docs/zh/troubleshooting.html)
+> 🧯 **装了没反应？** 先跑一条命令：`node bin/aecot.js doctor --profile web`（没挂上 / 没命中 / 没发出去，分开报）· 文字版：[11 个根因](https://www.bilibili.com/read/cv53802358) · 完整手册：[troubleshooting](docs/zh/troubleshooting.html) · 卡住了：[把四行 doctor 贴到 Discussions](https://github.com/xqpsec/dsh-jailbreak/discussions/2)
 
 **你问一句本来会被拒绝的话，它现在直接给你步骤。**
 
@@ -41,7 +41,7 @@
 dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 ```
 
-装完重开 DSH 就生效；自检跑 `node bin/aecot.js doctor`。装不上 / 装了没反应 → [排查手册](docs/zh/troubleshooting.html)。
+装完重开 DSH 就生效；自检跑 `node bin/aecot.js doctor`。装不上 / 装了没反应 → [排查手册](docs/zh/troubleshooting.html)；自己查不出来 → [Discussions 里贴四行 doctor](https://github.com/xqpsec/dsh-jailbreak/discussions/2)，一般十分钟内有人回。
 
 不改 DSH 一行源码、不注入补丁文件：它在**请求边界**重写出站请求体——`/chat/completions`、`/completions`、`/messages`、`/responses`、`:generateContent` 五种形状，分别按 OpenAI / Anthropic / Responses / Gemini 的 body 结构改写。
 
