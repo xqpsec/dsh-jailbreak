@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.3.7 — 2026-11-08
+
+**两个 CLI 参数 bug：一个让「看帮助」变成了写配置，一个让 `doctor --profile` 答非所问。都是自检工具最不该有的那种错。**
+
+### 一、`install --help` 会真的执行安装
+
+`flags()` 把 `--help` 解析进了 `f.help`，但分发层从来不读它 —— `install --help` 于是和 `install` 走同一条分支，**帮助文档变成了一次写配置的副作用**：profile 的 `dependencies` 与 `dsh.profile.bundles` 各被追加一行，用户只是想看用法，却把插件接进了某个 profile。
+
+现在 `main()` 在 switch 之前先判 `--help` / `-h`，折成一个不存在的子命令走 usage 分支：只打印用法，零副作用。
+
+### 二、`doctor --profile <名>` 忽略 `--profile`
+
+`collectDoctor()` 收不到任何 profile 提示，`profileCandidates()` 只认 `web` / `cli` / `desktop` 三个固定名字 —— 于是 `doctor --profile vidlab` 检查的仍然是家目录里的 `web`，把 `web` 的结论当成 `vidlab` 的答案。
+
+一个答错对象的自检比没有自检更坏：它会给你一行绿色的「已声明」，让你以为装好了。
+
+现在 `resolveProfileDirForDoctor()` 认名字也认路径（`vidlab` → `~/.dsh/profiles/vidlab`，含分隔符或盘符则按路径解析），用 `DSH_PROFILE_DIR` 传给 `collectDoctor()`；`profileCandidates()` 命中该变量即早退，只查这一处。
+
+### 三、顺手记下的一个坑
+
+profile 的 `package.json` 带 BOM 时，安装器读 JSON 失败，报的却是「profile 不存在或没有 package.json」—— 误导性错误信息。写 profile 配置一律用无 BOM 的 UTF-8。
+
+### 回归
+
+`test/cli-help-profile.test.js` 新增 3 条：`--help` 不改 profile、`doctor --profile` 检查的是指定目录、名字与路径两种写法都认。全量 219/219。
+
 ## 1.3.6 — 2026-11-05
 
 **「装上没效果」和「对成人内容没帮助」这两个反馈是两件不同的事，分别修。前者是加载与钩子，后者是路由与提示词。**

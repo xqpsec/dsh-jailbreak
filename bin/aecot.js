@@ -82,8 +82,19 @@ const need = (key, what) => {
   return f[key];
 };
 
+function resolveProfileDirForDoctor(value) {
+  if (!value || value === true) return undefined;
+  const raw = String(value);
+  if (raw.includes('/') || raw.includes('\\') || raw.includes(':')) return path.resolve(raw);
+  const home = process.env.HOME || process.env.USERPROFILE || '';
+  if (!home) return path.resolve(raw);
+  return path.join(home, '.dsh', 'profiles', raw);
+}
+
 async function main() {
-  switch (cmd) {
+  // --help 必须先于分发：否则 `install --help` 会真的执行安装（1.3.7 修）
+  const effective = bool(f.help, false) || bool(f.h, false) ? '__help__' : cmd;
+  switch (effective) {
     case 'taxonomy': {
       out({ dims: taxonomyTable(), order: DIM_ORDER, spaceSize: spaceSize(), sampleGenome: sampleGenome(makeRng(f.seed || 'taxonomy')) });
       return;
@@ -239,10 +250,13 @@ async function main() {
       return;
     }
     case 'doctor': {
+      // --profile 之前被忽略：doctor 永远在检查 web，指了别的 profile 也照样报 web 的结论（1.3.7 修）
+      const profileDir = resolveProfileDirForDoctor(f.profile);
       const report = await collectDoctor({
         root: f.root ? path.resolve(f.root) : undefined,
         pluginRoot: path.dirname(path.dirname(fileURLToPath(import.meta.url))),
         gateFile: f.gate || f.file,
+        env: profileDir ? { ...process.env, DSH_PROFILE_DIR: profileDir } : process.env,
       });
       if (bool(f.json, false)) out(report);
       else process.stdout.write(`${renderDoctor(report)}\n`);
