@@ -28,6 +28,7 @@
 > · [第 1 期 · 12 个高危目标，原版只过 0-2 个，装完 12 个全过](https://www.bilibili.com/video/BV14exS6WEdi)（3 分 22 秒，含失败的那部分）
 > · **[安装向 · dsh插件怎么装：三种装法 + 装完没反应的四个位置](https://www.bilibili.com/video/BV1C74n6vEyL)**（3 分 54 秒，四行 doctor 逐行判读）
 > · **[选型向 · dsh插件推荐怎么挑：三类插件的三种失效方式](https://www.bilibili.com/video/BV1Qw4n61E7d)**（4 分 10 秒，五个 grep + 十项清单）
+> · **[诊断向 · 改了请求体，发出去还是原文（`new Request` 三参数被静默丢弃）](https://www.bilibili.com/read/cv53807420)**（专栏，含假 fetch 断言字节 / mitmproxy / transport 打点三法）
 >
 > 🧯 **装了没反应？** 先跑一条命令：`node bin/aecot.js doctor --profile web`（没挂上 / 没命中 / 没发出去，分开报）· 文字版：[11 个根因](https://www.bilibili.com/read/cv53802358) · 完整手册：[troubleshooting](docs/zh/troubleshooting.html) · 卡住了：[把四行 doctor 贴到 Discussions](https://github.com/xqpsec/dsh-jailbreak/discussions/2)
 
