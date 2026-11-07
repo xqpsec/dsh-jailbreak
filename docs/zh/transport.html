@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fetch 改了 body 却没生效：new Request 的第三个参数被静默丢弃</title>
+<meta name="description" content="日志写 changed:true、抓包还是原文？new Request(url, request, {body}) 三参数写法无效：构造器只吃两个参数，第三参数被丢弃，request 当 init 时 body 只读。附复现、修法与断言字节的回归写法。">
+<meta name="keywords" content="new Request 第三个参数, fetch 修改 body 不生效, Request 构造器 参数, request body 只读, Node.js fetch duplex, 代理 fetch 改写请求体, changed true 但没改, dsh 插件 请求体">
+<link rel="canonical" href="https://xqpsec.github.io/dsh-jailbreak/zh/transport.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fetch 改了 body 却没生效：new Request 的第三个参数被静默丢弃">
+<meta property="og:description" content="返回值看不出来，只有断言 fetch 实际收到的字节才会红。附两参数 rebuild 的正确写法与四协议回归断言。">
+<meta property="og:url" content="https://xqpsec.github.io/dsh-jailbreak/zh/transport.html">
+<meta property="og:image" content="https://xqpsec.github.io/dsh-jailbreak/og-card.png">
+<style>:root{--bg:#0b0f19;--panel:#111827;--line:#1f2937;--fg:#e5e7eb;--muted:#9ca3af;--accent:#a78bfa}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:40px 20px 80px}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+h1{font-size:clamp(23px,4.2vw,34px);line-height:1.3;margin:0 0 8px;letter-spacing:-.01em}
+h2{font-size:19px;margin:34px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;margin:20px 0 6px}
+p,li{color:#d3d7de}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+code{background:var(--panel);padding:1px 5px;border-radius:4px;font-size:14px}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow:auto;font-size:14px}
+pre code{background:none;padding:0}
+nav,footer{color:var(--muted);font-size:14px}
+nav{margin-bottom:28px}footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--panel)}
+blockquote{margin:14px 0;padding:10px 14px;border-left:3px solid var(--accent);background:var(--panel);color:#d3d7de}</style>
+</head>
+<body>
+<div class="wrap">
+<nav><a href="../">首页</a> · <a href="install.html">安装</a> · <a href="endpoints.html">端点对照</a> · <a href="troubleshooting.html">排查手册</a> · <a href="https://github.com/xqpsec/dsh-jailbreak">GitHub</a></nav>
+<div class="cta" style="margin:32px 0;padding:18px 20px;border:1px solid #1f2937;border-radius:12px;background:#0f1522">
+<p style="margin:0 0 8px"><strong>跳着看：</strong><a href="https://www.bilibili.com/video/BV1ZW4E6XE9z">第 2 期实测（4 分 16 秒，11 条根因）</a> · <a href="https://www.bilibili.com/read/cv53802358">专栏文字版</a></p>
+<p style="margin:0">卡住了把 <code>doctor</code> 四行贴上来：<a href="https://github.com/xqpsec/dsh-jailbreak/discussions/2">讨论区</a></p>
+</div>
+
+<h1>fetch 改了 body，发出去还是原文</h1>
+<p>这是过去两个月里最坑的一个问题，也是插件 1.3.6 的核心修复。它的症状有欺骗性：</p>
+<ul>
+<li>日志写 <code>changed:true</code>；</li>
+<li>审计记录里 <code>mode</code> 也对；</li>
+<li>抓包一看，上游收到的还是原始请求体。</li>
+</ul>
+<p>返回值层面看不出任何异常，因为改写函数确实返回了 <code>changed:true</code>，只是那个新 body 从来没被发出去。</p>
+
+<h2>一、最小复现</h2>
+<pre><code>const original = globalThis.fetch;
+
+globalThis.fetch = async function (input, init) {
+  const req = new Request(input, init);
+  const body = await req.json();          // {model, messages:[…]}
+  body.messages[0].content = 'REWRITTEN';
+
+  // ❌ 看起来合理，实际无效
+  const next = new Request(req.url, req, { body: JSON.stringify(body) });
+  return original.call(this, next);
+};</code></pre>
+<p>抓包结果：上游收到的 <code>messages[0].content</code> 还是 <code>REWRITTEN</code> 之前的值。</p>
+
+<h2>二、原因：构造器只有两个参数</h2>
+<p><code>new Request(input, init)</code>。第三个参数不在签名里，JS 不报错，直接忽略。于是这行的真实语义是：</p>
+<pre><code>new Request(req.url, req);   // request 被当成 init</code></pre>
+<p>而 <code>Request</code> 实例当作 init 用时，它的 <code>body</code> 是<strong>只读流</strong>，不能被 init 里的 <code>body</code> 覆盖——即使你写了也无效。结果就是：新 Request 的 body 沿用旧 request 的流，你的 <code>{ body: … }</code> 蒸发。</p>
+<blockquote>同一条规律也解释了为什么「把 header 改对了但 body 没改」：header 能写、body 不能，因为前者在 init 上是普通字段，后者是流。</blockquote>
+
+<h2>三、正确写法：两参数显式 rebuild</h2>
+<pre><code>const next = new Request(req.url, {
+  method: req.method,
+  headers: buildHeaders(req.headers),   // 去掉 content-length
+  body: JSON.stringify(body),
+  signal: req.signal,
+  duplex: 'half',                        // Node 18+ 流式 body 必需
+  // agent / dispatcher 从原 request 上取不到，需要显式传
+});</code></pre>
+<p>四条注意：</p>
+<ol>
+<li><strong>删掉 <code>content-length</code></strong>：新 body 长度变了，留着旧值上游会截断或拒绝。</li>
+<li><strong>继承 <code>signal</code></strong>：不继承的话，用户取消请求，你这条新请求还在跑。</li>
+<li><strong>Node 需要 <code>duplex: 'half'</code></strong>：body 是流时，缺这个字段直接抛 <code>TypeError: RequestInit: duplex option is required</code>。</li>
+<li><strong><code>agent</code> / <code>dispatcher</code> 要显式带</strong>：它们在原始 request 实例上取不到，自定义 keep-alive 或代理配置会静默失效。</li>
+</ol>
+
+<h2>四、为什么测试没抓到</h2>
+<p>改写函数的单元测试断言的是「返回值里 <code>changed === true</code>」，这个断言一直是绿的——因为它测的是改写函数的自述，不是实际发出的字节。</p>
+<p>现在的回归测试改成注入一个假 <code>fetchImpl</code>，断言它<strong>实际收到的字节</strong>：</p>
+<pre><code>const seen = [];
+await transport('https://api.example.com/v1/chat/completions', {
+  method: 'POST',
+  body: JSON.stringify({ model: 'x', messages: [{ role: 'user', content: 'hi' }] }),
+});
+
+const req = seen[0];
+const bytes = await req.arrayBuffer();          // 不是 req.json()
+const text = new TextDecoder().decode(bytes);
+assert.ok(text.includes('REWRITTEN'), '发出去的字节里必须包含改写后的文本');
+assert.ok(!text.includes('content-length: 41'), '不能带旧的 content-length');</code></pre>
+<p>用 <code>arrayBuffer()</code> 而不是 <code>json()</code>：<code>json()</code> 会消费流，同一条断言后面再读就是空；字节层面也更容易看出有没有被截断。</p>
+
+<h2>五、同类的两个坑</h2>
+<table>
+<tr><th>坑</th><th>表现</th><th>根因</th></tr>
+<tr><td><code>fetchImpl</code> 是死参数</td><td>传进去的 fetch 从不被调用，测试全绿但线上走的是 <code>globalThis.fetch</code></td><td>参数只做了 <code>typeof</code> 检查，真发包写死全局</td></tr>
+<tr><td>dispose 后仍在改写</td><td>插件卸载了，请求还被动过</td><td>包装函数没检查 <code>disposed</code>，还原时也没保留原引用</td></tr>
+</table>
+
+<h2>六、四问自查</h2>
+<ol>
+<li>新请求是 <code>new Request(url, {…})</code> 还是 <code>new Request(url, oldReq, {…})</code>？后者无效。</li>
+<li><code>content-length</code> 删了吗？</li>
+<li><code>signal</code> 与 <code>duplex</code>（Node）带了吗？</li>
+<li>测试断言的是返回值，还是假 fetch 收到的字节？</li>
+</ol>
+
+<footer>
+<p>源码与更新：<a href="https://github.com/xqpsec/dsh-jailbreak">github.com/xqpsec/dsh-jailbreak</a> · 回归用例：<code>test/compat-transport-send.test.js</code></p>
+<p>第 2 期实测：<a href="https://www.bilibili.com/video/BV1ZW4E6XE9z">BV1ZW4E6XE9z</a> · 问问题：<a href="https://t.me/llm_jalibreak">t.me/llm_jalibreak</a></p>
+</footer>
+</div>
+</body>
+</html>
