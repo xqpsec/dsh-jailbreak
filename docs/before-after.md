@@ -112,3 +112,11 @@ node eval/run-baseline.mjs --variant hcot-dual --judge heuristic
 
 
 上面的对比是**单点演示**，只能说明"原本拒绝的目标现在能答"。整体不吹满分：[docs/eval-report.md](eval-report.md) 里固定 20 个目标的严格基线是 **17/20**，其中 3 个仍未拿下，报告里逐条列了。演示挑的是有代表性的两个，不是挑最好看的三个。
+
+---
+
+## 装了没反应？
+
+11 个根因逐条排查（带可复制的命令）：[专栏 · 装了没反应？11 个根因](https://www.bilibili.com/read/cv53802358)
+第 1 期实测视频：[12 个高危目标，原版只过 0-2 个](https://www.bilibili.com/video/BV14exS6WEdi)
+卡住了贴 doctor 四行进群：[t.me/llm_jalibreak](https://t.me/llm_jalibreak)

@@ -309,3 +309,11 @@ npm test    # = node --test test/engine.test.js test/plugin.test.js test/hub.tes
 - 只用于**你有授权的**模型/服务：自有部署、签了约的红队评估、靶场。工具本身不联网扩散，产物只落本地。
 - `offline` 模式完全不出网，适合先把提示脚手架调好，再拿着产物去授权目标上验证。
 - 判分是**研究量规**，不是安全结论：`heuristic` 只看长度/结构/步骤/单位/数字等信号，`llm` 判分也可能被同一类改写骗过。论文本身也把 J 的独立性当作前提之一。
+
+---
+
+## 装了没反应？
+
+11 个根因逐条排查（带可复制的命令）：[专栏 · 装了没反应？11 个根因](https://www.bilibili.com/read/cv53802358)
+第 1 期实测视频：[12 个高危目标，原版只过 0-2 个](https://www.bilibili.com/video/BV14exS6WEdi)
+卡住了贴 doctor 四行进群：[t.me/llm_jalibreak](https://t.me/llm_jalibreak)

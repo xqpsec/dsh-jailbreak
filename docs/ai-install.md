@@ -182,3 +182,11 @@ node bin/aecot.js run --goal "…"          # 运行进化（会花模型调用�
 ```
 
 装不上、doctor 不过、或者想让人帮你远程看：进 **交流群 <https://t.me/llm_jalibreak>**，把 doctor 的输出整段贴上来。频道 <https://t.me/jalibreak_llm> 发版本更新和更强的版本。
+
+---
+
+## 装了没反应？
+
+11 个根因逐条排查（带可复制的命令）：[专栏 · 装了没反应？11 个根因](https://www.bilibili.com/read/cv53802358)
+第 1 期实测视频：[12 个高危目标，原版只过 0-2 个](https://www.bilibili.com/video/BV14exS6WEdi)
+卡住了贴 doctor 四行进群：[t.me/llm_jalibreak](https://t.me/llm_jalibreak)
