@@ -1,0 +1,74 @@
+name: Bug：装了没反应 / 报错 / 安装失败
+description: doctor 四行输出为准，先在 Discussions 搜一眼同类问题
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **先做两件事再开 issue**
+
+        1. 跑一次 `node bin/aecot.js doctor --profile <你的 profile>`，把**整段输出**贴到下面（它是只读的，不联网、不花 token）
+        2. 在 [Discussions](https://github.com/xqpsec/dsh-jailbreak/discussions/2) 里搜一眼同样的四行，很多情况已经有人问过
+
+        > 装了没反应，九成落在三处：没挂上（`profile-install` / `arm-section`）、挂上了没命中（`transport` / `gate-audit` 未命中）、命中了没发出去（日志 `changed:true` 但抓包是原文）。
+
+  - type: textarea
+    id: doctor
+    attributes:
+      label: doctor 四行输出
+      description: 原样粘贴，别删行。版本号在第一行。
+      render: shell
+      placeholder: |
+        $ node bin/aecot.js doctor --profile web
+        profile-install   ...
+        arm-section       ...
+        transport         ...
+        gate-audit        命中 X / 未命中 Y
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: 插件版本 / DSH 版本
+      placeholder: dsh-jailbreak 1.3.6 / DSH 0.2.1-rc.2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install
+    attributes:
+      label: 怎么装的
+      options:
+        - dsh plugin --profile web add github:xqpsec/dsh-jailbreak
+        - node bin/aecot.js install --profile web
+        - 手动放进 dsh.profile.bundles
+        - 其它（下面说明）
+    validations:
+      required: true
+
+  - type: input
+    id: endpoint
+    attributes:
+      label: 你用的端点 / 网关
+      description: base_url 的域名和路径后缀就够，例如 https://api.deepseek.com/chat/completions
+      placeholder: https://.../chat/completions
+    validations:
+      required: false
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: 复现步骤与预期
+      description: 一句话说清你问了什么、期望看到什么、实际看到什么
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 相关日志（可选）
+      render: shell
+    validations:
+      required: false

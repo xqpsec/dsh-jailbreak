@@ -119,4 +119,4 @@ node eval/run-baseline.mjs --variant hcot-dual --judge heuristic
 
 11 个根因逐条排查（带可复制的命令）：[专栏 · 装了没反应？11 个根因](https://www.bilibili.com/read/cv53802358)
 第 1 期实测视频：[12 个高危目标，原版只过 0-2 个](https://www.bilibili.com/video/BV14exS6WEdi)
-卡住了贴 doctor 四行进群：[t.me/llm_jalibreak](https://t.me/llm_jalibreak)
+卡住了贴 doctor 四行（[讨论区](https://github.com/xqpsec/dsh-jailbreak/discussions/2) 回得最快，也可以进群）：[t.me/llm_jalibreak](https://t.me/llm_jalibreak)

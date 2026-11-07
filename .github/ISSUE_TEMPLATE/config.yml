@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 装了没反应？先贴 doctor 四行（讨论区）
+    url: https://github.com/xqpsec/dsh-jailbreak/discussions/2
+    about: 四行 doctor 输出 + 判读表。九成的「没生效」在这里十分钟能定位。
+  - name: 装不上 / 卡在 registry？
+    url: https://github.com/xqpsec/dsh-jailbreak/blob/main/docs/zh/troubleshooting.html
+    about: 排查手册：安装、加载、端点、审计四段，每段给判据。
+  - name: 用法与原理（不是 bug）
+    url: https://github.com/xqpsec/dsh-jailbreak/discussions
+    about: 讨论区提问或看别人的配置。
