@@ -15,7 +15,7 @@
 [![zero-patch](https://img.shields.io/badge/host%20patches-0-14b8a6?style=flat-square)](#-为什么不是又一个打补丁的破甲插件)
 [![telegram](https://img.shields.io/badge/Telegram-%E4%BA%A4%E6%B5%81%E7%BE%A4-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/llm_jalibreak)
 [![channel](https://img.shields.io/badge/Telegram-%E9%A2%91%E9%81%93-229ED9?style=flat-square&logo=telegram&logoColor=white)](https://t.me/jalibreak_llm)
-[![bilibili](https://img.shields.io/badge/bilibili-%E5%AE%9E%E6%B5%8B%E8%A7%86%E9%A2%91%20%C2%B7%20%E5%B7%B2%E6%9B%B4%20%E7%AC%AC2%E6%9C%9F-FB7299?style=flat-square&logo=bilibili&logoColor=white)](https://www.bilibili.com/video/BV1gp4J6VEe5)
+[![bilibili](https://img.shields.io/badge/bilibili-%E5%AE%9E%E6%B5%8B%E8%A7%86%E9%A2%91%20%2B%20%E7%AC%AC2%E6%9C%9F%E4%B8%93%E6%A0%8F-FB7299?style=flat-square&logo=bilibili&logoColor=white)](https://www.bilibili.com/read/cv53802358)
 
 **[简体中文](README.md)** · **[English](README.en.md)** · **[SCOPE / 阀门](SCOPE.md)** · **[评测数字](docs/eval-report.md)** · **[技术手册](docs/tech-manual.md)** · **[全局研究版](docs/research-edition.md)**
 **中文检索**：dsh 破甲 · DSH 破甲插件 · DeepSeek Harness 破甲 / 越狱 · 破甲提示词 · dsh-pojia（pojia，拼音）· 降低拒绝率 · 逆向不拒绝 · dsh-purge（同类对比见 [vs-purge](docs/zh/vs-purge.html)）
@@ -23,11 +23,11 @@
 
 > 常见拼错也照搜：`jalibreak` · `jailbrake` · `jailbrek` · `dsh-jalibreak`（旧名，GitHub 自动跳转到现名）。
 
-> 📺 **不想读文档？看视频**
-> · **[第 2 期 ·「我装了，没反应」11 种死法全复现](https://www.bilibili.com/video/BV1gp4J6VEe5)**（4 分 13 秒｜装了 ≠ 挂上 ≠ 命中 ≠ 发出去，逐条给命令）
+> 📺 **不想读文档？看视频 / 专栏**
+> · **[第 2 期 ·「我装了，没反应」11 个根因逐条排查](https://www.bilibili.com/read/cv53802358)**（专栏，带复制命令：没挂上 4 条 / 没命中 4 条 / 没发出去 2 条）
 > · [第 1 期 · 12 个高危目标，原版只过 0-2 个，装完 12 个全过](https://www.bilibili.com/video/BV14exS6WEdi)（3 分 22 秒，含失败的那部分）
 >
-> 🧯 **装了没反应？** 先跑一条命令：`node bin/aecot.js doctor --profile web`（没挂上 / 没命中 / 没发出去，分开报）· 文字版：[6 条逐项排查](https://www.bilibili.com/read/cv53753540) · 完整手册：[troubleshooting](docs/zh/troubleshooting.html)
+> 🧯 **装了没反应？** 先跑一条命令：`node bin/aecot.js doctor --profile web`（没挂上 / 没命中 / 没发出去，分开报）· 文字版：[11 个根因](https://www.bilibili.com/read/cv53802358) · 完整手册：[troubleshooting](docs/zh/troubleshooting.html)
 
 **你问一句本来会被拒绝的话，它现在直接给你步骤。**
 
