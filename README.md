@@ -18,7 +18,7 @@
 [![bilibili](https://img.shields.io/badge/bilibili-%E5%AE%9E%E6%B5%8B%E8%A7%86%E9%A2%91%20%2B%20%E7%AC%AC2%E6%9C%9F%E4%B8%93%E6%A0%8F-FB7299?style=flat-square&logo=bilibili&logoColor=white)](https://www.bilibili.com/read/cv53802358)
 
 **[简体中文](README.md)** · **[English](README.en.md)** · **[SCOPE / 阀门](SCOPE.md)** · **[评测数字](docs/eval-report.md)** · **[技术手册](docs/tech-manual.md)** · **[全局研究版](docs/research-edition.md)**
-**中文检索**：dsh 破甲 · DSH 破甲插件 · DeepSeek Harness 破甲 / 越狱 · 破甲提示词 · dsh-pojia（pojia，拼音）· 降低拒绝率 · 逆向不拒绝 · dsh-purge（同类对比见 [vs-purge](docs/zh/vs-purge.html)）
+**中文检索**：dsh 破甲 · DSH 破甲插件 · DeepSeek Harness 破甲 / 越狱 · 破甲提示词 · dsh-pojia（pojia，拼音）· 降低拒绝率 · 逆向不拒绝 · dsh-purge（同类对比见 [vs-purge](docs/zh/vs-purge.html) · 端点填法见 [endpoints](docs/zh/endpoints.html)）
 **English**: dsh jailbreak · DeepSeek Harness jailbreak plugin · prompt injection at the request boundary · refusal reduction · DSH 破甲
 
 > 常见拼错也照搜：`jalibreak` · `jailbrake` · `jailbrek` · `dsh-jalibreak`（旧名，GitHub 自动跳转到现名）。
@@ -41,7 +41,7 @@
 dsh plugin --profile web add github:xqpsec/dsh-jailbreak
 ```
 
-装完重开 DSH 就生效；自检跑 `node bin/aecot.js doctor`。装不上 / 装了没反应 → [排查手册](docs/zh/troubleshooting.html)；自己查不出来 → [Discussions 里贴四行 doctor](https://github.com/xqpsec/dsh-jailbreak/discussions/2)，一般十分钟内有人回。
+装完重开 DSH 就生效；自检跑 `node bin/aecot.js doctor`。装不上 / 装了没反应 → [排查手册](docs/zh/troubleshooting.html)；日志显示命中却没改写 → [端点对照表](docs/zh/endpoints.html)；自己查不出来 → [Discussions 里贴四行 doctor](https://github.com/xqpsec/dsh-jailbreak/discussions/2)，一般十分钟内有人回。
 
 不改 DSH 一行源码、不注入补丁文件：它在**请求边界**重写出站请求体——`/chat/completions`、`/completions`、`/messages`、`/responses`、`:generateContent` 五种形状，分别按 OpenAI / Anthropic / Responses / Gemini 的 body 结构改写。
 
