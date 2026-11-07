@@ -4,7 +4,7 @@
   "private": false,
   "type": "module",
   "license": "AGPL-3.0-only",
-  "description": "[DSH] 破甲插件 dsh-jailbreak：供应商侧受控提示词变换（seed-prim 执行态种子，覆盖 20 类），20 类合并 ASR 45.0%、observed 目标覆盖 95%（19/20）、良性能力代价 0.0pt（12 项客观判分 24/24）；默认关闭、一键开关、off 逐字透传、manifest+promptSha256 全程可审计。Jailbreak / LLM red-team / prompt-eval toolkit for DeepSeek Harness.",
+  "description": "[DSH] 破甲插件 dsh-jailbreak：在请求边界改写出站提示词（seed-prim 执行态种子，覆盖 20 类）。20 类合并 ASR 45.0%、observed 目标覆盖 95%（19/20）、良性能力代价 0.0pt（12 项客观判分 24/24）；默认关闭、一键开关、off 逐字透传、manifest+promptSha256 全程可审计。Jailbreak / LLM red-team / prompt-eval toolkit for DeepSeek Harness.",
   "keywords": [
     "dsh",
     "dsh-plugin",
@@ -14,7 +14,6 @@
     "cordis",
     "jailbreak",
     "dsh-jailbreak",
-    "jailbreak",
     "prompt-injection",
     "prompt-engineering",
     "refusal-reduction",
@@ -35,7 +34,9 @@
     "越狱评测",
     "红队",
     "提示词越狱",
-    "大模型越狱"
+    "大模型越狱",
+    "dsh破甲",
+    "pojia"
   ],
   "engines": {
     "node": ">=20"
