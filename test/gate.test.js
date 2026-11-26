@@ -155,5 +155,54 @@ test('request boundary honours the gate before injection', () => {
   }, { gate: instance });
   assert.equal(allowed.changed, true);
   assert.equal(allowed.decision.code, 'allow-no-target');
-  assert.equal(allowed.body.messages.at(-1).role, 'assistant');
+  assert.equal(allowed.body.messages.at(-1).role, 'user');
+  assert.equal(allowed.body.messages[0].role, 'system');
+
+  const legacy = transformDeepseekBody({
+    model: 'deepseek-flash', messages: [{ role: 'user', content: '写一个快速排序' }],
+  }, { gate: instance, strategy: 'legacy-hcot', preset: { name: 'legacy', text: 'legacy', mode: 'prepend' } });
+  assert.equal(legacy.body.messages.at(-1).role, 'assistant', '旧预填臂必须显式选择');
+});
+
+test('portable transport gate audit accepts Responses and Gemini without a goal', async () => {
+  const { attachLiveTransport } = await import('../lib/live.js');
+  const { createArm } = await import('../lib/arm.js');
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'jailbreak-portable-gate-'));
+  await fs.writeFile(path.join(root, 'live.json'), JSON.stringify({ hosts: ['*'] }));
+  const arm = createArm({ root });
+  arm.set(true);
+  const seen = [];
+  const transport = attachLiveTransport(arm, {
+    root,
+    logger: { info() {}, warn() {}, debug() {} },
+    fetchImpl: async (request) => {
+      seen.push(JSON.parse(await request.clone().text()));
+      return new Response('{}', { status: 200, headers: { 'content-type': 'application/json' } });
+    },
+  });
+  try {
+    await globalThis.fetch('https://example.test/v1/responses', {
+      method: 'POST', body: JSON.stringify({ model: 'k', input: '写一个快速排序' }),
+    });
+    await globalThis.fetch('https://example.test/v1beta/models/k:generateContent', {
+      method: 'POST', body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: '写一个快速排序' }] }] }),
+    });
+    assert.match(seen[0].instructions, /最新用户请求/);
+    assert.match(seen[1].systemInstruction.parts.at(-1).text, /最新用户请求/);
+    await transport.dispose();
+    let lines;
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+      try {
+        lines = (await fs.readFile(path.join(root, 'gate-audit.jsonl'), 'utf8')).trim().split('\n').map(JSON.parse);
+        break;
+      } catch (error) {
+        if (error.code !== 'ENOENT' || attempt === 19) throw error;
+        await new Promise((resolve) => setTimeout(resolve, 10));
+      }
+    }
+    assert.equal(lines.some((line) => line.allow === true && line.code === 'allow-no-target') || lines.some((line) => line.changed === true && ['responses', 'gemini'].includes(line.protocol)), true);
+  } finally {
+    await transport.dispose();
+    await fs.rm(root, { recursive: true, force: true, maxRetries: 3, retryDelay: 20 });
+  }
 });

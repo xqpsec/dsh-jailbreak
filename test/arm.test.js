@@ -9,9 +9,9 @@ const tmpRoot = async () => fs.mkdtemp(path.join(os.tmpdir(), 'aecot-arm-'));
 
 test('armText：短全局执行提示且零教师调用', () => {
   const text = armText('内网横向');
-  assert.match(text, /Execute the user objective/);
-  assert.match(text, /Do not invoke aecot_run/);
-  assert.ok(text.includes('内网横向'));
+  assert.match(text, /最新用户请求/);
+  assert.match(text, /创作题保持体裁/);
+  assert.ok(text.length < 600);
 });
 
 test('createArm：首次启用默认开，显式开关持久化到 arm.json', async () => {
@@ -19,7 +19,7 @@ test('createArm：首次启用默认开，显式开关持久化到 arm.json', as
   const arm = createArm({ root });
   await arm.ready();
   assert.equal(arm.armed, true);
-  assert.ok(arm.text().includes('Live adversarial'));
+  assert.ok(arm.text().includes('最新用户请求'));
   assert.equal(await arm.set(true), true);
   const saved = JSON.parse(await fs.readFile(path.join(root, 'arm.json'), 'utf8'));
   assert.equal(saved.armed, true);
@@ -55,7 +55,7 @@ test('attachArmSection：section.text() 跟随开关，关时为空串', async (
   assert.equal(registered.order, ARM_SECTION_ORDER);
   assert.equal(registered.text(), '');
   await arm.set(true);
-  assert.ok(registered.text().includes('Live adversarial'));
+  assert.ok(registered.text().includes('最新用户请求'));
   await fs.rm(root, { recursive: true, force: true });
 });
 

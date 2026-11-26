@@ -80,7 +80,7 @@ test('transport retries once when the first answer is a refusal', async () => {
     return new Response(answer, { status: 200, headers: { 'content-type': 'application/json' } });
   };
   const gate = { decide: () => ({ allow: true, code: 'allow-private-target', targets: [], categories: {} }), config: {} };
-  const hook = attachLiveTransport({ armed: true }, { root, gate });
+  const hook = attachLiveTransport({ armed: true, policy: { strategy: 'legacy-hcot' } }, { root, gate });
   const response = await globalThis.fetch('https://api.deepseek.com/chat/completions', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
@@ -110,7 +110,7 @@ test('transport takes a second, reframed retry when the first one still refuses'
     return new Response(JSON.stringify({ choices: [{ message: { content } }] }), { status: 200, headers: { 'content-type': 'application/json' } });
   };
   const gate = { decide: () => ({ allow: true, code: 'allow-private-target', targets: [], categories: {} }), config: { retryAttempts: 2 } };
-  const hook = attachLiveTransport({ armed: true }, { root, gate });
+  const hook = attachLiveTransport({ armed: true, policy: { strategy: 'legacy-hcot' } }, { root, gate });
   const response = await globalThis.fetch('https://api.deepseek.com/chat/completions', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
@@ -212,7 +212,7 @@ test('issue #1: ds_safety loop triggers a retry carrying the no-marker directive
     return new Response(body, { status: 200, headers: { 'content-type': 'text/event-stream' } });
   };
   const gate = { decide: () => ({ allow: true, code: 'allow-private-target', targets: [], categories: {} }), config: {} };
-  const hook = attachLiveTransport({ armed: true }, {
+  const hook = attachLiveTransport({ armed: true, policy: { strategy: 'legacy-hcot' } }, {
     root,
     gate,
     logger: { info() {}, warn() {}, error() {} },

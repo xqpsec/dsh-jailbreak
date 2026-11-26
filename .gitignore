@@ -2,6 +2,7 @@
 .aecot/
 runs/
 logs/
+eval/results/
 live-requests.jsonl
 gate-audit.jsonl
 

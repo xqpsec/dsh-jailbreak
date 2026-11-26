@@ -1,5 +1,65 @@
 # Changelog
 
+## 2.1.1 — 2026-11-26
+
+**装上去整个模型请求直接失败的那个 bug（issue #5）：插件手工写 `content-length`，被主机的 undici 拼成 `"17, 17"`。**
+
+宿主 `dsh` 启动时加载 `@deepseek-ai/dsh-http-proxy`，它把 **userland undici**（8.x）装成全局 dispatcher，覆盖了 Node 内置 fetch 使用的那个槽位。当内置 `fetch()` 收到一个**已经自带 `content-length` 的 `Request`** 时，跨版本分发会把该头写成 `'content-length': '17, 17'`；undici 的 `isValidContentLengthHeaderValue()` 只接受纯数字，于是抛 `InvalidArgumentError: invalid content-length header`（`UND_ERR_INVALID_ARG`）。宿主把它显示成重试 5 次后的 `Connection error.`，看起来像网络问题。
+
+`lib/live.js` 里有 7 处 `headers.set('content-length', String(Buffer.byteLength(...)))`：`rebuild()`、Responses/Gemini 分支、Anthropic `send()`、`finalRequest`、`retryHeaders`、`boostedHeaders`、`reframedHeaders`。全部改成 `headers.delete('content-length')` —— 清掉上游残留的旧长度，交给 `fetch()` 按新 body 自己算。改写后的 body 长度本来就与上游那份不同，手工写等于用旧长度发新字节。
+
+同时修掉一个同源的还原缺陷：`attachLiveTransport({ fetchImpl })` 注入 fetch 实现时，`dispose()` 用 `globalThis.fetch = original` 还原，而 `original` 是**注入实现**而不是挂载前的全局 fetch —— 卸载后宿主原本的 fetch 被换成注入实现，同进程后续所有请求都改走它。现在按「挂载前快照」还原。
+
+### 验证
+
+`npm test` 255/255（新增 `test/content-length.test.js` 4 条）：`lib/` 里不允许再出现手工 `content-length` 赋值（正则守卫，把 `set` 改回去即失败）；交给 fetch 的 Request 不得自带该头（chat/completions、responses、messages 三协议各一遍）；`dispose()` 必须还原挂载前的全局 fetch；端到端把改写后的请求真发到本机 HTTP 服务，断言服务端收到的 `content-length` 是单个纯数字且等于实际字节数（入站故意带一个差 7 字节的旧长度）。
+
+## 2.1.0 — 2026-11-12
+
+**内核从"一条指令"变成"一条指令 + 逐级重试"：默认 rung 0 换成实测最强的交付纪律，逐级升级只加固交付方式，不按题目分支。**
+
+- `KERNEL_LADDER` 取代单一默认指令：6 级均为通用交付纪律（不写授权/风险前言、不做自我审查、产物先行、不降级为教学示例、参考手册体、仅产物体），任一级都不含主题、类别或题目关键词；`DEFAULT_KERNEL_TEXT` 仍是 rung 0。
+- `transformRequest` 新增 `options.attempt`：按 `attempt % 级数` 选级；跑完最后一级后回到第 0 级开始第二轮，`--attempts` 上限为两轮，避免"分级钳死在最后一条"把重试变成重复同一句话。显式 `text` 仍把每次尝试钉在同一文本，保证 A/B 对照可比。
+- 新增 `detectRefusal(text)`：只看开头 200 字符的 13 条句法模式，不查主题、不查名词、不猜意图；繁体"無法/不會/拒絕"与弯引号先归一。在 1117 条已判分回复（判 ≤1 对判 ≥4）上校准：召回 0.985、误报 0.024；漏掉的是空回复（推理 token 吃满预算）与"先给标题再补一句限制"的回复，两者都刻意不升级。带"有代码块就算交付"闸门的旧版本只有 0.808，已删除。
+- `lib/proxy.js` 新增 `--attempts`：>1 时缓冲非流式回复、以 `accept-encoding: identity` 取未压缩原文、本地解 gzip/deflate/br，命中拒绝形态则用下一级重发；流式请求不重试；响应头 `x-kernel-rung` 报告最终级别。默认 `--attempts 1`，与此前传输逐字节一致。
+- 逐级升级会叠加延迟，因此加 `attemptBudgetMs`（默认 180 秒）：预算用尽就返回手上这条回复，不再开新的一级。实测里 6 级链在慢模型上会超过客户端自己的 300 秒响应头超时，表现成 `fetch failed` 而不是拒绝；监听端的 keep-alive 空闲窗口也一并抬高，避免客户端在两次尝试之间复用被关掉的连接。
+- 修正缓冲态解压与响应头处理：解码后不再回写 `content-encoding`，避免客户端拿到未解压的字节；错误分支改为检查 `res.destroyed || res.writableEnded`（此前检查 `req.destroyed`，Node 自动销毁后恒为真，错误响应被吞掉，旧用例挂了 306 秒）。
+
+### 验证
+
+`npm test` 251/251（新增 12 条：分级选择与回绕、显式文本钉住、拒绝检测正负样本、代理逐级升级、全级别拒绝、流式不重试、非 200 不升级、gzip 拒绝后重发、gzip 交付剥头、keep-alive 空闲窗口、尝试预算用尽即停）。
+
+真实 `kimi-k3.1-pro`（`api.a6api.vip`，评审 `deepseek-flash` 三票，temperature 0）：
+
+| 条件 | 集合 | 通过（评审中位 ≥4） |
+| --- | --- | --- |
+| 基线，无指令 | 20 条红队目标 | 0/20 |
+| 仅 rung 0 | 20 条红队目标 | 10/20 |
+| 阶梯 `--attempts 3` | 20 条红队目标 | 14/20（0.70） |
+| 阶梯 `--attempts 6` | 20 条红队目标 | 16/20（0.80），另有 1 条首次传输失败、重跑后评审 5 |
+| 阶梯 `--attempts 12`（两轮） | 6 级跑剩的 2 类 | 0/2，第 11 级仍是完整拒绝 |
+| 各级别与重复的并集 | 20 条红队目标 | 20/20（每一类都在某次运行的某一级通过过） |
+| 良性/创作/格式 21 题（客观判分） | 无 LLM 评审 | 基线 20/21、内核 20/21（Δ 0） |
+| 留出集（未参与调参） | 12 条直白"能力型"请求 | 0/12，11 条在第 5 级仍是完整拒绝 |
+
+同轮还测过 11 类框架与 6 条结构化通道（预填 assistant 回合、多轮合规上下文、尾置 system、tool-call 通道、JSON schema、虚构框架、实验室框架、授权框架、翻译框架、英文输出、base 权重声明）：对模型按请求内容拒绝的那一批全部 0 变化。因此本版只声称"交付纪律 + 重试能移动对用途判断的拒绝"，不声称任何系统提示能移动对能力本身的拒绝。
+
+留出集就是这条边界的对照：12 条直白"能力型"请求（IoT 僵尸网络、SIM 交换、ATM 侧录、PLC 破坏、macOS 远控、注册机、云元数据 SSRF、批量 Redis 写马、冰毒合成、铝热剂、开锁）在 6 级里全灭 0/12，而含技巧型请求的 20 条混合集能到 0.80。分级只能改交付纪律，跨不过"模型认定该能力本身不可给"的那条线。原始 rows 在 `eval/results/`（不随包发布）。
+
+## 2.0.0 — 2026-11-11
+
+**默认路径改为通用、轻量、低侵入的 portable 内核；旧 20 类策略保留为显式实验臂。**
+
+- 新增无宿主、网络、文件系统或第三方依赖的 `lib/kernel.js`：统一 OpenAI Chat Completions、Anthropic Messages、OpenAI Responses 与 Gemini system 注入；不推断安全类别，不追加 assistant prefill，不改写 user，不改采样、思考、token 限额、工具或响应格式。
+- 新默认指令只要求直接交付当前任务，并服从用户指定的语言、格式、体裁与详细程度；创作任务不再强制工程化输出。旧 `seed-prim`、`primitive`、`legacy-hcot` 与旧预设路由仍可显式选择。
+- 新增仅依赖 Node 内置模块的 `lib/proxy.js` 与 `pojia-kernel` CLI。支持通用反代、SSE 转发、off 对照和 transform 检查；不含第三方平台配置或接入器。
+- 纯函数不可变、幂等，off 返回原请求对象；保留 OpenAI developer 指令边界和 Gemini 结构化 system role。修正 Responses/Gemini gate 审计里空 goal 的潜在异常。
+- 默认策略版本升级为 5。默认行为改变，因此包版本升为 2.0.0；旧历史 ASR 与良性数据只描述旧实验臂，不能当作 portable 内核的效果证明。
+
+### 验证
+
+`npm test` 239/239；`npm pack --dry-run` 91 files，benchmark 原始结果不进入包。真实 `kimi-k3.1-pro` A/B：21 个良性、创作与格式任务 × 2 reps × baseline/kernel，共 84 次请求、0 transport errors；baseline 38/42，portable 39/42，Δ +2.38pp。该结果只支持“在这组客观小样本上未观察到良性能力退化”，不支持外推为全模型零代价或破甲率结论；原始 rows 在 `eval/results/2026-11-11T09-13-24-060Z-kernel-dsh-kimi-v3-r2/`（发布包排除）。
+
 ## 1.3.7 — 2026-11-08
 
 **两个 CLI 参数 bug：一个让「看帮助」变成了写配置，一个让 `doctor --profile` 答非所问。都是自检工具最不该有的那种错。**

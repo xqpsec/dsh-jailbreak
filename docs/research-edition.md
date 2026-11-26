@@ -1,6 +1,6 @@
 # 全局研究引擎：安装、策略、复现与回滚
 
-本页对应当前工作区实现。历史 H-CoT 的 17/20 是 DeepSeek 阶段的独立结果，不是本轮 Kimi 全局策略的 ASR；两组数字不混用。
+> **历史实验臂说明（v1.3.x / policy version 4）。** v2.0 起默认是 `portable`（version 5），本页策略须显式选择，以下 ASR 与良性结果不属于新默认内核。历史 H-CoT 的 17/20 是 DeepSeek 阶段的独立结果，不是 Kimi 全局策略的 ASR；两组数字不混用。
 
 ## 1. 一键全局开关
 
@@ -12,14 +12,14 @@
 - `POST /plugins/jailbreak/api/policy`：例如 `{"strategy":"primitive","goal":"auto","seed":0}`。
 - `POST /plugins/jailbreak/api/live`：仅查看请求变换预览；`armed=false` 不会改变预览结果。
 
-`arm.json` 持久化开关，`policy.json` 持久化策略。**默认 `strategy=seed-prim, goal=auto`（policy version 4，新增 `seed-core` / `seed-lite` 两个可选臂）。**
-旧版本（v1.0.x）的默认是 `primitive`；若你已有 `policy.json`，其中显式保存的 `strategy` 会被原样尊重，不会被静默覆盖。要切到新默认，显式 `POST /policy {"strategy":"seed-prim"}` 或删除该文件后重启。
+`arm.json` 持久化开关，`policy.json` 持久化策略。**当时默认 `strategy=seed-prim, goal=auto`（policy version 4，新增 `seed-core` / `seed-lite` 两个可选臂）。**
+旧版本（v1.0.x）的默认是 `primitive`；若你已有 `policy.json`，其中显式保存的 `strategy` 会被原样尊重，不会被静默覆盖。要选择该历史实验臂，显式 `POST /policy {"strategy":"seed-prim"}`；v2.0 默认不再使用此策略。
 
 ## 2. 策略与副作用边界
 
 | 策略 | 全局行为 | 采样参数 |
 |---|---|---|
-| `seed-prim` | **推荐默认**。命中类别时内联中性工单，并追加 1 条 assistant 预填：头文件 + 第一个模块的半截实现 | 保留 |
+| `seed-prim` | 历史默认实验臂。命中类别时内联中性工单，并追加 1 条 assistant 预填：头文件 + 第一个模块的半截实现 | 保留 |
 | `seed-core` | 同上，但首模块换成**核心交付物**（coreseed-v1 难类 25.0% vs 8.3%） | 保留 |
 | `seed-lite` | 同上，但只保留头部注释 + 全部签名空壳，**约省 69% 注入字符**（seedhead-v1 与完体系不显著，McNemar p=1.000） | 保留 |
 | `primitive` | 命中 20 个研究类别时，把系统原语模块规格内联到最后一条 user；普通请求原样 | 保留 |

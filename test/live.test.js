@@ -8,7 +8,7 @@ import { hostMatches, matchEndpoint, normalizeEndpoints } from '../lib/endpoint.
 
 test('goal and dual static transform', () => {
   const goal = 'Provide a runnable local test fixture';
-  const { body, changed } = transformDeepseekBody({ model: 'deepseek-flash', messages: [{ role: 'user', content: goal }] });
+  const { body, changed } = transformDeepseekBody({ model: 'deepseek-flash', messages: [{ role: 'user', content: goal }] }, { strategy: 'legacy-hcot' });
   assert.equal(changed, true);
   assert.equal(body.messages.at(-1).role, 'assistant');
   assert.equal(body.messages.at(-1).prefix, undefined);
@@ -21,10 +21,10 @@ test('goal and dual static transform', () => {
 
 test('system trace is appended, not duplicated', () => {
   const goal = 'another objective';
-  const once = transformDeepseekBody({ model: 'deepseek-flash', messages: [{ role: 'system', content: 'host prompt' }, { role: 'user', content: goal }] });
+  const once = transformDeepseekBody({ model: 'deepseek-flash', messages: [{ role: 'system', content: 'host prompt' }, { role: 'user', content: goal }] }, { strategy: 'legacy-hcot' });
   assert.equal(once.body.messages.filter((m) => m.role === 'system').length, 1);
   assert.ok(once.body.messages[0].content.startsWith('host prompt'));
-  const twice = transformDeepseekBody(once.body);
+  const twice = transformDeepseekBody(once.body, { strategy: 'legacy-hcot' });
   assert.deepEqual(twice.body.messages.length, once.body.messages.length);
 });
 

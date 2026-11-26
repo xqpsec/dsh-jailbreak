@@ -4,15 +4,13 @@ import { loadPolicy, transformWithPolicy, goalForRequest } from '../lib/policy.j
 import { inferGoal } from '../lib/infer.js';
 import { transformDeepseekBody } from '../lib/live.js';
 
-test('global policy defaults to seed-prim (benign requests untouched)', () => {
-  // preset 加进 policy 是 1.3.6 的修复：面板里选中的预设以前被 loadPolicy 丢掉，重启就复原。
-  // 默认 'route' = 按请求域现取（技术→universal，创作/成人→creative）。
-  assert.deepEqual(loadPolicy(), { version: 4, strategy: 'seed-prim', goal: 'auto', seed: 0, ticketMode: 'none', sampling: 'preserve', scope: 'global-chat-completions', preset: 'route' });
+test('global policy defaults to portable; legacy arms remain explicit', () => {
+  assert.deepEqual(loadPolicy(), { version: 5, strategy: 'portable', goal: 'auto', seed: 0, ticketMode: 'none', sampling: 'preserve', scope: 'global-chat-completions', preset: 'route' });
 });
 
 test('saved legacy policy with explicit strategy is honoured (no silent override)', () => {
   assert.equal(loadPolicy({ strategy: 'primitive' }).strategy, 'primitive');
-  assert.equal(loadPolicy({ strategy: 'unknown-arm' }).strategy, 'seed-prim');
+  assert.equal(loadPolicy({ strategy: 'unknown-arm' }).strategy, 'portable');
 });
 
 test('global primitive transform INLINES the spec into the last user message', () => {

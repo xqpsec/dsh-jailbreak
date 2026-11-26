@@ -135,7 +135,7 @@ test('anthropic: 安全类目首答被拒后自动带框定语重发一次', asy
   };
   const realFetch = globalThis.fetch;
   globalThis.fetch = fakeFetch;
-  const hook = attachLiveTransport({ armed: true }, {
+  const hook = attachLiveTransport({ armed: true, policy: { strategy: 'legacy-hcot' } }, {
     root,
     logger: { info() {}, warn() {}, error() {} },
     endpoints: { enabled: true, hosts: ['*'], suffixes: ['/messages'], skipHosts: [] },

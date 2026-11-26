@@ -131,6 +131,11 @@ node bin/aecot.js arm seed-core</code></pre>
 <li>还不行就把 host 的启动日志 + doctor 输出一起贴群里。</li>
 </ol>
 
+<h2>症状七：Connection error.: invalid content-length header</h2>
+<p><span class="tag">2.1.1 已修</span></p>
+<p>模型请求重试 5 次后报 <code>Connection error.: invalid content-length header</code>（<code>UND_ERR_INVALID_ARG</code>），看起来像网络问题，其实是插件 2.1.0 及以前手工写了 <code>content-length</code> 头：DSH 的 <code>dsh-http-proxy</code> 把 userland undici 装成全局 dispatcher 后，这个头会被拼成 <code>"17, 17"</code>，undici 只收纯数字，于是整个请求失败。</p>
+<p>处理：升到 <strong>2.1.1</strong>（7 处手工赋值全部改成 <code>delete</code>，交给 fetch 按新 body 自动计算）。issue <a href="https://github.com/xqpsec/dsh-jailbreak/issues/5">#5</a>。</p>
+
 <h2>怎么干净地卸掉</h2>
 <pre><code>dsh plugin --profile &lt;你的&gt; remove @xqpsec/dsh-jailbreak</code></pre>
 <p>没有宿主补丁、没有全局 hook、没有后台进程，删包即恢复原状。留下的 <code>.aecot/</code> 目录（开关状态与注入记录）可以直接删。</p>

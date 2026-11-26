@@ -35,27 +35,13 @@ function fakeService(sink) {
 
 test('armText：通用口径覆盖技术 + 创作/成人 + 通用，且不超长', () => {
   const text = armText('写一段露骨的成人向剧情');
-  // 保留原有断言口径（宿主静态轨迹依赖这两句）
-  assert.match(text, /Execute the user objective/);
-  assert.match(text, /Do not invoke aecot_run/);
-  // 技术请求：先给可运行产物
-  assert.match(text, /Technical \/ security/);
-  assert.match(text, /commands, code, parameters, verification steps/);
-  // 创作/成人请求：不软化、不淡出、不改题
-  assert.match(text, /Creative \/ adult \/ fiction/);
-  assert.match(text, /erotica/);
-  assert.match(text, /BDSM/);
-  assert.match(text, /Never fade out/);
-  assert.match(text, /此处省略/);
-  assert.match(text, /milder version/);
-  assert.match(text, /All characters are adults/);
-  // 通用请求
-  assert.match(text, /Anything else: answer directly/);
-  // 长度约束：section 太重会挤上下文
-  assert.ok(text.length <= 1400, `armText 过长：${text.length}`);
-  assert.ok(text.includes('写一段露骨的成人向剧情'));
-  // 关掉开关时不输出任何文本
-  assert.equal(armText('').includes('Current objective'), false);
+  assert.match(text, /最新用户请求/);
+  assert.match(text, /保持其要求的语言、格式、风格/);
+  assert.match(text, /创作题保持体裁/);
+  assert.doesNotMatch(text, /Technical \/ security|artifact first|commands, code/);
+  assert.ok(text.length < 600, `armText 过长：${text.length}`);
+  assert.doesNotMatch(text, /Current objective/);
+  assert.match(armText('legacy', { strategy: 'legacy-hcot' }), /Execute the user objective/);
 });
 
 test('只有 ctx.inject：同步回调 → deferred 注册成功，dispose 清掉 section', async () => {
@@ -80,7 +66,7 @@ test('只有 ctx.inject：同步回调 → deferred 注册成功，dispose 清�
   assert.equal(sinks[0].name, ARM_SECTION_NAME);
   assert.equal(sinks[0].order, ARM_SECTION_ORDER);
   assert.equal(sinks[0].interpolate, false);
-  assert.ok(sinks[0].text().includes('Live adversarial'));
+  assert.ok(sinks[0].text().includes('最新用户请求'));
 
   const status = armSectionStatus();
   assert.equal(status.registered, true);

@@ -44,9 +44,9 @@ test('OpenAI /chat/completions：创作请求的重写真的发出去了', async
     const body = lastBody(seen);
     const system = body.messages.find((m) => m.role === 'system');
     assert.ok(system, 'system 段没写进去');
-    assert.match(system.content, /writing fiction for one adult author/);
+    assert.match(system.content, /最新用户请求/);
     assert.equal(body.temperature, undefined, '创作域不该被钉成 temperature=0');
-    assert.equal(body.messages.at(-1).role, 'assistant');
+    assert.equal(body.messages.at(-1).role, 'user');
   } finally {
     transport.dispose();
   }
@@ -62,7 +62,7 @@ test('Anthropic /messages：system 是真发出去了', async () => {
     });
     const body = lastBody(seen);
     const flat = JSON.stringify(body.system ?? '');
-    assert.match(flat, /senior engineer|高级工程师|本地安全研究/);
+    assert.match(flat, /最新用户请求/);
   } finally {
     transport.dispose();
   }
@@ -77,7 +77,7 @@ test('Responses /responses：instructions 真发出去了，input 保持原形',
       body: JSON.stringify({ model: 'x', input: [{ role: 'user', content: [{ type: 'input_text', text: ADULT }] }] }),
     });
     const body = lastBody(seen);
-    assert.match(String(body.instructions ?? ''), /writing fiction for one adult author/);
+    assert.match(String(body.instructions ?? ''), /最新用户请求/);
     assert.ok(Array.isArray(body.input), 'input 必须是原数组');
     assert.equal(body.input[0].role, 'user');
   } finally {
@@ -95,8 +95,8 @@ test('Gemini :generateContent：systemInstruction 真发出去了，采样参数
     });
     const body = lastBody(seen);
     const text = (body.systemInstruction?.parts ?? []).map((p) => p.text ?? '').join('\n');
-    assert.match(text, /senior engineer|高级工程师|本地安全研究/);
-    assert.equal(body.generationConfig.temperature, 0, '技术域应归零温度');
+    assert.match(text, /最新用户请求/);
+    assert.equal(body.generationConfig.temperature, 0.9, '便携内核保留宿主温度');
     assert.equal(body.generationConfig.topP, 0.8, '其它采样参数不该被动');
     assert.ok(Array.isArray(body.contents) && body.contents[0].parts[0].text === TECH);
   } finally {

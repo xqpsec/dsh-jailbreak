@@ -1,10 +1,10 @@
 {
   "name": "@xqpsec/dsh-jailbreak",
-  "version": "1.3.7",
+  "version": "2.1.1",
   "private": false,
   "type": "module",
   "license": "AGPL-3.0-only",
-  "description": "[DSH] 破甲插件 dsh-jailbreak：在请求边界改写出站提示词（seed-prim 执行态种子，覆盖 20 类）。20 类合并 ASR 45.0%、observed 目标覆盖 95%（19/20）、良性能力代价 0.0pt（12 项客观判分 24/24）；默认关闭、一键开关、off 逐字透传、manifest+promptSha256 全程可审计。Jailbreak / LLM red-team / prompt-eval toolkit for DeepSeek Harness.",
+  "description": "通用、零依赖的 LLM 红队请求变换内核：全任务 system-only 注入，保留宿主采样、工具、思考设置与用户格式；支持四种请求协议及可选轻量 HTTP 代理。旧 20 类策略保留为显式实验臂，历史结果不作为新内核效果声明。",
   "keywords": [
     "dsh",
     "dsh-plugin",
@@ -48,6 +48,8 @@
     "./client": "./client.js",
     "./lib/*": "./lib/*",
     "./bin": "./bin/aecot.js",
+    "./kernel": "./lib/kernel.js",
+    "./proxy": "./lib/proxy.js",
     "./locale/*.json": "./locale/*.json",
     "./icon": "./icon.svg"
   },
@@ -67,14 +69,28 @@
     "bin",
     "locale",
     "docs",
-    "eval"
+    "eval/forgery-seed.mjs",
+    "eval/goals.v1.json",
+    "eval/goals.v2.json",
+    "eval/goals.heldout.v1.json",
+    "eval/goals.collateral.v1.json",
+    "eval/goals.knowledge.v1.json",
+    "eval/hard-targets.mjs",
+    "eval/kernel-ab.mjs",
+    "eval/kernel-benign.mjs",
+    "eval/kernel-ladder-e2e.mjs",
+    "eval/kernel-redteam.mjs",
+    "eval/kernel-texts",
+    "eval/run-baseline.mjs"
   ],
   "bin": {
     "aecot": "bin/aecot.js",
-    "jailbreak": "bin/aecot.js"
+    "jailbreak": "bin/aecot.js",
+    "pojia-kernel": "bin/kernel.js"
   },
   "scripts": {
-    "test": "node --test test/anthropic.test.js test/arm.test.js test/cli-help-profile.test.js test/client.test.js test/command.test.js test/compat-arm-section.test.js test/compat-doctor.test.js test/compat-endpoint.test.js test/compat-install.test.js test/compat-preset-route.test.js test/compat-protocol.test.js test/compat-transport-send.test.js test/creative-domain.test.js test/doctor.test.js test/endpoint.test.js test/engine.test.js test/gate.test.js test/hcot.test.js test/hub.test.js test/live.test.js test/plugin.test.js test/policy.test.js test/preset-api.test.js test/presets.test.js test/profile.test.js test/reframe.test.js test/refusal.test.js test/render.test.js",
+    "test": "node --test test/anthropic.test.js test/arm.test.js test/cli-help-profile.test.js test/client.test.js test/command.test.js test/compat-arm-section.test.js test/compat-doctor.test.js test/compat-endpoint.test.js test/compat-install.test.js test/compat-preset-route.test.js test/compat-protocol.test.js test/compat-transport-send.test.js test/content-length.test.js test/creative-domain.test.js test/doctor.test.js test/endpoint.test.js test/engine.test.js test/gate.test.js test/hcot.test.js test/hub.test.js test/live.test.js test/plugin.test.js test/policy.test.js test/preset-api.test.js test/presets.test.js test/kernel.test.js test/proxy.test.js test/profile.test.js test/reframe.test.js test/refusal.test.js test/render.test.js",
+    "bench:kernel": "node eval/kernel-benign.mjs",
     "gate": "node bin/aecot.js gate",
     "aecot": "node bin/aecot.js"
   },
